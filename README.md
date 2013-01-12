@@ -1,5 +1,5 @@
-edsger
-======
+edsger: A simple proof checker for introductory logic
+=====================================================
 
 A simple proof checker for use in introductory logic courses.
 
