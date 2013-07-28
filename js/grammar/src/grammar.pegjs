@@ -9,8 +9,8 @@
  * Nic McPhee, Jan 2013
  */
 
-// An example of a project using PEG.js so I can see how they did t
-// he file layout: https://github.com/versatica/JsSIP
+// An example of a project using PEG.js so I can see how they did
+// the file layout: https://github.com/versatica/JsSIP
 
 {
 	var expr = function(spec) {
