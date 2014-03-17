@@ -2,17 +2,24 @@
 <html>
 <head>
     <title>Edsger Proof Checker</title>
-
+    <link rel="stylesheet" type="txt/css" href="Edsger_StyleSheet.css">
     <script src="../js/proof_checker.js"></script>
 </head>
 <body>
 
-<p>This is content!</p>
-<form action="javascript:checkStep()">
-    <input type="text" name="FirstExpression"><br>
-    <input type="text" name="SecondExpression"><br>
-    <input type="submit" value="Submit">
-</form>
+<div class="header">
+    <h2>Proof Checker</h2>
+</div>
+
+<div class="content">
+    <form action="javascript:checkStep()">
+        <label for="FirstExpression">First Expression</label>
+        <input type="text" id="FirstExpression"><br>
+        <label for="SecondExpression">Second Expression</label>
+        <input type="text" id="SecondExpression"><br>
+        <input type="submit" value="Submit">
+    </form>
+</div>
 
 </body>
 </html>
