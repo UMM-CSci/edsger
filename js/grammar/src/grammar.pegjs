@@ -97,6 +97,10 @@
 		}
 		return result;
 	}
+
+	var keys = function(spec) {
+	    return Object.keys(spec)[0];
+	}
 }
 
 expr
