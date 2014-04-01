@@ -117,7 +117,7 @@ equiv "expression"
 equivOp = "===" / "≡"
 
 andOrOr "AND/OR"
-  = left:unary _ binOp:[|&∧∨] _ right:andOrOr 
+  = left:unary _ binOp:[|&∧∨] _ right:andOrOr
 	{ return binary({ op : normalizeOp(binOp), left : left, right : right }); }
   / unary
 
