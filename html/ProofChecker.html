@@ -17,6 +17,14 @@
     <form action="javascript:checkStep()">
         <label for="FirstExpression">First Expression</label>
         <input type="text" id="FirstExpression"><br>
+            Select Rule:
+            <select id="myStep" onchange="">
+                <option></option>
+                <option>Substitution</option>
+                <option>Symmetry</option>
+                <option>Equivalence</option>
+                <option>...</option>
+            </select><br>
         <label for="SecondExpression">Second Expression</label>
         <input type="text" id="SecondExpression"><br>
         <input type="submit" value="Submit">
