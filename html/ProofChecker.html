@@ -14,18 +14,29 @@
 
 <div class="content">
     <form action="javascript:checkStep()">
-        <label for="FirstExpression">First Expression</label>
-        <input type="text" id="FirstExpression"><br>
-        <label for="myStep">Select Rule:</label>
-        <select id="myStep" onchange="">
-                <option></option>
-                <option>Substitution</option>
-                <option>Symmetry</option>
-                <option>Equivalence</option>
-                <option>...</option>
-            </select><br>
-        <label for="SecondExpression">Second Expression</label>
-        <input type="text" id="SecondExpression"><br>
+        <table>
+            <tr>
+                <th><label for="FirstExpression">First Expression</label></th>
+                <th><input type="text" id="FirstExpression"></th>
+            </tr>
+            <tr>
+                <th><label for="myStep">Select Rule:</label></th>
+                <th><select id="myStep" onchange="">
+                    <option></option>
+                    <option>...</option>
+                    <option>...</option>
+                    <option>...</option>
+                    <option>...</option>
+                </select></th>
+            </tr>
+            <tr>
+                <th><label for="extra">Substitution:</label></th>
+                <th><input for="Substitution" id="extra"></th>
+            <tr>
+            <th><label for="SecondExpression">Second Expression</label></th>
+            <th><input type="text" id="SecondExpression"></th>
+            </tr>
+        </table>
         <input type="submit" value="Submit">
     </form>
 </div>
