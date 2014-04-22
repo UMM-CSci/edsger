@@ -15,4 +15,13 @@ function checkStep() {
     } else {
         alert("They're not equal!");
     }
+    console.log(JSON.stringify(makeRules()["3.8"]))
+}
+
+function makeRules() {
+    var rules = {
+        "3.8" : parser.parse("false === ! true"),
+        "3.9" : parser.parse("! (p === q) === ! p === q")
+    };
+    return rules
 }
