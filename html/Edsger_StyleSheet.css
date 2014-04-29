@@ -1,7 +1,10 @@
 body
 {
-    background-color:grey;
+    background-color: grey;
 }
 
-div.header {background-color:lightgrey;}
+div.header {background-color: lightgrey;}
 div.content {}
+
+table {text-align: left;
+}

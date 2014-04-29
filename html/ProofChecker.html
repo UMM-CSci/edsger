@@ -6,7 +6,7 @@
     <script src="../js/grammar/dist/grammar.js"></script>
     <script src="../js/proof_checker.js"></script>
 </head>
-<body>
+<body onload="ChangeList()">
 
 <div class="header">
     <h2>Proof Checker</h2>
@@ -14,26 +14,49 @@
 
 <div class="content">
     <form action="javascript:checkStep()">
-        <label for="FirstExpression">First Expression</label>
-        <input type="text" id="FirstExpression"><br>
-        <label for="myStep">Select Rule:</label>
-        <select id="myStep" onchange="">
-                <option></option>
-                <option>3.8</option>
-                <option>3.9</option>
-                <option>3.10</option>
-                <option>3.11</option>
-                <option>3.12 Double Negation</option>
-                <option>3.13</option>
-                <option>3.14 Negation of false</option>
-                <option>3.15</option>
-                <option>3.16 Symmetry of Negative equivalence</option>
-            </select><br>
-        <label for="SecondExpression">Second Expression</label>
-        <input type="text" id="SecondExpression"><br>
+        <table>
+            <tr>
+                <th><label for="FirstExpression">First Expression</label></th>
+                <th><input type="text" id="FirstExpression"></th>
+            </tr>
+        </table>
+                <select id="section" name="section" onchange="ChangeList()">
+<!--                    <option>Section</option>
+                    <option>Equivalence and True</option>
+                    <option>Negation, Inequivalence, and False</option>
+                    <option>Disjunction</option>
+                    <option>Conjunction</option>
+                    <option>Implication</option>
+                    <option>...</option>    -->
+                </select><br>
+                <select id="rule" name="rule">
+<!--                    <option>Rule</option>
+                    <option>...</option>
+                    <option>3.8 Definition of false</option>
+                    <option>3.9 Distributivity of ! over ===</option>
+                    <option>3.10 Definition of !===</option>
+                    <option>3.11 </option>
+                    <option>3.12 Double Negation</option>
+                    <option>3.13 Negation of false</option>
+                    <option>3.14 </option>
+                    <option>3.15 </option>
+                    <option>3.16 Symmetry of !===</option>
+                    <option>...</option>    -->
+                </select>
+        <table>
+            <tr>
+                <th><label for="extra">Substitution :</label></th>
+                <th><input for="Substitution" id="extra"></th>
+            <tr>
+                <th><label for="SecondExpression">Second Expression</label></th>
+                <th><input type="text" id="SecondExpression"></th>
+            </tr>
+        </table>
         <input type="submit" value="Submit">
     </form>
 </div>
+
+
 
 </body>
 </html>
