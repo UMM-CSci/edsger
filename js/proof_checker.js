@@ -26,15 +26,16 @@ Sect['Equivalence and True'] = makeRules();
 
 function makeRules() {
     var Sect1 = {
+        // "3.8" : { "name" : "Symmetry", "equation" : parser.parse("false === ! true") };
         "3.8" : parser.parse("false === ! true"),
         "3.9" : parser.parse("! (p === q) === ! p === q"),
-        "3.10" : parser.parse("(p !=== q) === ! (p == q)"),
+     //   "3.10" : parser.parse("(p !=== q) === ! (p == q)"),
         "3.11" : parser.parse("! p === q === p === ! q"),
-        "3.12" : parser.parse("!! p === p"),
+    //    "3.12" : parser.parse("!! p === p"),
         "3.13" : parser.parse("! false === true"),
-        "3.14" : parser.parse("(p !=== q) === ! p === q"),
-        "3.15" : parser.parse("! p === p === false"),
-        "3.16" : parser.parse("(p !=== q) === (q !=== p)")
+     //   "3.14" : parser.parse("(p !=== q) === ! p === q"),
+        "3.15" : parser.parse("! p === p === false")//,
+      //  "3.16" : parser.parse("(p !=== q) === (q !=== p)")
     };
     return Sect1
 }
@@ -49,9 +50,11 @@ function ChangeList() {
     }
 
     var sel = Sect[select];
+    console.log(JSON.stringify(select))
+    console.log(JSON.stringify(sel))
     if (sel) {
-        for (var i=0; i<sel.length; i++) {
-            var sect = new Option(sel[i],i);
+        for (var rule in sel) {
+            var sect = new Option(rule);
             ruleList.options.add(sect);
         }
     }
