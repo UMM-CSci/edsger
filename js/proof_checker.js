@@ -22,22 +22,71 @@ function checkStep() {
 }
 
 var Sect = {};
-Sect['Equivalence and True'] = makeRules();
+Sect['Sect1'] = makeRules(1);
+Sect['Sect2'] = makeRules(2);
+Sect['Sect3'] = makeRules(3);
+Sect['Sect4'] = makeRules(4);
+Sect['Sect5'] = makeRules(5);
 
-function makeRules() {
+function makeRules(int) {
     var Sect1 = {
-        // "3.8" : { "name" : "Symmetry", "equation" : parser.parse("false === ! true") };
-        "3.8" : parser.parse("false === ! true"),
-        "3.9" : parser.parse("! (p === q) === ! p === q"),
-     //   "3.10" : parser.parse("(p !=== q) === ! (p == q)"),
-        "3.11" : parser.parse("! p === q === p === ! q"),
-    //    "3.12" : parser.parse("!! p === p"),
-        "3.13" : parser.parse("! false === true"),
-     //   "3.14" : parser.parse("(p !=== q) === ! p === q"),
-        "3.15" : parser.parse("! p === p === false")//,
-      //  "3.16" : parser.parse("(p !=== q) === (q !=== p)")
+        "3.1" : {"name" : "Associativity of ===", "equation" : parser.parse("((p === q) === r) === (p === (q === r))")},
+        "3.2" : {"name" : "Symmetry of ===", "equation" : parser.parse("p === q === q === p")},
+        "3.3" : {"name" : "Identity of ===", "equation" : parser.parse("true === q === q")},
+        "3.4" : {"name" : "", "equation" : parser.parse("true")},
+        "3.5" : {"name" : "Reflexivity of ===", "equation" : parser.parse("p === p")}
+        };
+
+    var Sect2 = {
+        "3.8" : {"name" : "Definition if false", "equation" : parser.parse("false === ! true")},
+        "3.9" : {"name" : "Distribution of ! over ===", "equation" : parser.parse("! (p === q) === ! p === q")},
+    //   "3.10" : {"name" : "Definition of !===", "equation" : parser.parse("(p !=== q) === ! (p == q)")},
+        "3.11" : {"name" : "", "equation" : parser.parse("! p === q === p === ! q")},
+    //    "3.12" : {"name" : "Double Negation", "equation" : parser.parse("!! p === p")},
+        "3.13" : {"name" : "Negation of false", "equation" : parser.parse("! false === true")},
+    //   "3.14" : {"name" : "", "equation" : parser.parse("(p !=== q) === ! p === q")},
+        "3.15" : {"name" : "", "equation" : parser.parse("! p === p === false")}
+    //  "3.16" : {"name" : "Symmetry of !===", "equation" : parser.parse("(p !=== q) === (q !=== p)")},
+    //    "3.17" : {"name" : "Associativity of !===", "equation" : parser.parse("((p !=== q) !=== r) === (p !=== (q !=== r))")},
+    //    "3.18" : {"name" : "Mutual associativity", "equation" : parser.parse("((p !=== q) === r) === (p !=== (q === r))")},
+    //    "3.19" : {"name" : "Mutual interchangeability", "equation" : parser.parse("p !=== q === r ===  p === q !=== r")}
     };
-    return Sect1
+
+    var Sect3 = {
+        "3.24" : {"name" : "Symmetry of |", "equation" : parser.parse("p | q === q | p")},
+        "3.25" : {"name" : "Associativity of |", "equation" : parser.parse("(p | q) | r === p | (q | r)")},
+        "3.26" : {"name" : "Idempotency of |", "equation" : parser.parse("p | p === p")},
+        "3.27" : {"name" : "Distributivity of | over ===", "equation" : parser.parse("p | (q === r) === p | q === p | r")},
+        "3.28" : {"name" : "Excluded Middle", "equation" : parser.parse("p | ! p")},
+        "3.29" : {"name" : "Zero of |", "equation" : parser.parse("p | true === true")},
+        "3.30" : {"name" : "Identity of |", "equation" : parser.parse("p | false === p")},
+        "3.31" : {"name" : "Distributivity of | over |", "equation" : parser.parse("p | (q | r) === (p | q) | (p | r)")},
+        "3.32" : {"name" : "", "equation" : parser.parse("p | q === p | ! q === p")}
+    };
+
+    var Sect4 = {
+        "3.35" : {"name" : "Golden rule", "equation" : parser.parse("p & q === p === q === p | q")},
+        "3.36" : {"name" : "Symmetry of &", "equation" : parser.parse("p & q === q & p")},
+        "3.37" : {"name" : "Associativity of &", "equation" : parser.parse("(p & q) & r === p & (q & r)")},
+        "3.38" : {"name" : "Idempotency of &", "equation" : parser.parse("p & p === p")},
+        "3.39" : {"name" : "Identity of &", "equation" : parser.parse("p & true === p")},
+        "3.40" : {"name" : "Zero of &", "equation" : parser.parse("p & false === false")},
+        "3.41" : {"name" : "Distributivity of & over &", "equation" : parser.parse("p & (q & r) === (p & q) & (p & r)")},
+        "3.42" : {"name" : "Contradiction", "equation" : parser.parse("p & ! p === false")},
+        "3.43a" : {"name" : "Absorption (a)", "equation" : parser.parse("p & (p | q) === p")},
+        "3.43b" : {"name" : "Absorption (b)", "equation" : parser.parse("p | (p & q ) === p")},
+        "3.44a" : {"name" : "Absorption (a)", "equation" : parser.parse("p & (! p | q) === p & q")},
+        "3.44b" : {"name" : "Absorption (b)", "equation" : parser.parse("p | (! p & q) === p | q")}
+    };
+
+    var Sect5 = {};
+
+    if (int = 1) {return Sect1;}
+    else if (int = 2) {return Sect2;}
+    else if (int = 3) {return Sect3;}
+    else if (int = 4) {return Sect4;}
+    else if (int = 5) {return Sect5;}
+    return null;
 }
 
 function ChangeList() {
@@ -50,11 +99,12 @@ function ChangeList() {
     }
 
     var sel = Sect[select];
-    console.log(JSON.stringify(select))
-    console.log(JSON.stringify(sel))
+    console.log(JSON.stringify(select));
+    console.log(JSON.stringify(sel));
     if (sel) {
+        ruleList.options.add(new Option("Rule"));
         for (var rule in sel) {
-            var sect = new Option(rule);
+            var sect = new Option(rule + " " + rule.name);
             ruleList.options.add(sect);
         }
     }
