@@ -18,7 +18,7 @@ function checkStep() {
         alert("They're not equal!");
     }
 
-    console.log(JSON.stringify(makeRules()["3.8"]))
+    console.log(JSON.stringify(makeRules(2)["3.8"]));
 }
 
 var Sect = {};
