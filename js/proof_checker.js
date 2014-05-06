@@ -28,7 +28,7 @@ Sect["Sect3"] = makeRules(3);
 Sect["Sect4"] = makeRules(4);
 Sect["Sect5"] = makeRules(5);
 
-function makeRules(int) {
+function makeRules(arg) {
     var Sect1 = {
         '3.1' : {name : "Associativity of ===", equation : parser.parse("((p === q) === r) === (p === (q === r))")},
         '3.2' : {name : "Symmetry of ===", equation : parser.parse("p === q === q === p")},
@@ -81,11 +81,11 @@ function makeRules(int) {
 
     var Sect5 = {};
 
-    if (int = 1) {return Sect1;}
-    else if (int = 2) {return Sect2;}
-    else if (int = 3) {return Sect3;}
-    else if (int = 4) {return Sect4;}
-    else if (int = 5) {return Sect5;}
+    if (arg == 1) {return Sect1;}
+    else if (arg == 2) {return Sect2;}
+    else if (arg == 3) {return Sect3;}
+    else if (arg == 4) {return Sect4;}
+    else if (arg == 5) {return Sect5;}
     return null;
 }
 
