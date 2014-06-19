@@ -27,6 +27,7 @@ Sect["Sect2"] = makeRules(2);
 Sect["Sect3"] = makeRules(3);
 Sect["Sect4"] = makeRules(4);
 Sect["Sect5"] = makeRules(5);
+Sect["Sect6"] = makeRules(6);
 
 function makeRules(arg) {
     var Sect1 = {
@@ -76,16 +77,82 @@ function makeRules(arg) {
         '3.43a' : {name : "Absorption (a)", equation : parser.parse("p & (p | q) === p")},
         '3.43b' : {name : "Absorption (b)", equation : parser.parse("p | (p & q ) === p")},
         '3.44a' : {name : "Absorption (a)", equation : parser.parse("p & (! p | q) === p & q")},
-        '3.44b' : {name : "Absorption (b)", equation : parser.parse("p | (! p & q) === p | q")}
+        '3.44b' : {name : "Absorption (b)", equation : parser.parse("p | (! p & q) === p | q")},
+        '3.45' : {name : "Distributivity of | over &", equation : parser.parse("p | (q & r) === (p | q) & (p | r)")},
+        '3.46' : {name : "Distributivity of & over |", equation : parser.parse("p & (q | r) === (p &q) | (p & r)")},
+        '3.47a' : {name : "De Morgan (a)", equation : parser.parse("! (p & q) === ! p | !q")},
+        '3.47b' : {name : "De Morgan (b)", equation : parser.parse("! (p | q) === ! p & ! q")},
+        '3.48' : {name : "", equation : parser.parse("p & q === p & ! q === ! p")},
+        '3.49' : {name : "", equation : parser.parse("p & (q === r) === p & q === p & r === p")},
+        '3.50' : {name : "", equation : parser.parse("p & (q === p) === p & q")},
+        '3.51' : {name : "Replacement", equation : parser.parse("(p === q) & (r === p) === (p === q) & (r === q)")},
+        '3.52' : {name : "Definition of ===", equation : parser.parse("p === q === (p & q) | (! p & ! q)")},
+        '3.53' : {name : "Exclusive or", equation : parser.parse("p ! === q === (! p & q) | (p & ! q")},
+        '3.55' : {name : "", equation : parser.parse("(p & q) & r === p === q === r === p | q === q | r === r | p === p | q | r")}
     };
 
-    var Sect5 = {};
+    var Sect5 = {
+        '3.57' : {name : "Definition of Implication", equation : parser.parse("")},
+        '3.58' : {name : "Consequence", equation : parser.parse("")},
+        '3.59' : {name : "Definition of Implication", equation : parser.parse("")},
+        '3.60' : {name : "Definition of implication", equation : parser.parse("")},
+        '3.61' : {name : "Contrapositive", equation : parser.parse("")},
+        '3.62' : {name : "", equation : parser.parse("")},
+        '3.63' : {name : "", equation : parser.parse("")},
+        '3.64' : {name : "", equation : parser.parse("")},
+        '3.65' : {name : "", equation : parser.parse("")},
+        '3.66' : {name : "", equation : parser.parse("")},
+        '3.67' : {name : "", equation : parser.parse("")},
+        '3.68' : {name : "", equation : parser.parse("")},
+        '3.69' : {name : "", equation : parser.parse("")},
+        '3.70' : {name : "", equation : parser.parse("")},
+        '3.71' : {name : "", equation : parser.parse("")},
+        '3.72' : {name : "", equation : parser.parse("")},
+        '3.73' : {name : "", equation : parser.parse("")},
+        '3.74' : {name : "", equation : parser.parse("")},
+        '3.75' : {name : "", equation : parser.parse("")},
+        '3.76a' : {name : "", equation : parser.parse("")},
+        '3.76b' : {name : "", equation : parser.parse("")},
+        '3.76c' : {name : "", equation : parser.parse("")},
+        '3.76d' : {name : "", equation : parser.parse("")},
+        '3.76e' : {name : "", equation : parser.parse("")},
+        '3.77' : {name : "", equation : parser.parse("")},
+        '3.78' : {name : "", equation : parser.parse("")},
+        '3.79' : {name : "", equation : parser.parse("")},
+        '3.80' : {name : "", equation : parser.parse("")},
+        '3.81' : {name : "", equation : parser.parse("")},
+        '3.82a' : {name : "", equation : parser.parse("")},
+        '3.82b' : {name : "", equation : parser.parse("")},
+        '3.82c' : {name : "", equation : parser.parse("")}
+    };
+
+    var Sect6 = {
+        '3.83' : {name : "", equation : parser.parse("")},
+        '3.84a' : {name : "", equation : parser.parse("")},
+        '3.84b' : {name : "", equation : parser.parse("")},
+        '3.84c' : {name : "", equation : parser.parse("")},
+        '3.85' : {name : "", equation : parser.parse("")},
+        '3.86' : {name : "", equation : parser.parse("")},
+        '3.87' : {name : "", equation : parser.parse("")},
+        '3.88' : {name : "", equation : parser.parse("")},
+        '3.89' : {name : "", equation : parser.parse("")},
+        '4.1' : {name : "", equation : parser.parse("")},
+        '4.2' : {name : "", equation : parser.parse("")},
+        '4.3' : {name : "", equation : parser.parse("")},
+        '4.4' : {name : "", equation : parser.parse("")},
+        '4.5' : {name : "", equation : parser.parse("")},
+        '4.6' : {name : "", equation : parser.parse("")},
+        '4.7' : {name : "", equation : parser.parse("")},
+        '4.9' : {name : "", equation : parser.parse("")},
+        '4.12' : {name : "", equation : parser.parse("")}
+    };
 
     if (arg == 1) {return Sect1;}
     else if (arg == 2) {return Sect2;}
     else if (arg == 3) {return Sect3;}
     else if (arg == 4) {return Sect4;}
     else if (arg == 5) {return Sect5;}
+    else if (arg == 6) {return Sect6;}
     return null;
 }
 
