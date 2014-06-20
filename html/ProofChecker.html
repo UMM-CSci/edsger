@@ -6,7 +6,7 @@
     <script src="../js/grammar/dist/grammar.js"></script>
     <script src="../js/proof_checker.js"></script>
 </head>
-<body onload="ChangeList()">
+<body>
 
 <div class="header">
     <h2>Proof Checker</h2>
@@ -20,16 +20,17 @@
                 <th><input type="text" id="FirstExpression"></th>
             </tr>
         </table>
-                <select id="section" name="section" onchange="ChangeList()">
-                    <option value = "">Section</option>
-                    <option value = "Sect1">Equivalence and True</option>
-                    <option value = "Sect2">Negation, Inequivalence, and False</option>
-                    <option value = "Sect3">Disjunction</option>
-                    <option value = "Sect4">Conjunction</option>
-                    <option value = "Sect5">Implication</option>
-                    <option value = "Sect6">Leibniz as an Axiom</option>
-                </select><br>
-                <select id="rule" name="rule"></select>
+        <select id="book" name="book" onchange="ChangeBook()">
+            <option>Book</option>
+            <option value = "Book1">A Logical Approach To Discrete Math</option>
+            <option value = "Book2">Book2</option>
+        </select><br>
+        <select id="section" name="section" onchange="ChangeSection()">
+            <option>Section</option>
+        </select><br>
+        <select id="rule" name="rule">
+            <option>Rule</option>
+        </select>
         <table>
             <tr>
                 <th><label for="extra">Substitution :</label></th>

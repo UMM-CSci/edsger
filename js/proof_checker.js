@@ -21,6 +21,53 @@ function checkStep() {
     console.log(JSON.stringify(makeRules(2)["3.8"]));
 }
 
+var Book = {};
+Book["Book1"] = makeSections(1);
+Book["Book2"] = makeSections(2);
+
+function makeSections(arg) {
+    var Book1 = {
+        'Sect1' : {name : "Equivalence and True", value : 'Sect1'},
+        'Sect2' : {name : "Negation, Inequivalence, and False", value : "Sect2"},
+        'Sect3' : {name : "Disjunction", value : "Sect3"},
+        'Sect4' : {name : "Conjunction", value : "Sect4"},
+        'Sect5' : {name : "Implication", value : "Sect5"},
+        'Sect6' : {name : "Leibniz as an Axiom", value : "Sect6"},
+        'Sect7' : {name : "Proof Techniques", value : "Sect7"},
+        'Sect8' : {name : "General Laws of Quantification", value : "Sect8"},
+        'Sect9' : {name : "Universal Quantification", value : "Sect9"},
+        'Sect10' : {name : "Existential Quantification", value : "Sect10"}
+    };
+
+    var Book2 = {};
+
+    if (arg == 1) {return Book1;}
+    else if (arg == 2) {return Book2;}
+    return null;
+}
+
+function ChangeBook() {
+    var bookList = document.getElementById("book");
+    var sectList = document.getElementById("section");
+    var select = bookList.options[bookList.selectedIndex].value;
+
+    while (sectList.options.length) {
+        sectList.remove(0);
+    }
+
+    var sel = Book[select];
+    console.log(JSON.stringify(select));
+    console.log(JSON.stringify(sel));
+    if (sel) {
+        sectList.options.add(new Option("Section"));
+        for (var sect in sel) {
+            var opt = new Option(sel[sect].name);
+            opt.value = sect;
+            sectList.options.add(opt);
+        }
+    }
+}
+
 var Sect = {};
 Sect["Sect1"] = makeRules(1);
 Sect["Sect2"] = makeRules(2);
@@ -28,6 +75,10 @@ Sect["Sect3"] = makeRules(3);
 Sect["Sect4"] = makeRules(4);
 Sect["Sect5"] = makeRules(5);
 Sect["Sect6"] = makeRules(6);
+Sect["Sect7"] = makeRules(7);
+Sect["Sect8"] = makeRules(8);
+Sect["Sect9"] = makeRules(9);
+Sect["Sect10"] = makeRules(10);
 
 function makeRules(arg) {
     var Sect1 = {
@@ -138,7 +189,10 @@ function makeRules(arg) {
         '3.89' : {name : "", equation : parser.parse("")},
         '4.1' : {name : "", equation : parser.parse("")},
         '4.2' : {name : "", equation : parser.parse("")},
-        '4.3' : {name : "", equation : parser.parse("")},
+        '4.3' : {name : "", equation : parser.parse("")}
+    };
+
+    var Sect7 = {
         '4.4' : {name : "", equation : parser.parse("")},
         '4.5' : {name : "", equation : parser.parse("")},
         '4.6' : {name : "", equation : parser.parse("")},
@@ -147,16 +201,67 @@ function makeRules(arg) {
         '4.12' : {name : "", equation : parser.parse("")}
     };
 
+    var Sect8 = {
+        '8.13' : {name : "", equation : parser.parse("")},
+        '8.14' : {name : "", equation : parser.parse("")},
+        '8.15' : {name : "", equation : parser.parse("")},
+        '8.16' : {name : "", equation : parser.parse("")},
+        '8.17' : {name : "", equation : parser.parse("")},
+        '8.18' : {name : "", equation : parser.parse("")},
+        '8.19' : {name : "", equation : parser.parse("")},
+        '8.20' : {name : "", equation : parser.parse("")},
+        '8.21' : {name : "", equation : parser.parse("")},
+        '8.22' : {name : "", equation : parser.parse("")},
+        '8.23' : {name : "", equation : parser.parse("")}
+    };
+
+    var Sect9 = {
+        '9.2' : {name : "", equation : parser.parse("")},
+        '9.3' : {name : "", equation : parser.parse("")},
+        '9.4' : {name : "", equation : parser.parse("")},
+        '9.5' : {name : "", equation : parser.parse("")},
+        '9.6' : {name : "", equation : parser.parse("")},
+        '9.7' : {name : "", equation : parser.parse("")},
+        '9.8' : {name : "", equation : parser.parse("")},
+        '9.9' : {name : "", equation : parser.parse("")},
+        '9.10' : {name : "", equation : parser.parse("")},
+        '9.11' : {name : "", equation : parser.parse("")},
+        '9.12' : {name : "", equation : parser.parse("")},
+        '9.13' : {name : "", equation : parser.parse("")},
+        '9.16' : {name : "", equation : parser.parse("")}
+    };
+
+    var Sect10 = {
+        '9.17' : {name : "", equation : parser.parse("")},
+        '9.18' : {name : "", equation : parser.parse("")},
+        '9.19' : {name : "", equation : parser.parse("")},
+        '9.20' : {name : "", equation : parser.parse("")},
+        '9.21' : {name : "", equation : parser.parse("")},
+        '9.22' : {name : "", equation : parser.parse("")},
+        '9.23' : {name : "", equation : parser.parse("")},
+        '9.24' : {name : "", equation : parser.parse("")},
+        '9.25' : {name : "", equation : parser.parse("")},
+        '9.26' : {name : "", equation : parser.parse("")},
+        '9.27' : {name : "", equation : parser.parse("")},
+        '9.28' : {name : "", equation : parser.parse("")},
+        '9.29' : {name : "", equation : parser.parse("")},
+        '9.30' : {name : "", equation : parser.parse("")}
+    };
+
     if (arg == 1) {return Sect1;}
     else if (arg == 2) {return Sect2;}
     else if (arg == 3) {return Sect3;}
     else if (arg == 4) {return Sect4;}
     else if (arg == 5) {return Sect5;}
     else if (arg == 6) {return Sect6;}
+    else if (arg == 7) {return Sect7;}
+    else if (arg == 8) {return Sect8;}
+    else if (arg == 9) {return Sect9;}
+    else if (arg == 10) {return Sect10;}
     return null;
 }
 
-function ChangeList() {
+function ChangeSection() {
     var sectList = document.getElementById("section");
     var ruleList = document.getElementById("rule");
     var select = sectList.options[sectList.selectedIndex].value;
@@ -171,8 +276,8 @@ function ChangeList() {
     if (sel) {
         ruleList.options.add(new Option("Rule"));
         for (var rule in sel) {
-            var sect = new Option(rule + " " + sel[rule].name);
-            ruleList.options.add(sect);
+            var opt = new Option(rule + " " + sel[rule].name);
+            ruleList.options.add(opt);
         }
     }
 }
