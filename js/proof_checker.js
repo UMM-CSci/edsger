@@ -61,8 +61,7 @@ function ChangeBook() {
     if (sel) {
         sectList.options.add(new Option("Section"));
         for (var sect in sel) {
-            var opt = new Option(sel[sect].name);
-            opt.value = sect;
+            var opt = new Option(sel[sect].name,sel[sect].value,false,false);
             sectList.options.add(opt);
         }
     }
