@@ -17,8 +17,6 @@ function checkStep() {
     } else {
         alert("They're not equal!");
     }
-
-    console.log(JSON.stringify(makeRules(2)["3.8"]));
 }
 
 var Book = {};
@@ -65,6 +63,15 @@ function ChangeBook() {
             sectList.options.add(opt);
         }
     }
+}
+
+function History() {
+    var first = document.getElementById("FirstExpression").value;
+    var second = document.getElementById("SecondExpression").value;
+    var recent = first + second;
+    var old = document.getElementById("history").value;
+
+    document.getElementById("history").value = old + recent;
 }
 
 function addJavascript(jsname,pos) {
