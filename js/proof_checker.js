@@ -59,19 +59,24 @@ function ChangeBook() {
     if (sel) {
         sectList.options.add(new Option("Section"));
         for (var sect in sel) {
-            var opt = new Option(sel[sect].name,sel[sect].value,false,false);
+            var opt = new Option(sel[sect].name,sect, false, false);
             sectList.options.add(opt);
         }
     }
 }
 
 function History() {
-    var first = document.getElementById("FirstExpression").value;
-    var second = document.getElementById("SecondExpression").value;
-    var recent = first + second;
+    var NewFirst = document.getElementById("FirstExpression").value;
+    var NewSecond = document.getElementById("SecondExpression").value;
+    var OldSecond = null;   //always null at the moment
+
+    var recent = NewFirst + NewSecond;
     var old = document.getElementById("history").value;
 
-    document.getElementById("history").value = old + recent;
+    if (NewFirst == OldSecond || OldSecond == null)
+        {document.getElementById("history").value = old + recent;}
+    else
+        {document.getElementById("history").value = null;}
 }
 
 function addJavascript(jsname,pos) {
