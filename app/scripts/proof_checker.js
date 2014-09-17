@@ -82,7 +82,7 @@ function History() {
         alert("First and/or second expression has to have an input.");
     }
     else {
-        hist.push({first:first, second:second, rule:"rule", sub:"extra"});
+        hist.push({first:first, second:second, rule:"rule", sub:"sub"});
     }
 
     for (var i=0; i < hist.length; i++) {
