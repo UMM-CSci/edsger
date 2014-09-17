@@ -2,6 +2,9 @@
  * Created by mcphee on 2/25/14.
  */
 
+//Says unused function for checkStep(),
+// however ProofChecker.html uses it in <form>
+// inside <div class="content"> as <form action="javascript:checkStep()".
 function checkStep() {
     alert('Checking a step!');
     var first = document.getElementById('FirstExpression').value;
@@ -59,8 +62,10 @@ function ChangeBook() {
     if (sel) {
         sectList.options.add(new Option('Section'));
         for (var sect in sel) {
-            var opt = new Option(sel[sect].name,sect, false, false);
-            sectList.options.add(opt);
+            if (sel.hasOwnProperty(sect)) {
+                var opt = new Option(sel[sect].name,sect, false, false);
+                sectList.options.add(opt);
+            }
         }
     }
 }
