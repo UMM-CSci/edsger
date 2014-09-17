@@ -70,18 +70,31 @@ function ChangeBook() {
     }
 }
 
+var hist = {first: "", second: "", rule: "", sub: ""};
+
 function History() {
-    var NewFirst = document.getElementById('FirstExpression').value;
-    var NewSecond = document.getElementById('SecondExpression').value;
-    var OldSecond = null;   //always null at the moment
+    var first = document.getElementById('FirstExpression').value;
+    var second = document.getElementById('SecondExpression').value;
+    var rule = document.getElementById('rule').selectedIndex.value;
+    var sub = document.getElementById('extra').value;
 
-    var recent = NewFirst + NewSecond;
-    var old = document.getElementById('history').value;
+    if (first === "" || second === "") {
+        alert("First and/or second expression has to have an input.");
+    }
+    else {
+        hist.push({first:first, second:second, rule:"rule", sub:"extra"});
+    }
 
-    if (NewFirst === OldSecond || OldSecond === null)
-        {document.getElementById('history').value = old + recent;}
-    else
-        {document.getElementById('history').value = null;}
+    for (var i=0; i < hist.length; i++) {
+        if (hist.hasOwnProperty(h)) {
+            var fst = hist[i].first + " ";
+            var sec = hist[i].second + " ";
+            var rl = hist[i].rule;
+            var sb = hist[i].sub + " ";
+
+            document.getElementById('history').value = fst + rl + sb + sec;
+        }
+    }
 }
 
 function addJavascript(jsname,pos) {
