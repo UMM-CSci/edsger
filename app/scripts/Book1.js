@@ -218,8 +218,10 @@ function ChangeSection() {
     if (sel) {
         ruleList.options.add(new Option("Rule"));
         for (var rule in sel) {
-            var opt = new Option(rule + " " + sel[rule].name);
-            ruleList.options.add(opt);
+            if (sel.hasOwnProperty(rule)) {
+                var opt = new Option(rule + " " + sel[rule].name);
+                ruleList.options.add(opt);
+            }
         }
     }
 }
