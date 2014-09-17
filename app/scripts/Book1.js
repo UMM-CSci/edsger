@@ -202,26 +202,3 @@ function makeRules(arg) {
     else if (arg == 10) {return Sect10;}
     return null;
 }
-
-function ChangeSection() {
-    var sectList = document.getElementById("section");
-    var ruleList = document.getElementById("rule");
-    var select = sectList.options[sectList.selectedIndex].value;
-
-    while (ruleList.options.length) {
-        ruleList.remove(0);
-    }
-
-    var sel = Sect[select];
-    console.log(JSON.stringify(select));
-    console.log(JSON.stringify(sel));
-    if (sel) {
-        ruleList.options.add(new Option("Rule"));
-        for (var rule in sel) {
-            if (sel.hasOwnProperty(rule)) {
-                var opt = new Option(rule + " " + sel[rule].name);
-                ruleList.options.add(opt);
-            }
-        }
-    }
-}
