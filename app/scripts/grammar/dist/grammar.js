@@ -6,9 +6,9 @@ parser = (function() {
    */
 
   function peg$subclass(child, parent) {
-    function ctor() { this.constructor = child; }
-    ctor.prototype = parent.prototype;
-    child.prototype = new ctor();
+    function Ctor() { this.constructor = child; }
+    Ctor.prototype = parent.prototype;
+    child.prototype = new Ctor();
   }
 
   function SyntaxError(message, expected, found, offset, line, column) {
@@ -19,7 +19,7 @@ parser = (function() {
     this.line     = line;
     this.column   = column;
 
-    this.name     = "SyntaxError";
+    this.name     = 'SyntaxError';
   }
 
   peg$subclass(SyntaxError, Error);
@@ -34,49 +34,49 @@ parser = (function() {
 
         peg$c0 = peg$FAILED,
         peg$c1 = function(equiv) { return equiv; },
-        peg$c2 = { type: "other", description: "whitespace" },
+        peg$c2 = { type: 'other', description: 'whitespace' },
         peg$c3 = [],
         peg$c4 = /^[ \t\r\n]/,
-        peg$c5 = { type: "class", value: "[ \\t\\r\\n]", description: "[ \\t\\r\\n]" },
-        peg$c6 = { type: "other", description: "expression" },
-        peg$c7 = function(left, right) { return binary({ op : "≡", left : left, right : right }); },
-        peg$c8 = "===",
-        peg$c9 = { type: "literal", value: "===", description: "\"===\"" },
-        peg$c10 = "\u2261",
-        peg$c11 = { type: "literal", value: "\u2261", description: "\"\\u2261\"" },
-        peg$c12 = { type: "other", description: "AND/OR" },
+        peg$c5 = { type: 'class', value: '[ \\t\\r\\n]', description: '[ \\t\\r\\n]' },
+        peg$c6 = { type: 'other', description: 'expression' },
+        peg$c7 = function(left, right) { return binary({ op : '≡', left : left, right : right }); },
+        peg$c8 = '===',
+        peg$c9 = { type: 'literal', value: '===', description: '\'===\'' },
+        peg$c10 = '\u2261',
+        peg$c11 = { type: 'literal', value: '\u2261', description: '\'\\u2261\'' },
+        peg$c12 = { type: 'other', description: 'AND/OR' },
         peg$c13 = /^[|&\u2227\u2228]/,
-        peg$c14 = { type: "class", value: "[|&\\u2227\\u2228]", description: "[|&\\u2227\\u2228]" },
+        peg$c14 = { type: 'class', value: '[|&\\u2227\\u2228]', description: '[|&\\u2227\\u2228]' },
         peg$c15 = function(left, binOp, right) { return binary({ op : normalizeOp(binOp), left : left, right : right }); },
         peg$c16 = /^[\xAC!]/,
-        peg$c17 = { type: "class", value: "[\\xAC!]", description: "[\\xAC!]" },
+        peg$c17 = { type: 'class', value: '[\\xAC!]', description: '[\\xAC!]' },
         peg$c18 = function(op, e) { return unary({ op : normalizeOp(op), expr : e }); },
-        peg$c19 = { type: "other", description: "substitution" },
+        peg$c19 = { type: 'other', description: 'substitution' },
         peg$c20 = function(expr, subst) { return expr.applySubstitutions(subst); },
-        peg$c21 = "[",
-        peg$c22 = { type: "literal", value: "[", description: "\"[\"" },
-        peg$c23 = ",",
-        peg$c24 = { type: "literal", value: ",", description: "\",\"" },
-        peg$c25 = ":=",
-        peg$c26 = { type: "literal", value: ":=", description: "\":=\"" },
-        peg$c27 = "]",
-        peg$c28 = { type: "literal", value: "]", description: "\"]\"" },
-        peg$c29 = function(replacedVars, replacements) { return { "varsToReplace" : makeList(replacedVars), "replacementExprs" : makeList(replacements) }; },
-        peg$c30 = "(",
-        peg$c31 = { type: "literal", value: "(", description: "\"(\"" },
-        peg$c32 = ")",
-        peg$c33 = { type: "literal", value: ")", description: "\")\"" },
+        peg$c21 = '[',
+        peg$c22 = { type: 'literal', value: '[', description: '\'[\'' },
+        peg$c23 = ',',
+        peg$c24 = { type: 'literal', value: ',', description: '\',\'' },
+        peg$c25 = ':=',
+        peg$c26 = { type: 'literal', value: ':=', description: '\':=\'' },
+        peg$c27 = ']',
+        peg$c28 = { type: 'literal', value: ']', description: '\']\'' },
+        peg$c29 = function(replacedVars, replacements) { return { 'varsToReplace' : makeList(replacedVars), 'replacementExprs' : makeList(replacements) }; },
+        peg$c30 = '(',
+        peg$c31 = { type: 'literal', value: '(', description: '\'(\'' },
+        peg$c32 = ')',
+        peg$c33 = { type: 'literal', value: ')', description: '\')\'' },
         peg$c34 = function(e) { return e; },
-        peg$c35 = { type: "other", description: "variable" },
+        peg$c35 = { type: 'other', description: 'variable' },
         peg$c36 = /^[A-Za-z]/,
-        peg$c37 = { type: "class", value: "[A-Za-z]", description: "[A-Za-z]" },
+        peg$c37 = { type: 'class', value: '[A-Za-z]', description: '[A-Za-z]' },
         peg$c38 = /^[A-Za-z0-9_]/,
-        peg$c39 = { type: "class", value: "[A-Za-z0-9_]", description: "[A-Za-z0-9_]" },
-        peg$c40 = function(chars) { return variable({name : chars[0] + chars[1].join("")}); },
-        peg$c41 = { type: "other", description: "integer" },
+        peg$c39 = { type: 'class', value: '[A-Za-z0-9_]', description: '[A-Za-z0-9_]' },
+        peg$c40 = function(chars) { return variable({name : chars[0] + chars[1].join('')}); },
+        peg$c41 = { type: 'other', description: 'integer' },
         peg$c42 = /^[0-9]/,
-        peg$c43 = { type: "class", value: "[0-9]", description: "[0-9]" },
-        peg$c44 = function(digits) { return parseInt(digits.join(""), 10); },
+        peg$c43 = { type: 'class', value: '[0-9]', description: '[0-9]' },
+        peg$c44 = function(digits) { return parseInt(digits.join(''), 10); },
 
         peg$currPos          = 0,
         peg$reportedPos      = 0,
@@ -88,9 +88,9 @@ parser = (function() {
 
         peg$result;
 
-    if ("startRule" in options) {
+    if ('startRule' in options) {
       if (!(options.startRule in peg$startRuleFunctions)) {
-        throw new Error("Can't start parsing from rule \"" + options.startRule + "\".");
+        throw new Error('Cant start parsing from rule \'' + options.startRule + '\'.');
       }
 
       peg$startRuleFunction = peg$startRuleFunctions[options.startRule];
@@ -115,7 +115,7 @@ parser = (function() {
     function expected(description) {
       throw peg$buildException(
         null,
-        [{ type: "other", description: description }],
+        [{ type: 'other', description: description }],
         peg$reportedPos
       );
     }
@@ -130,11 +130,11 @@ parser = (function() {
 
         for (p = startPos; p < endPos; p++) {
           ch = input.charAt(p);
-          if (ch === "\n") {
+          if (ch === '\n') {
             if (!details.seenCR) { details.line++; }
             details.column = 1;
             details.seenCR = false;
-          } else if (ch === "\r" || ch === "\u2028" || ch === "\u2029") {
+          } else if (ch === '\r' || ch === '\u2028' || ch === '\u2029') {
             details.line++;
             details.column = 1;
             details.seenCR = true;
@@ -197,7 +197,7 @@ parser = (function() {
 
           return s
             .replace(/\\/g,   '\\\\')
-            .replace(/"/g,    '\\"')
+            .replace(/'/g,    "\\'")
             .replace(/\x08/g, '\\b')
             .replace(/\t/g,   '\\t')
             .replace(/\n/g,   '\\n')
@@ -217,14 +217,14 @@ parser = (function() {
         }
 
         expectedDesc = expected.length > 1
-          ? expectedDescs.slice(0, -1).join(", ")
-              + " or "
+          ? expectedDescs.slice(0, -1).join(', ')
+              + ' or '
               + expectedDescs[expected.length - 1]
           : expectedDescs[0];
 
-        foundDesc = found ? "\"" + stringEscape(found) + "\"" : "end of input";
+        foundDesc = found ? '\'' + stringEscape(found) + '\'' : 'end of input';
 
-        return "Expected " + expectedDesc + " but " + foundDesc + " found.";
+        return 'Expected ' + expectedDesc + ' but ' + foundDesc + ' found.';
       }
 
       var posDetails = peg$computePosDetails(pos),
@@ -1010,12 +1010,12 @@ parser = (function() {
     	}
     	
     	var normalizeOp = function(op) {
-    		if (op === "&") {
-    			return "∧";
-    		} else if (op === "|") {
-    			return "∨";
-    		} else if (op === "!") {
-    			return "¬";
+    		if (op === '&') {
+    			return '∧';
+    		} else if (op === '|') {
+    			return '∨';
+    		} else if (op === '!') {
+    			return '¬';
     		} else {
     			return op;
     		}
@@ -1043,7 +1043,7 @@ parser = (function() {
       return peg$result;
     } else {
       if (peg$result !== peg$FAILED && peg$currPos < input.length) {
-        peg$fail({ type: "end", description: "end of input" });
+        peg$fail({ type: 'end', description: 'end of input' });
       }
 
       throw peg$buildException(null, peg$maxFailExpected, peg$maxFailPos);
@@ -1055,3 +1055,4 @@ parser = (function() {
     parse:       parse
   };
 })();
+S

@@ -2,77 +2,77 @@
  * Created by BlueFire on 6/21/14.
  */
 var Sect = {};
-Sect["Sect1"] = makeRules(1);
-Sect["Sect2"] = makeRules(2);
-Sect["Sect3"] = makeRules(3);
-Sect["Sect4"] = makeRules(4);
-Sect["Sect5"] = makeRules(5);
-Sect["Sect6"] = makeRules(6);
-Sect["Sect7"] = makeRules(7);
-Sect["Sect8"] = makeRules(8);
-Sect["Sect9"] = makeRules(9);
-Sect["Sect10"] = makeRules(10);
+Sect['Sect1'] = makeRules(1);
+Sect['Sect2'] = makeRules(2);
+Sect['Sect3'] = makeRules(3);
+Sect['Sect4'] = makeRules(4);
+Sect['Sect5'] = makeRules(5);
+Sect['Sect6'] = makeRules(6);
+Sect['Sect7'] = makeRules(7);
+Sect['Sect8'] = makeRules(8);
+Sect['Sect9'] = makeRules(9);
+Sect['Sect10'] = makeRules(10);
 
 function makeRules(arg) {
     var Sect1 = {
-        '3.1' : {name : "Associativity of ===", equation : parser.parse("((p === q) === r) === (p === (q === r))")},
-        '3.2' : {name : "Symmetry of ===", equation : parser.parse("p === q === q === p")},
-        '3.3' : {name : "Identity of ===", equation : parser.parse("true === q === q")},
-        '3.4' : {name : "", equation : parser.parse("true")},
-        '3.5' : {name : "Reflexivity of ===", equation : parser.parse("p === p")}
+        '3.1' : {name : 'Associativity of ===', equation : parser.parse('((p === q) === r) === (p === (q === r))')},
+        '3.2' : {name : 'Symmetry of ===', equation : parser.parse('p === q === q === p')},
+        '3.3' : {name : 'Identity of ===', equation : parser.parse('true === q === q')},
+        '3.4' : {name : '', equation : parser.parse('true')},
+        '3.5' : {name : 'Reflexivity of ===', equation : parser.parse('p === p')}
     };
 
     var Sect2 = {
-        '3.8' : {name : "Definition if false", equation : parser.parse("false === ! true")},
-        '3.9' : {name : "Distribution of ! over ===", equation : parser.parse("! (p === q) === ! p === q")},
-        //   '3.10' : {name : "Definition of !===", equation : parser.parse("(p !=== q) === ! (p == q)")},
-        '3.11' : {name : "", equation : parser.parse("! p === q === p === ! q")},
-        //    '3.12' : {name : "Double Negation", equation : parser.parse("!! p === p")},
-        '3.13' : {name : "Negation of false", equation : parser.parse("! false === true")},
-        //   '3.14' : {name : "", equation : parser.parse("(p !=== q) === ! p === q")},
-        '3.15' : {name : "", equation : parser.parse("! p === p === false")}
-        //  '3.16' : {name : "Symmetry of !===", equation : parser.parse("(p !=== q) === (q !=== p)")},
-        //    '3.17' : {name : "Associativity of !===", equation : parser.parse("((p !=== q) !=== r) === (p !=== (q !=== r))")},
-        //    '3.18' : {name : "Mutual associativity", equation : parser.parse("((p !=== q) === r) === (p !=== (q === r))")},
-        //    '3.19' : {name : "Mutual interchangeability", equation : parser.parse("p !=== q === r ===  p === q !=== r")}
+        '3.8' : {name : 'Definition if false', equation : parser.parse('false === ! true')},
+        '3.9' : {name : 'Distribution of ! over ===', equation : parser.parse('! (p === q) === ! p === q')},
+        //   '3.10' : {name : 'Definition of !===', equation : parser.parse('(p !=== q) === ! (p == q)')},
+        '3.11' : {name : '', equation : parser.parse('! p === q === p === ! q')},
+        //    '3.12' : {name : 'Double Negation', equation : parser.parse('!! p === p')},
+        '3.13' : {name : 'Negation of false', equation : parser.parse('! false === true')},
+        //   '3.14' : {name : '', equation : parser.parse('(p !=== q) === ! p === q')},
+        '3.15' : {name : '', equation : parser.parse('! p === p === false')}
+        //  '3.16' : {name : 'Symmetry of !===', equation : parser.parse('(p !=== q) === (q !=== p)')},
+        //    '3.17' : {name : 'Associativity of !===', equation : parser.parse('((p !=== q) !=== r) === (p !=== (q !=== r))")},
+        //    '3.18' : {name : 'Mutual associativity', equation : parser.parse('((p !=== q) === r) === (p !=== (q === r))')},
+        //    '3.19' : {name : 'Mutual interchangeability', equation : parser.parse('p !=== q === r ===  p === q !=== r')}
     };
 
     var Sect3 = {
-        '3.24' : {name : "Symmetry of |", equation : parser.parse("p | q === q | p")},
-        '3.25' : {name : "Associativity of |", equation : parser.parse("(p | q) | r === p | (q | r)")},
-        '3.26' : {name : "Idempotency of |", equation : parser.parse("p | p === p")},
-        '3.27' : {name : "Distributivity of | over ===", equation : parser.parse("p | (q === r) === p | q === p | r")},
-        '3.28' : {name : "Excluded Middle", equation : parser.parse("p | ! p")},
-        '3.29' : {name : "Zero of |", equation : parser.parse("p | true === true")},
-        '3.30' : {name : "Identity of |", equation : parser.parse("p | false === p")},
-        '3.31' : {name : "Distributivity of | over |", equation : parser.parse("p | (q | r) === (p | q) | (p | r)")},
-        '3.32' : {name : "", equation : parser.parse("p | q === p | ! q === p")}
+        '3.24' : {name : 'Symmetry of |', equation : parser.parse('p | q === q | p')},
+        '3.25' : {name : 'Associativity of |', equation : parser.parse('(p | q) | r === p | (q | r)')},
+        '3.26' : {name : 'Idempotency of |', equation : parser.parse('p | p === p')},
+        '3.27' : {name : 'Distributivity of | over ===', equation : parser.parse('p | (q === r) === p | q === p | r')},
+        '3.28' : {name : 'Excluded Middle', equation : parser.parse('p | ! p')},
+        '3.29' : {name : 'Zero of |', equation : parser.parse('p | true === true')},
+        '3.30' : {name : 'Identity of |', equation : parser.parse('p | false === p')},
+        '3.31' : {name : 'Distributivity of | over |', equation : parser.parse('p | (q | r) === (p | q) | (p | r)')},
+        '3.32' : {name : '', equation : parser.parse('p | q === p | ! q === p')}
     };
 
     var Sect4 = {
-        '3.35' : {name : "Golden rule", equation : parser.parse("p & q === p === q === p | q")},
-        '3.36' : {name : "Symmetry of &", equation : parser.parse("p & q === q & p")},
-        '3.37' : {name : "Associativity of &", equation : parser.parse("(p & q) & r === p & (q & r)")},
-        '3.38' : {name : "Idempotency of &", equation : parser.parse("p & p === p")},
-        '3.39' : {name : "Identity of &", equation : parser.parse("p & true === p")},
-        '3.40' : {name : "Zero of &", equation : parser.parse("p & false === false")},
-        '3.41' : {name : "Distributivity of & over &", equation : parser.parse("p & (q & r) === (p & q) & (p & r)")},
-        '3.42' : {name : "Contradiction", equation : parser.parse("p & ! p === false")},
-        '3.43a' : {name : "Absorption (a)", equation : parser.parse("p & (p | q) === p")},
-        '3.43b' : {name : "Absorption (b)", equation : parser.parse("p | (p & q ) === p")},
-        '3.44a' : {name : "Absorption (a)", equation : parser.parse("p & (! p | q) === p & q")},
-        '3.44b' : {name : "Absorption (b)", equation : parser.parse("p | (! p & q) === p | q")},
-        '3.45' : {name : "Distributivity of | over &", equation : parser.parse("p | (q & r) === (p | q) & (p | r)")},
-        '3.46' : {name : "Distributivity of & over |", equation : parser.parse("p & (q | r) === (p &q) | (p & r)")},
-        '3.47a' : {name : "De Morgan (a)", equation : parser.parse("! (p & q) === ! p | !q")},
-        '3.47b' : {name : "De Morgan (b)", equation : parser.parse("! (p | q) === ! p & ! q")},
-        '3.48' : {name : "", equation : parser.parse("p & q === p & ! q === ! p")},
-        '3.49' : {name : "", equation : parser.parse("p & (q === r) === p & q === p & r === p")},
-        '3.50' : {name : "", equation : parser.parse("p & (q === p) === p & q")},
-        '3.51' : {name : "Replacement", equation : parser.parse("(p === q) & (r === p) === (p === q) & (r === q)")},
-        '3.52' : {name : "Definition of ===", equation : parser.parse("p === q === (p & q) | (! p & ! q)")},
-        '3.53' : {name : "Exclusive or", equation : parser.parse("p ! === q === (! p & q) | (p & ! q")},
-        '3.55' : {name : "", equation : parser.parse("(p & q) & r === p === q === r === p | q === q | r === r | p === p | q | r")}
+        '3.35' : {name : 'Golden rule', equation : parser.parse('p & q === p === q === p | q')},
+        '3.36' : {name : 'Symmetry of &', equation : parser.parse('p & q === q & p')},
+        '3.37' : {name : 'Associativity of &', equation : parser.parse('(p & q) & r === p & (q & r)')},
+        '3.38' : {name : 'Idempotency of &', equation : parser.parse('p & p === p')},
+        '3.39' : {name : 'Identity of &', equation : parser.parse('p & true === p')},
+        '3.40' : {name : 'Zero of &', equation : parser.parse('p & false === false')},
+        '3.41' : {name : 'Distributivity of & over &', equation : parser.parse('p & (q & r) === (p & q) & (p & r)')},
+        '3.42' : {name : 'Contradiction', equation : parser.parse('p & ! p === false')},
+        '3.43a' : {name : 'Absorption (a)', equation : parser.parse('p & (p | q) === p')},
+        '3.43b' : {name : 'Absorption (b)', equation : parser.parse('p | (p & q ) === p')},
+        '3.44a' : {name : 'Absorption (a)', equation : parser.parse('p & (! p | q) === p & q')},
+        '3.44b' : {name : 'Absorption (b)', equation : parser.parse('p | (! p & q) === p | q')},
+        '3.45' : {name : 'Distributivity of | over &', equation : parser.parse('p | (q & r) === (p | q) & (p | r)')},
+        '3.46' : {name : 'Distributivity of & over |', equation : parser.parse('p & (q | r) === (p &q) | (p & r)')},
+        '3.47a' : {name : 'De Morgan (a)', equation : parser.parse('! (p & q) === ! p | !q')},
+        '3.47b' : {name : 'De Morgan (b)', equation : parser.parse('! (p | q) === ! p & ! q')},
+        '3.48' : {name : '', equation : parser.parse('p & q === p & ! q === ! p')},
+        '3.49' : {name : '', equation : parser.parse('p & (q === r) === p & q === p & r === p')},
+        '3.50' : {name : '', equation : parser.parse('p & (q === p) === p & q')},
+        '3.51' : {name : 'Replacement', equation : parser.parse('(p === q) & (r === p) === (p === q) & (r === q)')},
+        '3.52' : {name : 'Definition of ===', equation : parser.parse('p === q === (p & q) | (! p & ! q)')},
+        '3.53' : {name : 'Exclusive or', equation : parser.parse('p ! === q === (! p & q) | (p & ! q')},
+        '3.55' : {name : '', equation : parser.parse('(p & q) & r === p === q === r === p | q === q | r === r | p === p | q | r')}
     };
 
     var Sect5 = {

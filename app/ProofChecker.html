@@ -2,9 +2,9 @@
 <html>
 <head>
     <title>Edsger Proof Checker</title>
-    <link rel="stylesheet" type="txt/css" href="Edsger_StyleSheet.css">
-    <script src="../js/grammar/dist/grammar.js"></script>
-    <script src="../js/proof_checker.js"></script>
+    <link rel="stylesheet" type="txt/css" href="../app/styles/Edsger_StyleSheet.css">
+    <script src="../app/scripts/grammar/dist/grammar.js"></script>
+    <script src="../app/scripts/proof_checker.js"></script>
 </head>
 <body>
 
@@ -20,21 +20,24 @@
                 <th><input type="text" id="FirstExpression"></th>
             </tr>
         </table>
+
         <select id="book" name="book" onchange="ChangeBook()">
             <option>Book</option>
             <option value = "Book1">A Logical Approach To Discrete Math</option>
             <option value = "Book2">Book2</option>
         </select><br>
+
         <select id="section" name="section" onchange="ChangeSection()">
             <option>Section</option>
         </select><br>
+
         <select id="rule" name="rule">
             <option>Rule</option>
         </select>
         <table>
             <tr>
                 <th><label for="extra">Substitution :</label></th>
-                <th><input for="Substitution" id="extra" placeholder="optional"></th>
+                <th><input type="text" id="extra" placeholder="optional"></th>
             </tr>
             <tr>
                 <th><label for="SecondExpression">Second Expression</label></th>
