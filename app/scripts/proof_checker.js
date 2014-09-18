@@ -63,7 +63,7 @@ function ChangeBook() {
         sectList.options.add(new Option('Section'));
         for (var sect in sel) {
             if (sel.hasOwnProperty(sect)) {
-                var opt = new Option(sel[sect].name,sect, false, false);
+                var opt = new Option(sel[sect].name,sect);
                 sectList.options.add(opt);
             }
         }
@@ -71,22 +71,23 @@ function ChangeBook() {
 }
 
 function ChangeSection() {
-    var sectList = document.getElementById("section");
-    var ruleList = document.getElementById("rule");
+    var sectList = document.getElementById('section');
+    var ruleList = document.getElementById('rule');
     var select = sectList.options[sectList.selectedIndex].value;
 
     while (ruleList.options.length) {
         ruleList.remove(0);
     }
 
+    console.log(JSON.stringify(Sect['Sect2']));
     var sel = Sect[select];
     console.log(JSON.stringify(select));
     console.log(JSON.stringify(sel));
     if (sel) {
-        ruleList.options.add(new Option("Rule"));
+        ruleList.options.add(new Option('Rule'));
         for (var rule in sel) {
             if (sel.hasOwnProperty(rule)) {
-                var opt = new Option(rule + " " + sel[rule].name);
+                var opt = new Option(sel[rule].name,rule);
                 ruleList.options.add(opt);
             }
         }
@@ -128,5 +129,5 @@ function addJavascript(jsname,pos) {
     th.appendChild(s);
 }
 
-addJavascript('../js/Book1.js','head');
-addJavascript('../js/Book2.js','head');
+addJavascript('../app/scripts/Book1.js','head');
+addJavascript('../app/scripts/Book2.js','head');
