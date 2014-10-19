@@ -6,7 +6,7 @@
     <script src="../app/scripts/grammar/dist/grammar.js"></script>
     <script src="../app/scripts/proof_checker.js"></script>
 </head>
-<body>
+<body onload="makeSections()">
 
 <div class="header">
     <h2>Proof Checker</h2>
@@ -21,15 +21,15 @@
             </tr>
         </table>
 
-        <label for="book"></label>
-        <select id="book" name="book" onchange="ChangeBook()">
-            <option>Book</option>
-            <option value = "Book1">A Logical Approach To Discrete Math</option>
-            <option value = "Book2">Book2</option>
-        </select><br>
+        <!--<label for="book"></label>-->
+        <!--<select id="book" name="book" onchange="ChangeBook()">-->
+            <!--<option>Book</option>-->
+            <!--<option value = "Book1">A Logical Approach To Discrete Math</option>-->
+            <!--<option value = "Book2">Book2</option>-->
+        <!--</select><br>-->
 
         <label for="section"></label>
-        <select id="section" name="section" onchange="ChangeSection()">
+        <select id="section" name="section" onchange="changeSection()">
             <option>Section</option>
         </select><br>
 

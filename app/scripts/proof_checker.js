@@ -22,12 +22,8 @@ function checkStep() {
     }
 }
 
-var Book = {};
-Book['Book1'] = makeSections(1);
-Book['Book2'] = makeSections(2);
-
-function makeSections(arg) {
-    var Book1 = {
+function makeSections() {
+    var Book = {
         'Sect1' : {name : 'Equivalence and True', value : 'Sect1'},
         'Sect2' : {name : 'Negation, Inequivalence, and False', value : 'Sect2'},
         'Sect3' : {name : 'Disjunction', value : 'Sect3'},
@@ -40,37 +36,40 @@ function makeSections(arg) {
         'Sect10' : {name : 'Existential Quantification', value : 'Sect10'}
     };
 
-    var Book2 = {};
-
-    if (arg == 1) {return Book1;}
-    else if (arg == 2) {return Book2;}
-    return null;
-}
-
-function ChangeBook() {
-    var bookList = document.getElementById('book');
     var sectList = document.getElementById('section');
-    var select = bookList.options[bookList.selectedIndex].value;
-
-    while (sectList.options.length) {
-        sectList.remove(0);
-    }
-
-    var sel = Book[select];
-    console.log(JSON.stringify(select));
-    console.log(JSON.stringify(sel));
-    if (sel) {
-        sectList.options.add(new Option('Section'));
-        for (var sect in sel) {
-            if (sel.hasOwnProperty(sect)) {
-                var opt = new Option(sel[sect].name,sect);
-                sectList.options.add(opt);
-            }
-        }
+    for (var sect in Book) {
+       if (Book.hasOwnProperty(sect)) {
+            console.log(JSON.stringify(sect));
+            var opt = new Option(Book[sect].name,Book[sect].value);
+            sectList.add(opt);
+       }
     }
 }
 
-function ChangeSection() {
+//function ChangeBook() {
+//    var bookList = document.getElementById('book');
+//    var sectList = document.getElementById('section');
+//    var select = bookList.options[bookList.selectedIndex].value;
+//
+//    while (sectList.options.length) {
+//        sectList.remove(0);
+//    }
+//
+//    var sel = Book[select];
+//    console.log(JSON.stringify(select));
+//    console.log(JSON.stringify(sel));
+//    if (sel) {
+//        sectList.options.add(new Option('Section'));
+//        for (var sect in sel) {
+//            if (sel.hasOwnProperty(sect)) {
+//                var opt = new Option(sel[sect].name,sect);
+//                sectList.options.add(opt);
+//            }
+//        }
+//    }
+//}
+
+function changeSection() {
     var sectList = document.getElementById('section');
     var ruleList = document.getElementById('rule');
     var select = sectList.options[sectList.selectedIndex].value;
