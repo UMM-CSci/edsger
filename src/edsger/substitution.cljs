@@ -50,5 +50,6 @@
   "Takes a `sequential?` and returns a list containing exactly all the
    possible permutations of the passed in list."
   [input]
-  (nth (permutations-helper '() input)
+  (nth (iterate #(apply concat %)
+                (permutations-helper '() input))
        (dec (count input))))
