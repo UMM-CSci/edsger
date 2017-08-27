@@ -117,10 +117,22 @@
         button (by-id "clear")]
     (ev/listen button "click" clear-click-handler)))
 
+;; TODO: Proof validation should be implemented
+(defn validate [exps]
+  (str exps))
+
+(defn validate-click-handler []
+  (js/alert (validate (map #(get % "title") @exp-list))))
+
+(defn validate-event-listener []
+  (let [button (by-id "validate")]
+    (ev/listen button "click" validate-click-handler)))
+
 (defn refresh-data []
   (save-exps)
   (redraw-exps-ui)
-  (draw-exp-clear))
+  (draw-exp-clear)
+  (validate-event-listener))
 
 ;; This get-uuid fn is almost equiv to the original
 (defn get-uuid []
@@ -155,5 +167,3 @@
 ;; Launch window-load-handler when window loads
 ;; -- not sure why (ev/listen js/window "load" fn) does not work
 (events/listen js/window "load" window-load-handler)
-
-;; TODO: Make a submit button
