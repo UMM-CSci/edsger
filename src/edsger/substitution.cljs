@@ -1,7 +1,5 @@
 (ns edsger.substitution)
 
-(def equiv :equiv)
-
 (defn new-value [pairs old-value]
   (some (fn [[old new]]
           (if (= old old-value) new))
