@@ -51,3 +51,24 @@
   (nth (iterate #(apply concat %)
                 (permutations-helper '() input))
        (dec (count input))))
+
+(defn generate-substitutions
+  "*IN PROGRESS*. Takes in a valid logic expression and returns a list of
+   single-variable subtitutions that can be performed based on that rule."
+  [expression]
+  (cond
+
+    (= :eqv (first expression))
+    (filter #(not (sequential? (first %)))
+            (permutations (rest expression)))))
+
+(defn verify-substitution
+  "All three arguments should be logic expressions in canonical form.
+   (Whatever we end up deciding that should be). This function should
+   return true if and only if the rule can be used to transform the
+   original expression to the resulting expression, else returns false."
+  [original-expression rule resulting-expression]
+  (some (fn [substitution]
+          (= resulting-expression
+             (textual-substitution [substitution] original-expression)))
+        (generate-substitutions rule)))

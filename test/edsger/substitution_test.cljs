@@ -14,3 +14,12 @@
 (deftest highlight-elements-three-elements
   (is (= '((1 2 3) (2 3 1) (3 1 2))
          (subst/highlight-elements '(1 2 3)))))
+
+(deftest verify-substitution-simple-success
+  (is (= true
+         (subst/verify-substitution [:a] [:eqv :a :b] [:b]))))
+
+(deftest verify-substitution-simple-failure
+  (is (= nil
+         (subst/verify-substitution [:a] [:eqv :a :b] [:c]))))
+
