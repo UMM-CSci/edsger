@@ -2,7 +2,8 @@
   (:require [clojure.browser.repl :as repl]
             [clojure.browser.dom  :as dom]
             [clojure.browser.event :as ev]
-            [goog.events :as events]))
+            [goog.events :as events]
+            [edsger.substitution :as subs]))
 
 (enable-console-print!)
 
@@ -117,12 +118,13 @@
         button (by-id "clear")]
     (ev/listen button "click" clear-click-handler)))
 
-;; TODO: Proof validation should be implemented
-(defn validate [exps]
-  (str exps))
-
 (defn validate-click-handler []
-  (js/alert (validate (map #(get % "title") @exp-list))))
+  (let [exp-str-list (map #(get % "title")
+                          @exp-list) ;; ("a" "eqv a b" "b")
+        exp-vec-list (map #(mapv keyword (clojure.string/split % #" "))
+                          exp-str-list) ;; ([:a] [:eqv :a :b] [:b])
+        result-str (str (true? (apply subs/verify-substitution exp-vec-list)))]
+    (js/alert result-str)))
 
 (defn validate-event-listener []
   (let [button (by-id "validate")]
