@@ -18,10 +18,9 @@
        ~(conj (vec symbols) 'expression-sym 'rule-sym)
        (== ~'expression-sym ~expression)
        (== ~'rule-sym
-           ~(let [stripped (first (rest rule))]
-              (if (symbol? stripped)
-                stripped
-                `(list ~@stripped))))
+           ~(if (symbol? rule)
+              rule
+              `(list ~@rule)))
        ;; (if (= 1 (count stripped))
        ;;   (first  stripped)
        ;;   `(list ~@stripped))))
