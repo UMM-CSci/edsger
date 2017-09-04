@@ -9,22 +9,21 @@
   (set (filter symbol?
                (flatten structures))))
 
-(defmacro match-rule [expression rule]
+(defmacro match-rule [expression rule symbols]
   "Return bindings for the free variables in rule that will
    cause rule to be equal to expression. Currently, any
    symbol is treated as a free variable."
-  (let [symbols (get-symbols (rest rule))]
-    `(run* [~'q]
-       (fresh
-         ~(conj (vec symbols) 'expression-sym 'rule-sym)
-         (== ~'expression-sym ~expression)
-         (== ~'rule-sym
-             ~(let [stripped (first (rest rule))]
-                (if (symbol? stripped)
-                  stripped
-                  `(list ~@stripped))))
-                ;; (if (= 1 (count stripped))
-                ;;   (first  stripped)
-                ;;   `(list ~@stripped))))
-         (== ~'expression-sym ~'rule-sym)
-         (== ~'q ~(vec symbols))))))
+  `(run* [~'q]
+     (fresh
+       ~(conj (vec symbols) 'expression-sym 'rule-sym)
+       (== ~'expression-sym ~expression)
+       (== ~'rule-sym
+           ~(let [stripped (first (rest rule))]
+              (if (symbol? stripped)
+                stripped
+                `(list ~@stripped))))
+       ;; (if (= 1 (count stripped))
+       ;;   (first  stripped)
+       ;;   `(list ~@stripped))))
+       (== ~'expression-sym ~'rule-sym)
+       (== ~'q ~(vec symbols)))))
