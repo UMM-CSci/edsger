@@ -1,6 +1,12 @@
 (ns edsger.unification
   (:require [cljs.core.logic :as logic :refer [binding-map]]))
 
+(defn check-match [start-exp end-exp lhs rhs]
+  "TODO"
+  (=
+   (binding-map start-exp lhs)
+   (binding-map end-exp rhs)))
+
 ;; This file is currently only for playing around during development
 ;; but I think that we'll eventually have some useful functions here.
 
@@ -15,11 +21,16 @@
 (def a '(+ ?x 1))
 (def b '(+ 1 1))
 
-(def c '(:+ ?y ?x))
-(def d '(:+ (:* w (:+ 2 3)) 0))
+(def exp-start '(:not (:equiv u (:or w y))))
+(def exp-end '(:equiv (:not u) (:or w y)))
+(def lhs '(:not (:equiv ?a ?b)))
+(def rhs '(:equiv (:not ?a) ?b))
 
-(print (binding-map a b))
-(print (binding-map d c))
+(print (binding-map exp-start lhs))
+(print (binding-map exp-end rhs))
+(print (= (binding-map exp-start lhs)
+          (binding-map exp-end rhs)))
+
 
 
 (print "POST\nBBORK!") ;; I like a footer for the section
