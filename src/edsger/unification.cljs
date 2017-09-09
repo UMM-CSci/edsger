@@ -12,7 +12,14 @@
 
 (print "BBORK!\nPRE") ;; I like a header for the section
 
-(print (binding-map '(+ ?x 1) '(+ 1 1)))
+(def a '(+ ?x 1))
+(def b '(+ 1 1))
+
+(def c '(:+ ?y ?x))
+(def d '(:+ (:* w (:+ 2 3)) 0))
+
+(print (binding-map a b))
+(print (binding-map d c))
 
 
 (print "POST\nBBORK!") ;; I like a footer for the section
