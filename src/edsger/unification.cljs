@@ -7,8 +7,13 @@
   (let [start-matches (binding-map start-exp start-rule)
         end-matches (binding-map end-exp end-rule)]
     (and
-     (not (empty? start-matches))
-     (= start-matches end-matches))))
+     start-matches
+     end-matches
+     (every? (fn [[key end-binding]]
+               (let [start-binding (get start-matches key)]
+                 (or (nil? start-binding)
+                     (= start-binding end-binding))))
+             end-matches))))
 
 ;; This file is currently only for playing around during development
 ;; but I think that we'll eventually have some useful functions here.
