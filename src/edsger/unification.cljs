@@ -3,9 +3,11 @@
 
 (defn check-match [start-exp end-exp lhs rhs]
   "TODO"
-  (=
-   (binding-map start-exp lhs)
-   (binding-map end-exp rhs)))
+  (let [start-matches (binding-map start-exp lhs)
+        end-matches (binding-map end-exp rhs)]
+    (and
+     (not (empty? start-matches))
+     (= start-matches end-matches))))
 
 ;; This file is currently only for playing around during development
 ;; but I think that we'll eventually have some useful functions here.
