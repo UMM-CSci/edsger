@@ -11,6 +11,6 @@
 (deftest completely-inapplicable-rule
   (is (false? (u/check-match '(:equiv (:and p q) p q)
                              '(:or p q)
-                             '(:equiv (:and p q) p)
-                             '(:equiv q (:or p q))))))
+                             '(:equiv (:and ?p ?q) ?p)
+                             '(:equiv ?q (:or ?p ?q))))))
 
