@@ -1,10 +1,10 @@
 (ns edsger.unification
   (:require [cljs.core.logic :as logic :refer [binding-map]]))
 
-(defn check-match [start-exp end-exp lhs rhs]
+(defn check-match [start-exp end-exp start-rule end-rule]
   "TODO"
-  (let [start-matches (binding-map start-exp lhs)
-        end-matches (binding-map end-exp rhs)]
+  (let [start-matches (binding-map start-exp start-rule)
+        end-matches (binding-map end-exp end-rule)]
     (and
      (not (empty? start-matches))
      (= start-matches end-matches))))
