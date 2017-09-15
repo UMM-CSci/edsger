@@ -33,3 +33,14 @@
                               '(true)
                               '(:equiv ?q ?q)))))
 
+(deftest start-matches-and-end-requires-no-substitution
+  (is (true? (u/check-match '(:a-keyword q)
+                            '(true)
+                            '(:a-keyword ?p)
+                            '(true)))))
+
+(deftest constants-can-match
+  (is (true? (u/check-match '(:a) '(:b) '(:a) '(:b)))))
+
+(deftest constants-can-fail
+  (is (not (u/check-match '(:a) '(:c) '(:a) '(:b)))))
