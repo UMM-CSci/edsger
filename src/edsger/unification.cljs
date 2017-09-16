@@ -1,11 +1,19 @@
 (ns edsger.unification
   (:require [cljs.core.logic :as logic :refer [binding-map]]))
 
-(defn check-match [start-exp end-exp lhs rhs]
-  "TODO"
-  (=
-   (binding-map start-exp lhs)
-   (binding-map end-exp rhs)))
+(defn check-match [start-exp end-exp start-rule end-rule]
+  "Returns true if start-exp can be matched with start-rule
+   with the same bindings that cause end-exp to match end-rule."
+  (let [start-matches (binding-map start-exp start-rule)
+        end-matches (binding-map end-exp end-rule)]
+    (and
+     start-matches
+     end-matches
+     (every? (fn [[key end-binding]]
+               (let [start-binding (get start-matches key)]
+                 (or (nil? start-binding)
+                     (= start-binding end-binding))))
+             end-matches))))
 
 ;; This file is currently only for playing around during development
 ;; but I think that we'll eventually have some useful functions here.
