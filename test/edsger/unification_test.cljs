@@ -52,3 +52,33 @@
 
 (deftest constants-can-fail
   (is (not (u/check-match ':a ':c ':a ':b))))
+
+
+;; -------------------------------------------------------------
+(deftest non-recursive-case
+  (is (true? (u/check-match-recursive
+              '(:not (:equiv u (:or w y)))
+              '(:equiv (:not u) (:or w y))
+              '(:not (:equiv ?a ?b))
+              '(:equiv (:not ?a) ?b)))))
+
+(deftest simple-recursive-case
+  (is (true? (u/check-match-recursive
+              '(:and p (:equiv true true))
+              '(:and p true)
+              '(:equiv ?q ?q)
+              '(true)))))
+
+(deftest rule-applies-but-not-actually-equal
+  (is (not (u/check-match-recursive
+            '(:and p (:equiv true true))
+            '(:or p true)
+            '(:equiv ?q ?q)
+            '(true)))))
+
+(deftest rule-applies-but-not-actually-equal-v2
+  (is (not (u/check-match-recursive
+            '(:and p (:equiv true true) false)
+            '(:and p true true)
+            '(:equiv ?q ?q)
+            '(true)))))

@@ -24,6 +24,30 @@
                      (= start-binding end-binding))))
              end-matches))))
 
+
+(defn check-match-recursive [start-exp end-exp start-rule end-rule]
+  "Returns true when the given rules can be used to make the start-exp
+   equal to the end-exp."
+  (let [check (fn [s e]
+                (check-match s e start-rule end-rule))]
+      (or
+        (check start-exp end-exp)
+        (let
+            [result-list (map (fn [s e]
+                                {
+                                 :equal (= s e)
+                                 :match (if (and (list? s) (list? e))
+                                          (check-match-recursive s e
+                                                                 start-rule
+                                                                 end-rule)
+                                          (check s e))
+                                 })
+                              start-exp
+                              end-exp)]
+          (and
+           (some :match result-list)
+           (every? #(or (:match %) (:equal %)) result-list))))))
+
 ;; This file is currently only for playing around during development
 ;; but I think that we'll eventually have some useful functions here.
 
