@@ -2,6 +2,14 @@
   (:require [edsger.unification :as u]
             [cljs.test :as t :refer-macros [deftest is] :include-macros true]))
 
+(deftest wrap-with-symbol
+  (is (= '(:a) (u/wrap :a))))
+
+(deftest wrap-with-list
+  (is (= '(2) (u/wrap '(2)))))
+
+;;-----------------------------------------------------
+
 (deftest a-test
   (is (true? (u/check-match '(:not (:equiv u (:or w y)))
                             '(:equiv (:not u) (:or w y))
@@ -40,7 +48,7 @@
                             '(true)))))
 
 (deftest constants-can-match
-  (is (true? (u/check-match '(:a) '(:b) '(:a) '(:b)))))
+  (is (true? (u/check-match ':a ':b ':a ':b))))
 
 (deftest constants-can-fail
-  (is (not (u/check-match '(:a) '(:c) '(:a) '(:b)))))
+  (is (not (u/check-match ':a ':c ':a ':b))))

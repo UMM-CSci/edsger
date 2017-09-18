@@ -1,11 +1,20 @@
 (ns edsger.unification
   (:require [cljs.core.logic :as logic :refer [binding-map]]))
 
+(defn wrap [exp]
+  (if-not (list? exp)
+    (list exp)
+    exp))
+
 (defn check-match [start-exp end-exp start-rule end-rule]
   "Returns true if start-exp can be matched with start-rule
    with the same bindings that cause end-exp to match end-rule."
-  (let [start-matches (binding-map start-exp start-rule)
-        end-matches (binding-map end-exp end-rule)]
+  (let [start-matches (binding-map
+                       (wrap start-exp)
+                       (wrap start-rule))
+        end-matches (binding-map
+                     (wrap end-exp)
+                     (wrap end-rule))]
     (and
      start-matches
      end-matches
