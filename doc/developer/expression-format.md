@@ -13,18 +13,18 @@ following is a list of operations that Edsger should handle properly.
 :and   -- logical AND           -- any number of booleans
 :or    -- logical OR            -- any number of booleans
 :not   -- logical NOT           -- one boolean
-:implies -- logical implication -- two booleans
+:implies -- logical implication -- first operand implies the second
 ```
 
 That list should be enough to get us going, but we'll want the following in the
 future.
 
 ```
-:greater       -- greater than (>)      -- any number of integers
-:less          -- less than (<)         -- any number of integers
+:greater-than  -- greater than (>)      -- any number of integers, in decending order
+:less-than     -- less than (<)         -- any number of integers, in ascending order
 :element-of    -- self-explanetory name -- two operands, second is a set
-:strict-subset -- subset, but not equal -- two sets
-:subset        --                       -- two sets
+:strict-subset -- subset, but not equal -- first operand is a strict subset of the second
+:subset-of     --                       -- first operand is a subset of the second
 :union         --                       -- two sets
 :intersection  --                       -- two sets
 ```
