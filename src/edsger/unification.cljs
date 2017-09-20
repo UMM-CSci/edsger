@@ -1,7 +1,7 @@
 (ns edsger.unification
   (:require [cljs.core.logic :as logic :refer [binding-map]]))
 
-(defn wrap [exp]
+(defn- wrap [exp]
   (if-not (list? exp)
     (list exp)
     exp))
@@ -20,8 +20,8 @@
      end-matches
      (every? (fn [[key end-binding]]
                (let [start-binding (get start-matches key)]
-                 (or (nil? start-binding)
-                     (= start-binding end-binding))))
+                 (or (nil? start-binding) ;; constants are matched
+                     (= start-binding end-binding)))) ;; substitutions are matched
              end-matches))))
 
 
