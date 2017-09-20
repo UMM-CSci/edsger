@@ -2,6 +2,14 @@
   (:require [edsger.unification :as u]
             [cljs.test :as t :refer-macros [deftest is] :include-macros true]))
 
+(deftest wrap-with-symbol
+  (is (= '(:a) (u/wrap :a))))
+
+(deftest wrap-with-list
+  (is (= '(2) (u/wrap '(2)))))
+
+;;-----------------------------------------------------
+
 (deftest a-test
   (is (true? (u/check-match '(:not (:equiv u (:or w y)))
                             '(:equiv (:not u) (:or w y))
@@ -40,7 +48,37 @@
                             '(true)))))
 
 (deftest constants-can-match
-  (is (true? (u/check-match '(:a) '(:b) '(:a) '(:b)))))
+  (is (true? (u/check-match ':a ':b ':a ':b))))
 
 (deftest constants-can-fail
-  (is (not (u/check-match '(:a) '(:c) '(:a) '(:b)))))
+  (is (not (u/check-match ':a ':c ':a ':b))))
+
+
+;; -------------------------------------------------------------
+(deftest non-recursive-case
+  (is (true? (u/check-match-recursive
+              '(:not (:equiv u (:or w y)))
+              '(:equiv (:not u) (:or w y))
+              '(:not (:equiv ?a ?b))
+              '(:equiv (:not ?a) ?b)))))
+
+(deftest simple-recursive-case
+  (is (true? (u/check-match-recursive
+              '(:and p (:equiv true true))
+              '(:and p true)
+              '(:equiv ?q ?q)
+              '(true)))))
+
+(deftest rule-applies-but-not-actually-equal
+  (is (not (u/check-match-recursive
+            '(:and p (:equiv true true))
+            '(:or p true)
+            '(:equiv ?q ?q)
+            '(true)))))
+
+(deftest rule-applies-but-not-actually-equal-v2
+  (is (not (u/check-match-recursive
+            '(:and p (:equiv true true) false)
+            '(:and p true true)
+            '(:equiv ?q ?q)
+            '(true)))))
