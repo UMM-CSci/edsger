@@ -4,7 +4,8 @@
             [clojure.browser.event :as ev]
             [goog.events :as events]
             [edsger.substitution :as subs]
-            [edsger.unification :as uni]))
+            [edsger.unification :as uni]
+            [edsger.parsing :as parsing]))
 
 (enable-console-print!)
 
@@ -121,10 +122,10 @@
 
 (defn validate-click-handler []
   (let [exp-str-list (map #(get % "title")
-                          @exp-list) ;; ("a" "eqv a b" "b")
-        exp-vec-list (map #(mapv keyword (clojure.string/split % #" "))
-                          exp-str-list) ;; ([:a] [:eqv :a :b] [:b])
-        result-str (str (true? (apply subs/verify-substitution exp-vec-list)))]
+                          @exp-list) ;; ("(:and p q)" "(:and p q)" "(:and q p)" "(:and q p)")
+        exp-vec-list (map parsing/parse
+                          exp-str-list) ;; ('(:and p q) '(:and p q) '(:and q p) '(:and q p))
+        result-str (str (true? (apply uni/check-match-recursive exp-vec-list)))]
     (js/alert result-str)))
 
 (defn validate-event-listener []
