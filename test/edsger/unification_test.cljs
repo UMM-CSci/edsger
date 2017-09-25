@@ -104,3 +104,11 @@
             '(:and p true true)
             '(:equiv ?q ?q)
             '(true)))))
+
+(deftest diff-length-exps
+  (is (not (u/check-match-recursive
+            '(:and p (:equiv true true) false)
+            '(:and p true)
+            '(:equiv ?q ?q)
+            '(true)))
+      "Different lengths of expressions are handled correctly"))

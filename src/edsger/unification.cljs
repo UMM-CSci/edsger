@@ -32,7 +32,9 @@
                 (check-match s e start-rule end-rule))]
       (or
         (check start-exp end-exp)
-        (let
+        (and
+         (= (count start-exp) (count end-exp))
+         (let
             [result-list (map (fn [s e]
                                 {
                                  :equal (= s e)
@@ -46,7 +48,7 @@
                               end-exp)]
           (and
            (some :match result-list)
-           (every? #(or (:match %) (:equal %)) result-list))))))
+           (every? #(or (:match %) (:equal %)) result-list)))))))
 
 ;; This file is currently only for playing around during development
 ;; but I think that we'll eventually have some useful functions here.
