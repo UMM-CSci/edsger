@@ -1,6 +1,16 @@
 (ns edsger.parsing
   (:require [instaparse.core :as insta]))
 
+(def lisp-style-cfg
+  (insta/parser
+   "S = '('A')' | '('B' 'S')' | '('C' 'S' 'S')'
+    A = E | B
+    E = 'a' | 'b' | 'c'
+    D = 'true' | 'false'
+    B = 'not'
+    C = 'and' | 'or' | 'equiv'"
+   ))
+
 (defn parse
   "Takes an stringfied expression and converts it into
    a legitimate expression"
@@ -16,18 +26,10 @@
 
 (print "START in parsing")
 
-(def as-and-bs
-  (insta/parser
-   "S = '('A')' | '('B' 'S')' | '('C' 'S' 'S')'
-    A = E | B
-    E = 'a' | 'b' | 'c'
-    D = 'true' | 'false'
-    B = 'not'
-    C = 'and' | 'or' | 'equiv'"
-   ))
 
-(print (as-and-bs "(and (a) (b))"))
-(print (count (as-and-bs "(and (a) (b))")))
-(print (type (as-and-bs "(and (a) )")))
+
+;; (print (as-and-bs "(and (a) (b))"))
+;; (print (count (as-and-bs "(and (a) (b))")))
+;; (print (type (as-and-bs "(and (a) )")))
 
 (print "ENND in parsing")
