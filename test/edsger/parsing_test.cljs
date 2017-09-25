@@ -2,6 +2,7 @@
   (:require [edsger.parsing :as p]
             [clojure.test :as t :refer-macros [deftest is are] :include-macros true]))
 
+
 ;; ==== Tests for `lisp-style-cfg`
 
 (deftest lisp-style-cfg_constant-values
@@ -32,3 +33,24 @@
     "(true false)"
     "and a b"
     "(and (a) (b) (c))"))
+
+
+;; ==== Tests for `mk-list`
+
+(deftest mk-list_strips-trees-properly
+  (are [input output] (= (p/mk-list input) output)
+    [:S "("
+     [:C "equiv"] " "
+     [:S "(" [:A [:E "a"]] ")"] " "
+     [:S "(" [:A [:E "b"]] ")"] ")"]
+    '(:equiv (a) (b))
+
+    [:S "("
+     [:C "or"] " "
+     [:S "(" [:A [:D "false"]] ")"] " "
+     [:S "(" [:A [:E "b"]] ")"] ")"]
+    '(:or (false) (b))
+
+    [:S "(" [:A [:D "true"]] ")"]
+    '(true)
+    ))
