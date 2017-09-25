@@ -4,7 +4,7 @@
 (def lisp-style-cfg
   (insta/parser
    "S = '('A')' | '('B' 'S')' | '('C' 'S' 'S')'
-    A = E | B
+    A = E | D
     E = 'a' | 'b' | 'c'
     D = 'true' | 'false'
     B = 'not'
