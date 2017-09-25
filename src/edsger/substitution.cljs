@@ -1,25 +1,17 @@
 (ns edsger.substitution)
 
-(defn new-value [pairs old-value]
-  (some (fn [[old new]]
-          (if (= old old-value) new))
-        pairs))
-
 (defn textual-substitution
   "Performs textual substitution. `pairs` is expected to be a list of old values
   and new values as pairs. e.g. `[[old0 new0] [old1 new1] ...]`. If `list`
   contains elements that are `sequential?`, they will be recursively traversed. So any
   substitution pair where `old*` is a `sequential?` will not have any effect."
-  [pairs list]
+  [substitutions expression]
   (map
    (fn [old-value]
      (if (sequential? old-value)
-       (textual-substitution pairs old-value)
-       (if-let [new-value (new-value pairs old-value)]
-         new-value
-         old-value)))
-   list))
-
+       (textual-substitution substitutions old-value)
+       (get substitutions old-value old-value)))
+   expression))
 
 (defn highlight-elements [list]
   "When passed a finite list, the output will conform to the following

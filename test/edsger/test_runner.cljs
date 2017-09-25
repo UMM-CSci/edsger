@@ -1,11 +1,13 @@
 (ns edsger.test-runner
   (:require  [clojure.test :refer-macros [run-tests]]
-             [edsger.substitution-test]))
+             [edsger.substitution-test]
+             [edsger.unification-test]))
 
 ;; This enables printing of some sort during tests?
 (enable-console-print!)
 
 (defn run-all-tests
   []
-  (run-tests 'edsger.substitution-test))
+  (run-tests 'edsger.substitution-test)
+  (run-tests 'edsger.unification-test))
 

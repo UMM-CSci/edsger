@@ -3,7 +3,8 @@
             [clojure.browser.dom  :as dom]
             [clojure.browser.event :as ev]
             [goog.events :as events]
-            [edsger.substitution :as subs]))
+            [edsger.substitution :as subs]
+            [edsger.unification :as uni]))
 
 (enable-console-print!)
 
