@@ -121,11 +121,14 @@
     (ev/listen button "click" clear-click-handler)))
 
 (defn validate-click-handler []
-  (let [exp-str-list (map #(get % "title")
-                          @exp-list) ;; ("(:and p q)" "(:and p q)" "(:and q p)" "(:and q p)")
-        exp-vec-list (map parsing/parse
-                          exp-str-list) ;; ('(:and p q) '(:and p q) '(:and q p) '(:and q p))
-        result-str (str (true? (apply uni/check-match-recursive exp-vec-list)))]
+  (let [exp-str-list (map #(get % "title") @exp-list)
+        ;; ("(and p q)" "(and p q)" "(and q p)" "(and q p)")
+        exp-vec-list (map parsing/parse exp-str-list)
+        ;; ('(:and (p) (q)) '(:and (p) (q)) '(:and (q) (p)) '(:and (q) (p)))
+        result-str (str (true? (uni/check-match-recursive (nth exp-vec-list 0)
+                                                          (nth exp-vec-list 3)
+                                                          (parsing/rulify (nth exp-vec-list 1))
+                                                          (parsing/rulify (nth exp-vec-list 2)))))]
     (js/alert result-str)))
 
 (defn validate-event-listener []
