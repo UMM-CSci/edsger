@@ -7,24 +7,24 @@
 
 (deftest lisp-style-cfg_constant-values
   (are [input output] (= (p/lisp-style-cfg input) output)
-    "(c)" [:S "(" [:A [:E "c"]] ")"]
-    "(true)" [:S "(" [:A [:D "true"]] ")"]))
+    "c" [:S [:E "c"]]
+    "true" [:S [:D "true"]]))
 
 (deftest lisp-style-cfg_single-operand
   (are [input output] (= (p/lisp-style-cfg input) output)
-    "(not (a))" [:S "(" [:B "not"] " " [:S "(" [:A [:E "a"]] ")"] ")"]
-    "(not (false))" [:S "(" [:B "not"] " " [:S "(" [:A [:D "false"]] ")"] ")"]))
+    "(not a)" [:S "(" [:B "not"] " " [:S [:E "a"]] ")"]
+    "(not false)" [:S "(" [:B "not"] " " [:S [:D "false"]] ")"]))
 
 (deftest lisp-style-cfg_two-operand
   (are [input output] (= (p/lisp-style-cfg input) output)
-    "(or (false) (b))" [:S "("
-                        [:C "or"] " "
-                        [:S "(" [:A [:D "false"]] ")"] " "
-                        [:S "(" [:A [:E "b"]] ")"] ")"]
-    "(equiv (a) (b))" [:S "("
-                       [:C "equiv"] " "
-                       [:S "(" [:A [:E "a"]] ")"] " "
-                       [:S "(" [:A [:E "b"]] ")"] ")"]))
+    "(or false b)" [:S "("
+                    [:C "or"] " "
+                    [:S [:D "false"]] " "
+                    [:S [:E "b"]] ")"]
+    "(equiv a b)" [:S "("
+                   [:C "equiv"] " "
+                   [:S [:E "a"]] " "
+                   [:S [:E "b"]] ")"]))
 
 (deftest list-style-cfg_unparsable-input
   (are [input] (= (type (p/lisp-style-cfg input)) instaparse.gll/Failure)
@@ -41,30 +41,29 @@
   (are [input output] (= (p/mk-list input) output)
     [:S "("
      [:C "equiv"] " "
-     [:S "(" [:A [:E "a"]] ")"] " "
-     [:S "(" [:A [:E "b"]] ")"] ")"]
-    '(:equiv (a) (b))
+     [:S [:E "a"]] " "
+     [:S [:E "b"]] ")"]
+    '(:equiv a b)
 
     [:S "("
      [:C "or"] " "
-     [:S "(" [:A [:D "false"]] ")"] " "
-     [:S "(" [:A [:E "b"]] ")"] ")"]
-    '(:or (false) (b))
+     [:S [:D "false"]] " "
+     [:S [:E "b"] ")"]]
+    '(:or false b)
 
-    [:S "(" [:A [:D "true"]] ")"]
-    '(true)
-    ))
+    [:S [:D "true"]]
+    true))
 
 
 ;; ==== Tests for `parse`
 
 (deftest parse_good
   (are [input output] (= (p/parse input) output)
-    "(or (a) (and (b) (c)))" '(:or (a) (:and (b) (c)))
-    "(not (false))" '(:not (false))))
+    "(or a (and b c))" '(:or a (:and b c))
+    "(not false)" '(:not false)))
 
 (deftest parse_bad
-  (is (nil? (p/parse "(:or (a))"))))
+  (is (nil? (p/parse "(:or a)"))))
 
 
 ;; ==== Tests for `rulify`
@@ -72,7 +71,5 @@
 (deftest rulify_works-correctly
   (is (= '(:and ?b ?c (:or (:not ?a) ?c))
          (p/rulify '(:and b c (:or (:not a) c)))))
-  (is (= '(:and (true) (?c) (:or (:not (?a)) (false)))
-         (p/rulify '(:and (true) (c) (:or (:not (a)) (false))))))
   (is (= '(:and true ?c (:or (:not ?a) false))
          (p/rulify '(:and true c (:or (:not a) false))))) )

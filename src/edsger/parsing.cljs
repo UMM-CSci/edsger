@@ -3,8 +3,7 @@
 
 (def lisp-style-cfg
   (insta/parser
-   "S = '('A')' | '('B' 'S')' | '('C' 'S' 'S')'
-    A = E | D
+   "S = E | D | '('B' 'S')' | '('C' 'S' 'S')'
     E = 'a' | 'b' | 'c'
     D = 'true' | 'false'
     B = 'not'
@@ -16,8 +15,10 @@
    returns a simple list of lists representing the expression."
   [hiccup-tree]
   (case (first hiccup-tree)
-    :S (map mk-list (filter vector? hiccup-tree))
-    :A (mk-list (second hiccup-tree))
+    :S (let [filtered-list (filter vector? hiccup-tree)]
+         (if (= 1 (count filtered-list))
+           (mk-list (first filtered-list))
+           (map mk-list (filter vector? hiccup-tree))))
     :E (symbol (second hiccup-tree))
     :D (if (= "true" (second hiccup-tree)) true false)
     :B (keyword (second hiccup-tree))
