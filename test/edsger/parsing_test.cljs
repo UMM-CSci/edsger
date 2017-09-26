@@ -65,3 +65,14 @@
 
 (deftest parse_bad
   (is (nil? (p/parse "(:or (a))"))))
+
+
+;; ==== Tests for `rulify`
+
+(deftest rulify_works-correctly
+  (is (= '(:and ?b ?c (:or (:not ?a) ?c))
+         (p/rulify '(:and b c (:or (:not a) c)))))
+  (is (= '(:and (true) (?c) (:or (:not (?a)) (false)))
+         (p/rulify '(:and (true) (c) (:or (:not (a)) (false))))))
+  (is (= '(:and true ?c (:or (:not ?a) false))
+         (p/rulify '(:and true c (:or (:not a) false))))) )

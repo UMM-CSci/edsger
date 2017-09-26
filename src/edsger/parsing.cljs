@@ -33,6 +33,18 @@
     (if-not (= (type hiccup-tree) instaparse.gll/Failure)
       (mk-list hiccup-tree))))
 
+(defn rulify
+  "Recursively traverse a list and prepend '?' onto
+   all symbols."
+  [input]
+  (map
+   (fn [element]
+     (cond
+       (list? element) (rulify element)
+       (symbol? element) (symbol (str "?" element))
+       :else element))
+   input))
+
 (print "START in parsing")
 
 
