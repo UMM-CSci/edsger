@@ -33,17 +33,16 @@
       (or
         (check start-exp end-exp)
         (and
+         ;; only works for the same length exps
          (= (count start-exp) (count end-exp))
          (let
             [result-list (map (fn [s e]
-                                {
-                                 :equal (= s e)
+                                {:equal (= s e)
                                  :match (if (and (list? s) (list? e))
                                           (check-match-recursive s e
                                                                  start-rule
                                                                  end-rule)
-                                          (check s e))
-                                 })
+                                          (check s e))})
                               start-exp
                               end-exp)]
           (and

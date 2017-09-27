@@ -1,4 +1,5 @@
 (ns edsger.core
+  "Front-end view and controller UI"
   (:require [clojure.browser.repl :as repl]
             [clojure.browser.dom  :as dom]
             [clojure.browser.event :as ev]
@@ -124,7 +125,7 @@
   (let [exp-str-list (map #(get % "title") @exp-list)
         ;; ("(and p q)" "(and p q)" "(and q p)" "(and q p)")
         exp-vec-list (map parsing/parse exp-str-list)
-        ;; ('(:and (p) (q)) '(:and (p) (q)) '(:and (q) (p)) '(:and (q) (p)))
+        ;; ('(:and p q) '(:and p q) '(:and q p) '(:and q p))
         result-str (str (true? (uni/check-match-recursive (nth exp-vec-list 0)
                                                           (nth exp-vec-list 3)
                                                           (parsing/rulify (nth exp-vec-list 1))
