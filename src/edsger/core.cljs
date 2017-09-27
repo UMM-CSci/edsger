@@ -1,10 +1,12 @@
 (ns edsger.core
+  "Front-end view and controller UI"
   (:require [clojure.browser.repl :as repl]
             [clojure.browser.dom  :as dom]
             [clojure.browser.event :as ev]
             [goog.events :as events]
             [edsger.substitution :as subs]
-            [edsger.unification :as uni]))
+            [edsger.unification :as uni]
+            [edsger.parsing :as parsing]))
 
 (enable-console-print!)
 
@@ -120,11 +122,14 @@
     (ev/listen button "click" clear-click-handler)))
 
 (defn validate-click-handler []
-  (let [exp-str-list (map #(get % "title")
-                          @exp-list) ;; ("a" "eqv a b" "b")
-        exp-vec-list (map #(mapv keyword (clojure.string/split % #" "))
-                          exp-str-list) ;; ([:a] [:eqv :a :b] [:b])
-        result-str (str (true? (apply subs/verify-substitution exp-vec-list)))]
+  (let [exp-str-list (map #(get % "title") @exp-list)
+        ;; ("(and p q)" "(and p q)" "(and q p)" "(and q p)")
+        exp-vec-list (map parsing/parse exp-str-list)
+        ;; ('(:and p q) '(:and p q) '(:and q p) '(:and q p))
+        result-str (str (true? (uni/check-match-recursive (nth exp-vec-list 0)
+                                                          (nth exp-vec-list 3)
+                                                          (parsing/rulify (nth exp-vec-list 1))
+                                                          (parsing/rulify (nth exp-vec-list 2)))))]
     (js/alert result-str)))
 
 (defn validate-event-listener []
