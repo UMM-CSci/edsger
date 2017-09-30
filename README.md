@@ -20,7 +20,7 @@ there's some evidence that the students find it useful.
 
 ## Quick Start
 
-:warning: edsger is a still under active development. The running instructions are most likely to change in the future.
+:warning: edsger is still under active development. The running instructions are most likely to change in the future.
 
 Clone and run this repository to see the app in action
 ```
@@ -37,7 +37,10 @@ When you validate a logic expression looking:
 ≣    <(3.24) Symmetry of ∨>
   a ∧ (b ∨ c) 
 ```
-you need to type the expressions and rules in pseudo-clojure style.
+you need to type the expressions and rules in pseudo-clojure style.  
+
+:warning: In the next version of edsger, the input format will be 
+changed to look similar to the actual expression above.
 ```
 first box  : (and a (or c b))
 second box : (or a b)
