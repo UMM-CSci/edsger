@@ -2,7 +2,7 @@
 
 This document should contain various hints and tips for working on the project.
 
-## Using figwheel with Spacemacs
+## Using Figwheel with Spacemacs
 
 If you've used CIDER with Spacemacs or vanilla Emacs, you know how nice it is to
 be able to evaluate snippets of code directly from the editor. The basic idea is
