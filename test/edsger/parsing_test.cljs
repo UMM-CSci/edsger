@@ -83,6 +83,14 @@
                                   [:binary-op "∧"]
                                   [:bottom [:variable "u"]]]]]]]]]])))
 
+(deftest infix-cfg_spaces-with-not
+  (are [input] (= (p/infix-cfg input) [:top-level
+                                       [:unary-expr
+                                        [:unary-op "¬"]
+                                        [:bottom [:boolean "true"]]]])
+    "¬ true"
+    "¬true"))
+
 
 ;; ==== Tests for `transform-infix-cfg`
 
