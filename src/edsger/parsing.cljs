@@ -68,7 +68,9 @@
    a legitimate expression. Returns nil when the expression
    cannot be parsed."
   [expression]
-  (transform-infix-cfg (infix-cfg expression)))
+  (let [hiccup-tree (transform-infix-cfg (infix-cfg expression))]
+    (if-not (= (type hiccup-tree) instaparse.gll/Failure)
+      hiccup-tree)))
 
 (defn rulify
   "Recursively traverse a list and prepend '?' onto

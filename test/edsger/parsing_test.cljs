@@ -133,8 +133,8 @@
 
 (deftest parse_good
   (are [input output] (= (p/parse input) output)
-    "(or a (and b c))" '(:or a (:and b c))
-    "(not false)" '(:not false)))
+    "a ∨ (b ∧ c)" '(:or a (:and b c))
+    "¬ false" '(:not false)))
 
 (deftest parse_bad
   (is (nil? (p/parse "(:or a)"))))
