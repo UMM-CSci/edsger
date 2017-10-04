@@ -66,11 +66,9 @@
 (defn parse
   "Takes a stringfied expression and converts it into
    a legitimate expression. Returns nil when the expression
-   cannot be parsed. (TODO: improve error reporting)."
+   cannot be parsed."
   [expression]
-  (let [hiccup-tree (lisp-style-cfg expression)]
-    (if-not (= (type hiccup-tree) instaparse.gll/Failure)
-      (mk-list hiccup-tree))))
+  (transform-infix-cfg (infix-cfg expression)))
 
 (defn rulify
   "Recursively traverse a list and prepend '?' onto
