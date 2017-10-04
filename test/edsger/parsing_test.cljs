@@ -84,6 +84,23 @@
                                   [:bottom [:variable "u"]]]]]]]]]])))
 
 
+;; ==== Tests for `transform-infix-cfg`
+
+(deftest transform-infix-cfg_works-with-infix-cfg
+  (are [input expected-output] (= (p/transform-infix-cfg (p/infix-cfg input)) expected-output)
+    "true" true
+    "false" false
+    "a" 'a
+    "m" 'm
+    "z" 'z
+    "¬ true" [:not true]
+    "a ⇒ false" [:implies 'a false]
+    "p ≡ q" [:equiv 'p 'q]
+    "t ∧ u" [:and 't 'u]
+    "(a ⇒ false) ∨ (¬ (t ∧ u))" [:or
+                                 [:implies 'a false]
+                                 [:not [:and 't 'u]]]))
+
 ;; ==== Tests for `mk-list`
 
 (deftest mk-list_strips-trees-properly
