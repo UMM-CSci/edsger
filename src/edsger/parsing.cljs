@@ -20,9 +20,9 @@
         "boolean     = 'true' | 'false';"
         "variable    = #'[a-zA-Z]';" ;; we only support single-character variables
         "unary-op    = '¬';"
-        "unary-expr  = unary-op ' ' bottom;"
-        "bottom      = boolean | variable | '(' top-level ')';"
-        "binary-expr = bottom ' ' binary-op ' ' bottom;"
+        "unary-expr  = unary-op <' '> bottom;"
+        "bottom      = boolean | variable | <'('> top-level <')'>;"
+        "binary-expr = bottom <' '> binary-op <' '> bottom;"
         "binary-op   = '∨' | '∧' | '≡'| '⇒';"
         )))
 

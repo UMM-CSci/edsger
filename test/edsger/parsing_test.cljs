@@ -47,18 +47,18 @@
 
 (deftest infix-cfg_one-level-operations
   (are [input expected-output] (= (p/infix-cfg input) expected-output)
-    "¬ true" [:top-level [:unary-expr [:unary-op "¬"] " " [:bottom [:boolean "true"]]]]
+    "¬ true" [:top-level [:unary-expr [:unary-op "¬"] [:bottom [:boolean "true"]]]]
     "a ⇒ false" [:top-level [:binary-expr
-                             [:bottom [:variable "a"]] " "
-                             [:binary-op "⇒"] " "
+                             [:bottom [:variable "a"]]
+                             [:binary-op "⇒"]
                              [:bottom [:boolean "false"]]]]
     "p ≡ q" [:top-level [:binary-expr
-                         [:bottom [:variable "p"]] " "
-                         [:binary-op "≡"] " "
+                         [:bottom [:variable "p"]]
+                         [:binary-op "≡"]
                          [:bottom [:variable "q"]]]]
     "t ∧ u" [:top-level [:binary-expr
-                         [:bottom [:variable "t"]] " "
-                         [:binary-op "∧"] " "
+                         [:bottom [:variable "t"]]
+                         [:binary-op "∧"]
                          [:bottom [:variable "u"]]]]))
 
 (deftest infix-cfg_complex-nexting-with-parens-works
@@ -66,23 +66,22 @@
        (p/infix-cfg "(a ⇒ false) ∨ (¬ (t ∧ u))")
        [:top-level [:binary-expr
                     [:bottom
-                     "(" [:top-level
+                     [:top-level
                           [:binary-expr
                            [:bottom [:variable "a"]]
-                           " " [:binary-op "⇒"] " "
-                           [:bottom [:boolean "false"]]]] ")"]
-                    " " [:binary-op "∨"] " "
+                           [:binary-op "⇒"]
+                           [:bottom [:boolean "false"]]]]]
+                    [:binary-op "∨"]
                     [:bottom
-                     "(" [:top-level
+                     [:top-level
                           [:unary-expr
                            [:unary-op "¬"]
-                           " " [:bottom
-                                "("
+                           [:bottom
                                 [:top-level
                                  [:binary-expr
                                   [:bottom [:variable "t"]]
-                                  " " [:binary-op "∧"] " "
-                                  [:bottom [:variable "u"]]]] ")"]]] ")"]]])))
+                                  [:binary-op "∧"]
+                                  [:bottom [:variable "u"]]]]]]]]]])))
 
 
 ;; ==== Tests for `mk-list`
