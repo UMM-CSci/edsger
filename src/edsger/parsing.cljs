@@ -2,8 +2,8 @@
   "Tools to convert user input into cljs lists"
   (:require [instaparse.core :as insta :refer-macros [defparser]]))
 
-;;"A CFG for a simple logic supporting several logic operators.
-;; Currently requires expressions to be fully parenthesized"
+;; A simple CFG for parsing logical expressions containing several logic
+;; operators. Currently requires expressions to be fully parenthesized.
 (insta/defparser
   infix-cfg
   (str "top-level   = boolean | variable | unary-expr | binary-expr;"
