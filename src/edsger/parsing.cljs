@@ -1,6 +1,6 @@
 (ns edsger.parsing
   "Tools to convert user input into cljs lists"
-  (:require [instaparse.core :as insta]))
+  (:require [instaparse.core :as insta :refer-macros [defparser]]))
 
 (def ^:private lisp-style-cfg
   "Lisp-like syntax parser for logic expression"
@@ -11,20 +11,18 @@
     B = 'not'
     C = 'and' | 'or' | 'equiv'"))
 
-;; TODO use the insta/parser macro to do more of the work at build time.
-(def infix-cfg
-  "A CFG for a simple logic supporting several logic operators.
-   Currently requires expressions to be fully parenthesized"
-  (insta/parser
-   (str "top-level   = boolean | variable | unary-expr | binary-expr;"
-        "boolean     = 'true' | 'false';"
-        "variable    = #'[a-zA-Z]';" ;; we only support single-character variables
-        "unary-op    = '¬';"
-        "unary-expr  = unary-op (<' '> | epsilon) bottom;"
-        "bottom      = boolean | variable | <'('> top-level <')'>;"
-        "binary-expr = bottom <' '> binary-op <' '> bottom;"
-        "binary-op   = '∨' | '∧' | '≡'| '⇒';"
-        )))
+;;"A CFG for a simple logic supporting several logic operators.
+;; Currently requires expressions to be fully parenthesized"
+(insta/defparser
+  infix-cfg
+  (str "top-level   = boolean | variable | unary-expr | binary-expr;"
+       "boolean     = 'true' | 'false';"
+       "variable    = #'[a-zA-Z]';" ;; we only support single-character variables
+       "unary-op    = '¬';"
+       "unary-expr  = unary-op (<' '> | epsilon) bottom;"
+       "bottom      = boolean | variable | <'('> top-level <')'>;"
+       "binary-expr = bottom <' '> binary-op <' '> bottom;"
+       "binary-op   = '∨' | '∧' | '≡'| '⇒';"))
 
 (def ^:private operator-map
   {"¬" :not
