@@ -8,8 +8,84 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+    <!-- Custom styling CSS -->
+    <link href="css/style.css" rel="stylesheet">
   </head>
   <body>
+
+    <nav class="navbar navbar-light fixed-top bg-light justify-content-between">
+      <a class="navbar-brand" href="#">Edsger</a>
+      <form class="form-inline">
+        <button class="btn btn-outline-success btn-lg my-2 my-sm-0" type="submit">Validate</button>
+      </form>
+    </nav>
+
+    <div class="container">
+
+      <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-12 col-md-9">
+          <!-- Brief instructions -->
+          <div class="row">
+            <div class="col-12 col-lg-12">
+              <h4>Type expressions & rules and click `Validate`</h4>
+            </div>
+          </div>
+          <!-- User input -->
+          <div class="row">
+            <div class="col-12 col-lg-12">
+              <form>
+                <div class="form-group row">
+                  <label for="inputExp" class="col-sm-2 col-form-label">Expression</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" placeholder="Type an expression (e.x. p ∧ q)">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="inputRule" class="col-sm-2 col-form-label">Rule</label>
+                  <div class="col">
+                    <input type="text" class="form-control" placeholder="Left-hand side of rule">
+                  </div>
+                  <div class="col">
+                    <input type="text" class="form-control" placeholder="Right-hand side of rule">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="inputExp" class="col-sm-2 col-form-label">Expression</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" placeholder="Type an expression (e.x. q ∧ p)">
+                  </div>
+                </div>
+              </form>
+            </div><!--/span-->
+            <!-- Adding more slots -->
+            <div class="row text-center">
+              <div class="col-12 col-lg-12 text-center">
+                <button type="button" class="btn btn-secondary btn-lg">+</button>
+              </div>
+            </div>
+
+          </div><!--/row-->
+        </div><!--/span-->
+
+        <!-- Inserting symbols -->
+        <div class="col-6 col-md-1 sidebar-offcanvas btn-group-vertical btn-group-lg" id="sidebar">
+          <button class="btn btn-primary" type="button">¬</button>
+          <button class="btn btn-primary" type="button">∧</button>
+          <button class="btn btn-primary" type="button">∨</button>
+          <button class="btn btn-primary" type="button">⇒</button>
+          <button class="btn btn-primary" type="button">≡</button>
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p>&copy; Laverne Schrock, Tony Song 2017</p>
+      </footer>
+
+    </div><!--/.container-->  
 
     <!-- Bootstrap JavaScript -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
