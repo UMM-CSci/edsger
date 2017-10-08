@@ -48,7 +48,12 @@
                 :compiler {:output-to "resources/public/js/compiled/edsger.js"
                            :main edsger.core
                            :optimizations :advanced
-                           :pretty-print false}}]}
+                           :pretty-print false}}
+               {:id "test"
+                :source-paths ["src" "test"]
+                :compiler {:output-to "resources/public/js/testable.js"
+                           :main "edsger.test-runner"
+                           :optimizations :none}}]}
 
   :figwheel {;; :http-server-root "public" ;; default and assumes "resources"
              ;; :server-port 3449 ;; default
