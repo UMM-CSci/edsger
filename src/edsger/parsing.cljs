@@ -48,17 +48,13 @@
       hiccup-tree)))
 
 (defn rulify
-  "Recursively traverse a list and prepend '?' onto
+  "Recursively traverse an expression and prepend '?' onto
    all symbols."
   [input]
-  (map
-   (fn [element]
-     (cond
-       (list? element) (rulify element)
-       (symbol? element) (symbol (str "?" element))
-       :else element))
-   input))
-
+  (cond
+    (seqable? input) (map rulify input)
+    (symbol? input) (symbol (str "?" input))
+    :else input))
 (print "START in parsing")
 
 

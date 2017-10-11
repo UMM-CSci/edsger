@@ -112,3 +112,15 @@
             '(:equiv ?q ?q)
             '(true)))
       "Different lengths of expressions are handled correctly"))
+
+(deftest non-seqable-start-or-end-expr
+  (is (true? (u/check-match-recursive
+              '(:and a a)
+              'a
+              '(:and ?p ?p)
+              '?p)))
+  (is (not (u/check-match-recursive
+            '(:and a a)
+            'b
+            '(:and ?p ?p)
+            '?p))))
