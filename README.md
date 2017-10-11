@@ -50,4 +50,4 @@ fourth box : (and a (or b c))
 And, click the **validate** button to check your reasoning :100:.
 
 ## License
-TBA
+TBA soon
