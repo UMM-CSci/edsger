@@ -1,3 +1,6 @@
 language: clojure
 lein: lein
+before_script:
+  - npm install
+  - export PATH="$PATH:$(pwd)/node_modules/karma-cli/bin"
 script: lein doo chrome-headless test once
