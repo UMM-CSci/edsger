@@ -1,4 +1,5 @@
-edsger: _Simple proof checker for introductory logic_
+edsger: _Simple proof checker for introductory logic_ 
+[![Build Status](https://travis-ci.org/NicMcPhee/edsger.svg?branch=dev)](https://travis-ci.org/NicMcPhee/edsger)
 =====================================================
 
 ## Introduction
