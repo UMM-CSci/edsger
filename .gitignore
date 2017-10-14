@@ -13,3 +13,5 @@ pom.xml
 .nrepl-port
 .cljs_rhino_repl
 .lein-failures
+/resources/public/js/testable.js
+/node_modules
