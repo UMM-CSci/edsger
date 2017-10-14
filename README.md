@@ -49,5 +49,26 @@ fourth box : (and a (or b c))
 ```
 And, click the **validate** button to check your reasoning :100:.
 
+## Running the tests
+
+Running the tests requires Karma. You can install Karma and all the needed
+plugins by running `npm install` in the root of the repo. You'll then need to
+add `./node_modules/karma-cli/bin` to your
+`$PATH`. Check out [direnv](https://direnv.net/) if you want to make this easier
+to do.
+
+If you have Google Chrome, you can run the tests once with the following command:
+
+```
+lein doo chrome test once
+```
+
+If want to run the tests in Firefox, simply replace `chrome` with `firefox`. If
+you wish to avoid opening a browser window for the tests, use `chrome-headless`
+instead (requires Chrome 59 or later).
+
+If you omit `once` from the end of the command, the tests be re-run every time
+that Karma detects a change in the compiled JS files.
+
 ## License
 TBA soon
