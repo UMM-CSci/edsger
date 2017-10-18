@@ -50,17 +50,28 @@
   [elem id]
   (events/listen elem "click" (copy-handler-gen id)))
 
+(defn- merge-val
+  [curr-map val]
+  (let [curr-map (update curr-map :curr-id inc)
+        curr-id (:curr-id curr-map)]
+    (if (nil? val) (update-in curr-map [:locations] #(conj % curr-id)) curr-map)))
+
+
 (defn validate-handler
   "Performs the validation based on the values typed by users"
   [evt]
   (let [ex-elems (gdom/getElementsByClass "ex") ;; `iArrayLike` type
         rule-elems (gdom/getElementsByClass "rule")
         exps (map #(parsing/parse (.-value %)) (iArrayLike-to-cljs-list ex-elems))
-        rules (map #(parsing/rulify (parsing/parse (.-value %))) (iArrayLike-to-cljs-list rule-elems))
+        vanilla-rules (map #(parsing/parse (.-value %)) (iArrayLike-to-cljs-list rule-elems))
+        rules (map #(parsing/rulify %) vanilla-rules)
+        exp-parsing-err (:locations (reduce merge-val {:curr-id -1 :locations []} exps)) ;; vec of err ids
+        rule-parsing-err (:locations (reduce merge-val {:curr-id -1 :locations []} vanilla-rules)) ;; vec of err ids
         result-str (str (true? (uni/check-match-recursive (nth exps 0)
                                                           (nth exps 1)
                                                           (nth rules 0)
                                                           (nth rules 1))))]
+    (println exp-parsing-err)
     (.alert js/window result-str)))
 
 (defn validate-click-listener
