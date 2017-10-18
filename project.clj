@@ -20,7 +20,7 @@
 
   :cljsbuild {:builds
               [{:id "dev"
-                :source-paths ["src" "test"]
+                :source-paths ["src"]
 
                 ;; The presence of a :figwheel configuration here
                 ;; will cause figwheel to inject the figwheel client
@@ -52,6 +52,7 @@
                {:id "test"
                 :source-paths ["src" "test"]
                 :compiler {:output-to "resources/public/js/testable.js"
+                           :output-dir "resources/public/js/test"
                            :main "edsger.test-runner"
                            :optimizations :none}}]}
 
