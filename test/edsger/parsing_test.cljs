@@ -88,6 +88,38 @@
 (deftest parse_bad
   (is (nil? (p/parse "(:or a)"))))
 
+(deftest parse_binary-op_whitespace-agnostic
+  (are [expr] (= (p/parse expr) [:and 'p 'r])
+    "p∧r"
+    "p ∧ r"
+    " p ∧ r "
+    " p∧ r"
+    "  p∧ r"
+    "p∧ r    "))
+
+(deftest parse_simple_whitespace-agnostic
+  (are [form1 form2] (and (not (nil? form1))
+                          (not (nil? form2))
+                          (= (p/parse form1) (p/parse form2)))
+    "true" " true\t"
+    "a" "a\r\n"
+    "false" "   false  \t  "))
+
+(deftest parse_unary-op_whitespace-agnostic
+  (are [expr] (= (p/parse expr) [:not 'p])
+    "¬p"
+    "¬ p"
+    " ¬p"
+    "¬p "
+    " ¬\tp\n"))
+
+(deftest parse_nested_whitespace-agnostic
+  (are [expr] (= (p/parse expr) [:or
+                                 [:implies 'a false]
+                                 [:not [:and 't 'u]]])
+    "(a ⇒ false) ∨ (¬ (t ∧ u))"
+    "(a⇒false)∨(¬(t∧u))"
+    " ( a ⇒ false ) ∨ ( ¬ ( t ∧ u ) ) "))
 
 ;; ==== Tests for `rulify`
 

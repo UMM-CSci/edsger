@@ -6,13 +6,14 @@
 ;; operators. Currently requires expressions to be fully parenthesized.
 (insta/defparser
   infix-cfg
-  (str "top-level   = boolean | variable | unary-expr | binary-expr;"
+  (str "top-level   = <whitespace> (boolean | variable | unary-expr | binary-expr) <whitespace>;"
+       "whitespace   = #'\\s*';" ;; https://docs.oracle.com/javase/tutorial/essential/regex/pre_char_classes.html
        "boolean     = 'true' | 'false';"
        "variable    = #'[a-zA-Z]';" ;; we only support single-character variables
        "unary-op    = '¬';"
-       "unary-expr  = unary-op (<' '> | epsilon) bottom;"
+       "unary-expr  = unary-op <whitespace> bottom;"
        "bottom      = boolean | variable | <'('> top-level <')'>;"
-       "binary-expr = bottom <' '> binary-op <' '> bottom;"
+       "binary-expr = bottom <whitespace> binary-op <whitespace> bottom;"
        "binary-op   = '∨' | '∧' | '≡'| '⇒';"))
 
 (def ^:private operator-map
