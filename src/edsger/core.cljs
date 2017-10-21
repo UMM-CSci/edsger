@@ -50,12 +50,32 @@
   [elem id]
   (events/listen elem "click" (copy-handler-gen id)))
 
+(def parse-err-str
+  (str "<div class=\"alert alert-info alert-dismissible fade show col-2.5\" role=\"alert\">"
+         "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">"
+           "<span aria-hidden=\"true\">&times;</span>"
+         "</button>"
+         "Error in input"
+       "</div>"))
+
 (defn- merge-val
   [curr-map val]
   (let [curr-map (update curr-map :curr-id inc)
         curr-id (:curr-id curr-map)]
     (if (nil? val) (update-in curr-map [:locations] #(conj % curr-id)) curr-map)))
 
+(defn- show-exp-parse-err
+  [err-id-vec]
+  (let [err-msg-elem (fn []
+                       (.createContextualFragment (.createRange js/document)
+                                                  parse-err-str))
+        exp-boxes (iArrayLike-to-cljs-list (gdom/getElementsByClass "exp-box"))]
+    (dorun
+     (map
+      (fn [id]
+        ;; adding err msg where they fail
+        (gdom/appendChild (nth exp-boxes id) (err-msg-elem)))
+      err-id-vec))))
 
 (defn validate-handler
   "Performs the validation based on the values typed by users"
@@ -65,13 +85,13 @@
         exps (map #(parsing/parse (.-value %)) (iArrayLike-to-cljs-list ex-elems))
         vanilla-rules (map #(parsing/parse (.-value %)) (iArrayLike-to-cljs-list rule-elems))
         rules (map #(parsing/rulify %) vanilla-rules)
-        exp-parsing-err (:locations (reduce merge-val {:curr-id -1 :locations []} exps)) ;; vec of err ids
-        rule-parsing-err (:locations (reduce merge-val {:curr-id -1 :locations []} vanilla-rules)) ;; vec of err ids
+        exp-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} exps)) ;; vec of err ids
+        rule-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} vanilla-rules)) ;; vec of err ids
         result-str (str (true? (uni/check-match-recursive (nth exps 0)
                                                           (nth exps 1)
                                                           (nth rules 0)
                                                           (nth rules 1))))]
-    (println exp-parsing-err)
+    (when-not (empty? exp-parse-err) (show-exp-parse-err exp-parse-err))
     (.alert js/window result-str)))
 
 (defn validate-click-listener
