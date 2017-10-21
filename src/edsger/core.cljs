@@ -119,15 +119,12 @@
 
 ;; Top-level handler / listener ===================
 
-;; TODO: simplify this
 (defn window-load-handler
   "Top-level load handler"
   []
   (validate-click-listener (by-id "validate"))
-  (copy-click-listener (by-id "not") "not")
-  (copy-click-listener (by-id "and") "and")
-  (copy-click-listener (by-id "or") "or")
-  (copy-click-listener (by-id "impli") "impli")
-  (copy-click-listener (by-id "equiv") "equiv"))
+  (dorun
+   (map #(copy-click-listener (by-id %) %)
+        ["not" "and" "or" "impli" "equiv"])))
 
 (events/listen js/window "load" window-load-handler)
