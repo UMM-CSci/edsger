@@ -30,6 +30,12 @@
     (for [i (range length)]
       (aget iArr i))))
 
+(defn- str-to-elem
+  "Generates a HTML element node from the given
+   HTML-looking string (e.g., \"<span>Yo</span>\")"
+  [html-str]
+  (.createContextualFragment (.createRange js/document) html-str))
+
 
 
 ;; UI and handlers ===================
@@ -50,8 +56,9 @@
   [elem id]
   (events/listen elem "click" (copy-handler-gen id)))
 
+;; Bootstrap alert div
 (def parse-err-str
-  (str "<div class=\"alert alert-info alert-dismissible fade show col-2.5\" role=\"alert\">"
+  (str "<div class=\"alert alert-danger alert-dismissible fade show col-2.5\" role=\"alert\">"
          "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">"
            "<span aria-hidden=\"true\">&times;</span>"
          "</button>"
@@ -66,15 +73,23 @@
 
 (defn- show-exp-parse-err
   [err-id-vec]
-  (let [err-msg-elem (fn []
-                       (.createContextualFragment (.createRange js/document)
-                                                  parse-err-str))
-        exp-boxes (iArrayLike-to-cljs-list (gdom/getElementsByClass "exp-box"))]
+  (let [exp-boxes (iArrayLike-to-cljs-list (gdom/getElementsByClass "exp-box"))]
     (dorun
      (map
       (fn [id]
         ;; adding err msg where they fail
-        (gdom/appendChild (nth exp-boxes id) (err-msg-elem)))
+        (gdom/appendChild (nth exp-boxes id) (str-to-elem parse-err-str)))
+      err-id-vec))))
+
+(defn- show-rule-parse-err
+  [err-id-vec]
+  (let [rule-cols (map #(gdom/getParentElement %)
+                       (iArrayLike-to-cljs-list (gdom/getElementsByClass "rule")))]
+    (dorun
+     (map
+      (fn [id]
+        ;; adding err msg where they fail
+        (gdom/insertSiblingAfter (str-to-elem parse-err-str) (nth rule-cols id)))
       err-id-vec))))
 
 (defn validate-handler
@@ -85,18 +100,24 @@
         exps (map #(parsing/parse (.-value %)) (iArrayLike-to-cljs-list ex-elems))
         vanilla-rules (map #(parsing/parse (.-value %)) (iArrayLike-to-cljs-list rule-elems))
         rules (map #(parsing/rulify %) vanilla-rules)
-        exp-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} exps)) ;; vec of err ids
-        rule-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} vanilla-rules)) ;; vec of err ids
+        ;; vector of indices where parsing err occurred (e.g., [0, 3])
+        exp-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} exps))
+        rule-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} vanilla-rules))
         result-str (str (true? (uni/check-match-recursive (nth exps 0)
                                                           (nth exps 1)
                                                           (nth rules 0)
                                                           (nth rules 1))))]
     (when-not (empty? exp-parse-err) (show-exp-parse-err exp-parse-err))
+    (when-not (empty? rule-parse-err) (show-rule-parse-err rule-parse-err))
     (.alert js/window result-str)))
 
 (defn validate-click-listener
   [elem]
   (events/listen elem "click" validate-handler))
+
+
+
+;; Top-level handler / listener ===================
 
 ;; TODO: simplify this
 (defn window-load-handler
