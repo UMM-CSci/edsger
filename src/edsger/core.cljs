@@ -95,10 +95,11 @@
 (defn validate-handler
   "Performs the validation based on the values typed by users"
   [evt]
-  (let [ex-elems (gdom/getElementsByClass "ex") ;; `iArrayLike` type
-        rule-elems (gdom/getElementsByClass "rule")
-        exps (map #(parsing/parse (.-value %)) (iArrayLike-to-cljs-list ex-elems))
-        vanilla-rules (map #(parsing/parse (.-value %)) (iArrayLike-to-cljs-list rule-elems))
+  (let [exp-str-li (map #(.-value %) (iArrayLike-to-cljs-list (gdom/getElementsByClass "ex")))
+        rule-str-li (map #(.-value %) (iArrayLike-to-cljs-list (gdom/getElementsByClass "rule")))
+        non-empty-input (every? #(not= "" %) (concat exp-str-li rule-str-li))
+        exps (map #(parsing/parse %) exp-str-li)
+        vanilla-rules (map #(parsing/parse %) rule-str-li)
         rules (map #(parsing/rulify %) vanilla-rules)
         ;; vector of indices where parsing err occurred (e.g., [0, 3])
         exp-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} exps))
@@ -107,9 +108,11 @@
                                                           (nth exps 1)
                                                           (nth rules 0)
                                                           (nth rules 1))))]
-    (when-not (empty? exp-parse-err) (show-exp-parse-err exp-parse-err))
-    (when-not (empty? rule-parse-err) (show-rule-parse-err rule-parse-err))
-    (.alert js/window result-str)))
+    (when non-empty-input
+      (cond
+        (not (empty? exp-parse-err)) (show-exp-parse-err exp-parse-err)
+        (not (empty? rule-parse-err)) (show-rule-parse-err rule-parse-err)
+        :else (.alert js/window result-str)))))
 
 (defn validate-click-listener
   [elem]
