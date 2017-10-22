@@ -66,12 +66,17 @@
        "</div>"))
 
 (defn- merge-val
+  "Takes a map looking `{:curr-id # :locations []}` and a number.
+   Returns a new map looking `{:curr-id (inc #) :locations []}`.
+   If val is nil, (inc #) is added to the `:locations` vector"
   [curr-map val]
   (let [curr-map (update curr-map :curr-id inc)
         curr-id (:curr-id curr-map)]
     (if (nil? val) (update-in curr-map [:locations] #(conj % curr-id)) curr-map)))
 
 (defn- show-exp-parse-err
+  "Takes a vector of indices and attach error message elements
+   to corresponding exp input box"
   [err-id-vec]
   (let [exp-boxes (iArrayLike-to-cljs-list (gdom/getElementsByClass "exp-box"))]
     (dorun
@@ -82,6 +87,8 @@
       err-id-vec))))
 
 (defn- show-rule-parse-err
+  "Takes a vector of indices and attach error message elements
+   to corresponding rule input box"
   [err-id-vec]
   (let [rule-cols (map #(gdom/getParentElement %)
                        (iArrayLike-to-cljs-list (gdom/getElementsByClass "rule")))]
