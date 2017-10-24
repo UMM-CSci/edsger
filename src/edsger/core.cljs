@@ -36,6 +36,10 @@
   [html-str]
   (.createContextualFragment (.createRange js/document) html-str))
 
+(defn- remove-elems-by-class
+  "Removes all elements from dom with the given class"
+  [class]
+  (dorun (map #(gdom/removeNode %) (iArrayLike-to-cljs-list (gdom/getElementsByClass class)))))
 
 
 ;; UI and handlers ===================
@@ -115,6 +119,7 @@
                                                           (nth exps 1)
                                                           (nth rules 0)
                                                           (nth rules 1))))]
+    (remove-elems-by-class "alert-danger")
     (when non-empty-input
       (if (some not-empty [exp-parse-err rule-parse-err])
         (do (show-exp-parse-err exp-parse-err)
