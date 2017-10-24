@@ -116,10 +116,10 @@
                                                           (nth rules 0)
                                                           (nth rules 1))))]
     (when non-empty-input
-      (cond
-        (not (empty? exp-parse-err)) (show-exp-parse-err exp-parse-err)
-        (not (empty? rule-parse-err)) (show-rule-parse-err rule-parse-err)
-        :else (.alert js/window result-str)))))
+      (if (some not-empty [exp-parse-err rule-parse-err])
+        (do (show-exp-parse-err exp-parse-err)
+            (show-rule-parse-err rule-parse-err))
+        (.alert js/window result-str)))))
 
 (defn validate-click-listener
   [elem]
