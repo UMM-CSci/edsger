@@ -1,5 +1,7 @@
 language: clojure
 lein: lein
+jdk:
+  - openjdk8
 before_script:
   - npm install
   - export PATH="$PATH:$(pwd)/node_modules/karma-cli/bin"
