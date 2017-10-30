@@ -25,7 +25,7 @@ there's some evidence that the students find it useful.
 
 Clone and run this repository to see the app in action
 ```
-git clone https://github.com/NicMcPhee/edsger
+git clone https://github.com/UMM-CSci/edsger.git
 cd edsger
 lein figwheel
 ```
@@ -42,7 +42,7 @@ you need to type the expressions and rules similar to the above expression.
 
 ```
 top-expression box:     | a ∧ (b ∨ c) |
-left-rule box: | p ∨ q |  ≣  right-rule box: | q ∨ p |
+left-rule box:     | p ∨ q |  ≣  | q ∨ p |   :right-rule box
 bottom-expression box : | a ∧ (c ∨ b) |
 ```
 
