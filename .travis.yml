@@ -6,6 +6,9 @@ before_script:
   - npm install
   - export PATH="$PATH:$(pwd)/node_modules/karma-cli/bin"
 script: lein doo chrome-headless test once
+before_deploy:
+  - rm -rf resources/public/js/compiled
+  - lein cljsbuild once min
 deploy:
   provider: pages
   skip_cleanup: true
