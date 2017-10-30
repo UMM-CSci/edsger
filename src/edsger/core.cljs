@@ -43,23 +43,8 @@
   (dorun (map #(gdom/removeNode %) (iArrayLike-to-cljs-list (gdom/getElementsByClass class)))))
 
 
+
 ;; UI and handlers ===================
-
-(defn copy-handler-gen
-  "Returns a function/handler that copies the given element's content
-   to the clipboard"
-  [id]
-  (fn []
-    (let [temp (elemt "input" {"value" (aget (by-id id) "innerHTML")})]
-      (do
-        (gdom/appendChild (aget js/document "body") temp)
-        (.select temp)
-        (.execCommand js/document "copy")
-        (gdom/removeNode temp)))))
-
-(defn copy-click-listener
-  [elem id]
-  (events/listen elem "click" (copy-handler-gen id)))
 
 ;; Bootstrap alert div
 (def parse-err-str
@@ -156,15 +141,13 @@
   (events/listen (aget js/document "body") "keyup" keystroke-handler))
 
 
+
 ;; Top-level handler / listener ===================
 
 (defn window-load-handler
   "Top-level load handler"
   []
   (validate-click-listener (by-id "validate"))
-  (keystroke-listener)
-  (dorun
-   (map #(copy-click-listener (by-id %) %)
-        ["not" "and" "or" "impli" "equiv"])))
+  (keystroke-listener))
 
 (events/listen js/window "load" window-load-handler)
