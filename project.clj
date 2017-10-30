@@ -13,13 +13,14 @@
                  [instaparse "1.4.8"]]
 
   :plugins [[lein-figwheel "0.5.13"]
-            [lein-cljsbuild "1.1.7" :exclusions [[org.clojure/clojure]]]]
+            [lein-cljsbuild "1.1.7" :exclusions [[org.clojure/clojure]]]
+            [lein-doo "0.1.8"]]
 
   :source-paths ["src"]
 
   :cljsbuild {:builds
               [{:id "dev"
-                :source-paths ["src" "test"]
+                :source-paths ["src"]
 
                 ;; The presence of a :figwheel configuration here
                 ;; will cause figwheel to inject the figwheel client
@@ -47,7 +48,13 @@
                 :compiler {:output-to "resources/public/js/compiled/edsger.js"
                            :main edsger.core
                            :optimizations :advanced
-                           :pretty-print false}}]}
+                           :pretty-print false}}
+               {:id "test"
+                :source-paths ["src" "test"]
+                :compiler {:output-to "resources/public/js/compiled/testable.js"
+                           :output-dir "resources/public/js/compiled/test"
+                           :main "edsger.test-runner"
+                           :optimizations :none}}]}
 
   :figwheel {;; :http-server-root "public" ;; default and assumes "resources"
              ;; :server-port 3449 ;; default

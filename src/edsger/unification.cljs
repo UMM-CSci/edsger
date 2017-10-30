@@ -33,6 +33,11 @@
       (or
         (check start-exp end-exp)
         (and
+         ;; if start-exp and end-exp don't pass the check as a whole,
+         ;; then we must be able to break them down to find a place
+         ;; to apply the rule
+         (seqable? start-exp)
+         (seqable? end-exp)
          ;; only works for the same length exps
          (= (count start-exp) (count end-exp))
          (let

@@ -1,4 +1,5 @@
-edsger: _Simple proof checker for introductory logic_
+edsger: _Simple proof checker for introductory logic_ 
+[![Build Status](https://travis-ci.org/NicMcPhee/edsger.svg?branch=dev)](https://travis-ci.org/NicMcPhee/edsger)
 =====================================================
 
 ## Introduction
@@ -24,7 +25,7 @@ there's some evidence that the students find it useful.
 
 Clone and run this repository to see the app in action
 ```
-git clone https://github.com/NicMcPhee/edsger
+git clone https://github.com/UMM-CSci/edsger.git
 cd edsger
 lein figwheel
 ```
@@ -37,17 +38,49 @@ When you validate a logic expression looking:
 ≣    <(3.24) Symmetry of ∨>
   a ∧ (b ∨ c) 
 ```
-you need to type the expressions and rules in pseudo-clojure style.  
+you need to type the expressions and rules similar to the above expression.  
 
-:warning: In the next version of edsger, the input format will be 
-changed to look similar to the actual expression above.
 ```
-first box  : (and a (or c b))
-second box : (or a b)
-third box  : (or b a)
-fourth box : (and a (or b c))
+top-expression box:     | a ∧ (b ∨ c) |
+left-rule box:     | p ∨ q |  ≣  | q ∨ p |   :right-rule box
+bottom-expression box : | a ∧ (c ∨ b) |
 ```
-And, click the **validate** button to check your reasoning :100:.
+
+:interrobang: To type logic symbols like `≣` or `∨`, you don't have to copy them 
+from somewhere. _edsger_ is doing conversion for you when you type Java-like symbols. 
+The below is the conversion table.
+
+| Logic Symbol    | Regular Symbol (on keyboard) |
+| -------------   | -------------                |
+| ¬ (not)         | !                            |
+| ∧ (and)         | &                            |
+| ∨ (or)          | \|                           |
+| ⇒ (implication) | =>                           |
+| ≡ (equivalence) | ==                           |
+
+And finally, click the **validate** button to check your reasoning :100:.
+
+## Running the tests
+
+Running the tests requires Karma. You can install Karma and all the needed
+plugins by running `npm install` in the root of the repo. You'll then need to
+add `./node_modules/karma-cli/bin` to your
+`$PATH`. Check out [direnv](https://direnv.net/) if you want to make this easier
+to do.
+
+If you have Google Chrome, you can run the tests once with the following command:
+
+```
+lein doo chrome test once
+```
+
+If want to run the tests in Firefox, simply replace `chrome` with `firefox`. If
+you wish to avoid opening a browser window for the tests, use `chrome-headless`
+instead (requires Chrome 59 or later).
+
+If you omit `once` from the end of the command, the tests be re-run every time
+that Karma detects a change in the compiled JS files.
 
 ## License
-TBA
+
+Distributed under the Eclipse Public License either version 1.0 or any later version.

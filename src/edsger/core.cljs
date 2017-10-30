@@ -1,177 +1,156 @@
 (ns edsger.core
-  "Front-end view and controller UI"
+  "Front-end UI controller"
   (:require [clojure.browser.repl :as repl]
             [clojure.browser.dom  :as dom]
-            [clojure.browser.event :as ev]
             [goog.events :as events]
-            [edsger.substitution :as subs]
+            [goog.dom :as gdom]
+            [goog.dom.selection :as gselection]
             [edsger.unification :as uni]
             [edsger.parsing :as parsing]))
 
 (enable-console-print!)
 
-;; Constants and State
 
-(def ENTER_KEY 13)
-(def STORAGE_NAME "exps-cljs")
-(def exp-list (atom [])) ;; ALL APPLICATION STATE LIVES HERE
 
-;; State management
+;; Helpers ===========================
 
-(defn save-exps []
-  (.setItem js/localStorage STORAGE_NAME
-            (.stringify js/JSON (clj->js @exp-list))))
+;; shortcut for dom/get-element
+(defn- by-id [id] (dom/get-element id))
 
-(defn load-exps []
-  (if (not (seq (.getItem js/localStorage STORAGE_NAME)))
-    (do
-      (reset! exp-list [])
-      (save-exps)))
-  (reset! exp-list
-         (js->clj (.parse js/JSON (.getItem js/localStorage STORAGE_NAME)))))
+;; shortcut for dom/element
+(defn- elemt
+  ([tag-or-text]
+   (dom/element tag-or-text))
+  ([tag params]
+   (dom/element tag params)))
 
-;; HELPER: shortcut for dom/get-element
-(defn by-id [id] (dom/get-element id))
+(defn- iArrayLike-to-cljs-list
+  "Converts goog's iArrayLike type to cljs list"
+  [iArr]
+  (let [length (aget iArr "length")]
+    (for [i (range length)]
+      (aget iArr i))))
 
-;; HELPER: shortcut for dom/element
-(defn elemt [tag params] (dom/element tag params))
+(defn- str-to-elem
+  "Generates a HTML element node from the given
+   HTML-looking string (e.g., \"<span>Yo</span>\")"
+  [html-str]
+  (.createContextualFragment (.createRange js/document) html-str))
 
-;; HELPER: updates a exp by its id, changes puts a new val for the attr
-(defn update-attr [id attr val]
-  (let [updated
-        (vec (map #(if (= (% "id") id) (conj % {attr val}) %) @exp-list))]
-    (reset! exp-list updated)))
+(defn- remove-elems-by-class
+  "Removes all elements from dom with the given class"
+  [class]
+  (dorun (map #(gdom/removeNode %) (iArrayLike-to-cljs-list (gdom/getElementsByClass class)))))
 
-(defn remove-exp-by-id [id]
-  (reset! exp-list
-          (vec (filter #(not= (% "id") id) @exp-list))))
 
-;; UI and handlers
 
-(declare refresh-data)
+;; UI and handlers ===================
 
-(defn delete-click-handler [ev]
-  (let [id (.getAttribute (.-target ev) "data-exp-id")]
-    (remove-exp-by-id id)
-    (refresh-data)))
+;; Bootstrap alert div
+(def parse-err-str
+  (str "<div class=\"alert alert-danger alert-dismissible fade show col-2.5\" role=\"alert\">"
+         "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">"
+           "<span aria-hidden=\"true\">&times;</span>"
+         "</button>"
+         "Error in input"
+       "</div>"))
 
-(defn exp-content-handler [ev]
-  (let [id    (.getAttribute (.-target ev) "data-exp-id")
-        div   (by-id (str "li_" id))
-        input (by-id (str "input_" id))]
-    (dom/set-properties div {"class" "editing"})
-    (.focus input)))
+(defn- merge-val
+  "Takes a map looking `{:curr-id # :locations []}` and a number.
+   Returns a new map looking `{:curr-id (inc #) :locations []}`.
+   If val is nil, (inc #) is added to the `:locations` vector"
+  [curr-map val]
+  (let [curr-map (update curr-map :curr-id inc)
+        curr-id (:curr-id curr-map)]
+    (if (nil? val) (update-in curr-map [:locations] #(conj % curr-id)) curr-map)))
 
-(defn input-exp-key-handler [ev]
-  (let [input (.-target ev)
-        text  (.trim (.-value input))
-        id    (apply str (drop 6 (.-id input)))]
-    (if (seq text)
-      (if (= ENTER_KEY (.-keyCode ev))
-        (do
-          (update-attr id "title" text)
-          (refresh-data)))
-      (do
-        (remove-exp-by-id id)
-        (refresh-data)))))
+(defn- show-exp-parse-err
+  "Takes a vector of indices and attach error message elements
+   to corresponding exp input box"
+  [err-id-vec]
+  (let [exp-boxes (iArrayLike-to-cljs-list (gdom/getElementsByClass "exp-box"))]
+    (dorun
+     (map
+      (fn [id]
+        ;; adding err msg where they fail
+        (gdom/appendChild (nth exp-boxes id) (str-to-elem parse-err-str)))
+      err-id-vec))))
 
-(defn input-exp-blur-handler [ev]
-  (let [input (.-target ev)
-        text  (.trim (.-value input))
-        id    (apply str (drop 6 (.-id input)))] ;; drops "input_"
-    (do
-      (update-attr id "title" text)
-      (refresh-data))))
+(defn- show-rule-parse-err
+  "Takes a vector of indices and attach error message elements
+   to corresponding rule input box"
+  [err-id-vec]
+  (let [rule-cols (map #(gdom/getParentElement %)
+                       (iArrayLike-to-cljs-list (gdom/getElementsByClass "rule")))]
+    (dorun
+     (map
+      (fn [id]
+        ;; adding err msg where they fail
+        (gdom/insertSiblingAfter (str-to-elem parse-err-str) (nth rule-cols id)))
+      err-id-vec))))
 
-(defn redraw-exps-ui []
-  (set! (.-innerHTML (by-id "exp-list")) "")
-  (dom/set-value (by-id "new-exp") "")
-  (dorun ;; materialize lazy list returned by map below
-   (map
-    (fn [exp]
-      (let [
-        id          (exp "id")
-        li          (elemt "li" {"id" (str "li_" id)})
-        checkbox    (elemt "input" {"class" "toggle" "data-exp-id" id
-                                   "type" "checkbox"})
-        label       (elemt "label" {"data-exp-id" id})
-        delete-link (elemt "button" {"class" "destroy" "data-exp-id" id})
-        div-display (elemt "div" {"class" "view" "data-exp-id" id})
-        input-exp  (elemt "input" {"id" (str "input_" id) "class" "edit"})]
+(defn validate-handler
+  "Performs the validation based on the values typed by users"
+  [evt]
+  (let [exp-str-li (map #(.-value %) (iArrayLike-to-cljs-list (gdom/getElementsByClass "ex")))
+        rule-str-li (map #(.-value %) (iArrayLike-to-cljs-list (gdom/getElementsByClass "rule")))
+        non-empty-input (every? #(not= "" %) (concat exp-str-li rule-str-li))
+        exps (map #(parsing/parse %) exp-str-li)
+        vanilla-rules (map #(parsing/parse %) rule-str-li)
+        rules (map #(parsing/rulify %) vanilla-rules)
+        ;; vector of indices where parsing err occurred (e.g., [0, 3])
+        exp-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} exps))
+        rule-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} vanilla-rules))
+        result-str (str (true? (uni/check-match-recursive (nth exps 0)
+                                                          (nth exps 1)
+                                                          (nth rules 0)
+                                                          (nth rules 1))))]
+    (remove-elems-by-class "alert-danger")
+    (when non-empty-input
+      (if (some not-empty [exp-parse-err rule-parse-err])
+        (do (show-exp-parse-err exp-parse-err)
+            (show-rule-parse-err rule-parse-err))
+        (.alert js/window result-str)))))
 
-        (dom/set-text label (exp "title"))
-        (dom/set-value input-exp (exp "title"))
+(defn validate-click-listener
+  [elem]
+  (events/listen elem "click" validate-handler))
 
-        (ev/listen label "dblclick" exp-content-handler)
-        (ev/listen delete-link "click" delete-click-handler)
-        (ev/listen input-exp "keypress" input-exp-key-handler)
-        (ev/listen input-exp "blur" input-exp-blur-handler)
+(defn- replace-with-symbols
+  "Replaces all symbol-like strings to real symbols"
+  [vanilla-str]
+  (-> vanilla-str
+      (clojure.string/replace "!" "¬")
+      (clojure.string/replace "&" "∧")
+      (clojure.string/replace "|" "∨")
+      (clojure.string/replace "=>" "⇒")
+      (clojure.string/replace "==" "≡")))
 
-        (dom/append div-display checkbox label delete-link)
-        (dom/append li div-display input-exp)
-        (dom/append (by-id "exp-list") li)))
-    @exp-list)))
+(defn keystroke-handler
+  "Replaces all symbol-like strings in the focused input box to real symbols"
+  [evt]
+  (let [input-box (gdom/getActiveElement js/document)
+        key (aget evt "key")]
+    ;; The last four cases handle fast user typing
+    (when (contains? #{"!" "&" "|" "=" ">" "1" "7" "\\" "."} key)
+      (gselection/setStart input-box 0)
+      (gselection/setEnd input-box (count (.-value input-box)))
+      (gselection/setText input-box (replace-with-symbols (gselection/getText input-box)))
+      (gselection/setStart input-box (count (.-value input-box)))
+      (gselection/setEnd input-box (count (.-value input-box))))))
 
-(defn clear-click-handler []
-  (reset! exp-list [])
-  (refresh-data))
+(defn keystroke-listener
+  []
+  (events/listen (aget js/document "body") "keyup" keystroke-handler))
 
-(defn draw-exp-clear []
-  (let [footer (by-id "footer")
-        button (by-id "clear")]
-    (ev/listen button "click" clear-click-handler)))
 
-(defn validate-click-handler []
-  (let [exp-str-list (map #(get % "title") @exp-list)
-        ;; ("(and p q)" "(and p q)" "(and q p)" "(and q p)")
-        exp-vec-list (map parsing/parse exp-str-list)
-        ;; ('(:and p q) '(:and p q) '(:and q p) '(:and q p))
-        result-str (str (true? (uni/check-match-recursive (nth exp-vec-list 0)
-                                                          (nth exp-vec-list 3)
-                                                          (parsing/rulify (nth exp-vec-list 1))
-                                                          (parsing/rulify (nth exp-vec-list 2)))))]
-    (js/alert result-str)))
 
-(defn validate-event-listener []
-  (let [button (by-id "validate")]
-    (ev/listen button "click" validate-click-handler)))
+;; Top-level handler / listener ===================
 
-(defn refresh-data []
-  (save-exps)
-  (redraw-exps-ui)
-  (draw-exp-clear)
-  (validate-event-listener))
+(defn window-load-handler
+  "Top-level load handler"
+  []
+  (validate-click-listener (by-id "validate"))
+  (keystroke-listener))
 
-;; This get-uuid fn is almost equiv to the original
-(defn get-uuid []
-  (apply
-   str
-   (map
-    (fn [x]
-      (if (= x \0)
-        (.toString (bit-or (* 16 (.random js/Math)) 0) 16)
-        x))
-    "00000000-0000-4000-0000-000000000000")))
-
-(defn add-exp [text]
-  (let [tt (.trim text)]
-    (if (seq tt)
-      (do
-        (swap! exp-list conj {"id" (get-uuid) "title" tt})
-        (refresh-data)))))
-
-(defn new-exp-handler [ev]
-  (if (= ENTER_KEY (.-keyCode ev))
-    (add-exp (.-value (by-id "new-exp")))))
-
-(defn add-event-listeners []
-  (ev/listen (by-id "new-exp") "keypress" new-exp-handler))
-
-(defn window-load-handler []
-  (load-exps)
-  (refresh-data)
-  (add-event-listeners))
-
-;; Launch window-load-handler when window loads
-;; -- not sure why (ev/listen js/window "load" fn) does not work
 (events/listen js/window "load" window-load-handler)
