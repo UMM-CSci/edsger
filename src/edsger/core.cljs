@@ -131,7 +131,8 @@
   [evt]
   (let [input-box (gdom/getActiveElement js/document)
         key (aget evt "key")]
-    (when (contains? #{"!" "&" "|" "=" ">"} key)
+    ;; The last four cases handle fast user typing
+    (when (contains? #{"!" "&" "|" "=" ">" "1" "7" "\\" "."} key)
       (gselection/setStart input-box 0)
       (gselection/setEnd input-box (count (.-value input-box)))
       (gselection/setText input-box (replace-with-symbols (gselection/getText input-box)))
