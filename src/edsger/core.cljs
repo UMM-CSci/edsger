@@ -129,12 +129,14 @@
 (defn keystroke-handler
   "Replaces all symbol-like strings in the focused input box to real symbols"
   [evt]
-  (let [input-box (gdom/getActiveElement js/document)]
-    (gselection/setStart input-box 0)
-    (gselection/setEnd input-box (count (.-value input-box)))
-    (gselection/setText input-box (replace-with-symbols (gselection/getText input-box)))
-    (gselection/setStart input-box (count (.-value input-box)))
-    (gselection/setEnd input-box (count (.-value input-box)))))
+  (let [input-box (gdom/getActiveElement js/document)
+        key (aget evt "key")]
+    (when (contains? #{"!" "&" "|" "=" ">"} key)
+      (gselection/setStart input-box 0)
+      (gselection/setEnd input-box (count (.-value input-box)))
+      (gselection/setText input-box (replace-with-symbols (gselection/getText input-box)))
+      (gselection/setStart input-box (count (.-value input-box)))
+      (gselection/setEnd input-box (count (.-value input-box))))))
 
 (defn keystroke-listener
   []
