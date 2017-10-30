@@ -38,17 +38,27 @@ When you validate a logic expression looking:
 ≣    <(3.24) Symmetry of ∨>
   a ∧ (b ∨ c) 
 ```
-you need to type the expressions and rules in pseudo-clojure style.  
+you need to type the expressions and rules similar to the above expression.  
 
-:warning: In the next version of edsger, the input format will be 
-changed to look similar to the actual expression above.
 ```
-first box  : (and a (or c b))
-second box : (or a b)
-third box  : (or b a)
-fourth box : (and a (or b c))
+top-expression box:     | a ∧ (b ∨ c) |
+left-rule box: | p ∨ q |  ≣  right-rule box: | q ∨ p |
+bottom-expression box : | a ∧ (c ∨ b) |
 ```
-And, click the **validate** button to check your reasoning :100:.
+
+:interrobang: To type logic symbols like `≣` or `∨`, you don't have to copy them 
+from somewhere. _edsger_ is doing conversion for you when you type Java-like symbols. 
+The below is the conversion table.
+
+| Logic Symbol    | Regular Symbol (on keyboard) |
+| -------------   | -------------                |
+| ¬ (not)         | !                            |
+| ∧ (and)         | &                            |
+| ∨ (or)          | \|                           |
+| ⇒ (implication) | =>                           |
+| ≡ (equivalence) | ==                           |
+
+And finally, click the **validate** button to check your reasoning :100:.
 
 ## Running the tests
 
@@ -72,4 +82,5 @@ If you omit `once` from the end of the command, the tests be re-run every time
 that Karma detects a change in the compiled JS files.
 
 ## License
-TBA soon
+
+Distributed under the Eclipse Public License either version 1.0 or any later version.
