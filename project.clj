@@ -51,8 +51,8 @@
                            :pretty-print false}}
                {:id "test"
                 :source-paths ["src" "test"]
-                :compiler {:output-to "resources/public/js/testable.js"
-                           :output-dir "resources/public/js/test"
+                :compiler {:output-to "resources/public/js/compiled/testable.js"
+                           :output-dir "resources/public/js/compiled/test"
                            :main "edsger.test-runner"
                            :optimizations :none}}]}
 
