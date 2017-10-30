@@ -4,6 +4,7 @@
             [clojure.browser.dom  :as dom]
             [goog.events :as events]
             [goog.dom :as gdom]
+            [goog.dom.selection :as gselection]
             [edsger.unification :as uni]
             [edsger.parsing :as parsing]))
 
@@ -42,23 +43,8 @@
   (dorun (map #(gdom/removeNode %) (iArrayLike-to-cljs-list (gdom/getElementsByClass class)))))
 
 
+
 ;; UI and handlers ===================
-
-(defn copy-handler-gen
-  "Returns a function/handler that copies the given element's content
-   to the clipboard"
-  [id]
-  (fn []
-    (let [temp (elemt "input" {"value" (aget (by-id id) "innerHTML")})]
-      (do
-        (gdom/appendChild (aget js/document "body") temp)
-        (.select temp)
-        (.execCommand js/document "copy")
-        (gdom/removeNode temp)))))
-
-(defn copy-click-listener
-  [elem id]
-  (events/listen elem "click" (copy-handler-gen id)))
 
 ;; Bootstrap alert div
 (def parse-err-str
@@ -130,6 +116,33 @@
   [elem]
   (events/listen elem "click" validate-handler))
 
+(defn- replace-with-symbols
+  "Replaces all symbol-like strings to real symbols"
+  [vanilla-str]
+  (-> vanilla-str
+      (clojure.string/replace "!" "¬")
+      (clojure.string/replace "&" "∧")
+      (clojure.string/replace "|" "∨")
+      (clojure.string/replace "=>" "⇒")
+      (clojure.string/replace "==" "≡")))
+
+(defn keystroke-handler
+  "Replaces all symbol-like strings in the focused input box to real symbols"
+  [evt]
+  (let [input-box (gdom/getActiveElement js/document)
+        key (aget evt "key")]
+    ;; The last four cases handle fast user typing
+    (when (contains? #{"!" "&" "|" "=" ">" "1" "7" "\\" "."} key)
+      (gselection/setStart input-box 0)
+      (gselection/setEnd input-box (count (.-value input-box)))
+      (gselection/setText input-box (replace-with-symbols (gselection/getText input-box)))
+      (gselection/setStart input-box (count (.-value input-box)))
+      (gselection/setEnd input-box (count (.-value input-box))))))
+
+(defn keystroke-listener
+  []
+  (events/listen (aget js/document "body") "keyup" keystroke-handler))
+
 
 
 ;; Top-level handler / listener ===================
@@ -138,8 +151,6 @@
   "Top-level load handler"
   []
   (validate-click-listener (by-id "validate"))
-  (dorun
-   (map #(copy-click-listener (by-id %) %)
-        ["not" "and" "or" "impli" "equiv"])))
+  (keystroke-listener))
 
 (events/listen js/window "load" window-load-handler)
