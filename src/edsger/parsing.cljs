@@ -6,15 +6,20 @@
 ;; operators. Currently requires expressions to be fully parenthesized.
 (insta/defparser
   infix-cfg
-  (str "top-level   = <whitespace> (boolean | variable | unary-expr | binary-expr) <whitespace>;"
-       "whitespace   = #'\\s*';" ;; https://docs.oracle.com/javase/tutorial/essential/regex/pre_char_classes.html
-       "boolean     = 'true' | 'false';"
-       "variable    = #'[a-zA-Z]';" ;; we only support single-character variables
-       "unary-op    = '¬';"
-       "unary-expr  = unary-op <whitespace> bottom;"
-       "bottom      = boolean | variable | <'('> top-level <')'>;"
-       "binary-expr = bottom <whitespace> binary-op <whitespace> bottom;"
-       "binary-op   = '∨' | '∧' | '≡'| '⇒';"))
+  (str "top-level      = equiv-expr
+        <equiv-expr>   = implies-expr | equiv
+        equiv          = <w> equiv-expr <w '≡' w> implies-expr <w>
+        <implies-expr> = and-or-expr | implies
+        implies        = <w> implies-expr <w '⇒' w> and-or-expr <w>
+        <and-or-expr>  = not-expr | and | or
+        and            = <w> and-or-expr <w '∧' w> not-expr <w>
+        or             = <w> and-or-expr <w '∨' w> not-expr <w>
+        <not-expr>     = statement | not
+        not            = <w '¬' w> statement <w>
+        <statement>    = <w> (variable | boolean) <w> | <w '(' w> equiv-expr <w ')' w>
+        boolean        = 'true' | 'false'
+        variable       = #'[a-zA-Z]'
+        w              = #'\\s*'"))
 
 (def ^:private operator-map
   {"¬" :not
@@ -31,11 +36,9 @@
   (insta/transform
    {:boolean #(= "true" %)
     :variable symbol
-    :unary-op #(get operator-map %)
-    :binary-op #(get operator-map %)
-    :unary-expr (fn [op exp] [op exp])
-    :binary-expr (fn [left op right] [op left right])
-    :bottom identity
+    :and (fn [left right] [:and left right])
+    :or (fn [left right] [:or left right])
+    :equiv (fn [left right] [:equiv left right])
     :top-level identity}
    parse-tree))
 

@@ -15,47 +15,32 @@
 
 (deftest infix-cfg_one-level-operations
   (are [input expected-output] (= (p/infix-cfg input) expected-output)
-    "¬ true" [:top-level [:unary-expr [:unary-op "¬"] [:bottom [:boolean "true"]]]]
-    "a ⇒ false" [:top-level [:binary-expr
-                             [:bottom [:variable "a"]]
-                             [:binary-op "⇒"]
-                             [:bottom [:boolean "false"]]]]
-    "p ≡ q" [:top-level [:binary-expr
-                         [:bottom [:variable "p"]]
-                         [:binary-op "≡"]
-                         [:bottom [:variable "q"]]]]
-    "t ∧ u" [:top-level [:binary-expr
-                         [:bottom [:variable "t"]]
-                         [:binary-op "∧"]
-                         [:bottom [:variable "u"]]]]))
+    "¬ true" [:top-level [:not [:boolean "true"]]]
+    "a ⇒ false" [:top-level [:implies [:variable "a"] [:boolean "false"]]]
+    "p ≡ q" [:top-level [:equiv
+                         [:variable "p"]
+                         [:variable "q"]]]
+    "t ∧ u" [:top-level [:and
+                         [:variable "t"]
+                         [:variable "u"]]]))
 
 (deftest infix-cfg_complex-nexting-with-parens-works
   (is (=
        (p/infix-cfg "(a ⇒ false) ∨ (¬ (t ∧ u))")
-       [:top-level [:binary-expr
-                    [:bottom
-                     [:top-level
-                          [:binary-expr
-                           [:bottom [:variable "a"]]
-                           [:binary-op "⇒"]
-                           [:bottom [:boolean "false"]]]]]
-                    [:binary-op "∨"]
-                    [:bottom
-                     [:top-level
-                          [:unary-expr
-                           [:unary-op "¬"]
-                           [:bottom
-                                [:top-level
-                                 [:binary-expr
-                                  [:bottom [:variable "t"]]
-                                  [:binary-op "∧"]
-                                  [:bottom [:variable "u"]]]]]]]]]])))
+       [:top-level
+        [:or
+         [:implies
+          [:variable "a"]
+          [:boolean "false"]]
+         [:not
+          [:and
+           [:variable "t"]
+           [:variable "u"]]]]])))
 
 (deftest infix-cfg_spaces-with-not
   (are [input] (= (p/infix-cfg input) [:top-level
-                                       [:unary-expr
-                                        [:unary-op "¬"]
-                                        [:bottom [:boolean "true"]]]])
+                                       [:not
+                                        [:boolean "true"]]])
     "¬ true"
     "¬true"))
 
