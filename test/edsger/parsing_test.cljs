@@ -3,18 +3,18 @@
             [clojure.test :as t :refer-macros [deftest is are] :include-macros true]))
 
 
-;; ==== Tests for `infix-cfg`
+;; ==== Tests for `parse-trees`
 
-(deftest infix-cfg_single-value-expression
-  (are [input expected-output] (= (p/infix-cfg input) expected-output)
+(deftest parse-trees_single-value-expression
+  (are [input expected-output] (= (p/parse-trees input) (list expected-output))
     "true" [:top-level [:boolean "true"]]
     "false" [:top-level [:boolean "false"]]
     "a" [:top-level [:variable "a"]]
     "m" [:top-level [:variable "m"]]
     "z" [:top-level [:variable "z"]]))
 
-(deftest infix-cfg_one-level-operations
-  (are [input expected-output] (= (p/infix-cfg input) expected-output)
+(deftest parse-trees_one-level-operations
+  (are [input expected-output] (= (p/parse-trees input) (list expected-output))
     "¬ true" [:top-level [:not [:boolean "true"]]]
     "a ⇒ false" [:top-level [:implies [:variable "a"] [:boolean "false"]]]
     "p ≡ q" [:top-level [:equiv
@@ -24,10 +24,10 @@
                          [:variable "t"]
                          [:variable "u"]]]))
 
-(deftest infix-cfg_complex-nexting-with-parens-works
+(deftest parse-trees_complex-nexting-with-parens-works
   (is (=
-       (p/infix-cfg "(a ⇒ false) ∨ (¬ (t ∧ u))")
-       [:top-level
+       (p/parse-trees "(a ⇒ false) ∨ (¬ (t ∧ u))")
+       [[:top-level
         [:or
          [:implies
           [:variable "a"]
@@ -35,12 +35,12 @@
          [:not
           [:and
            [:variable "t"]
-           [:variable "u"]]]]])))
+           [:variable "u"]]]]]])))
 
-(deftest infix-cfg_spaces-with-not
-  (are [input] (= (p/infix-cfg input) [:top-level
+(deftest parse-trees_spaces-with-not
+  (are [input] (= (p/parse-trees input) [[:top-level
                                        [:not
-                                        [:boolean "true"]]])
+                                        [:boolean "true"]]]])
     "¬ true"
     "¬true"))
 

@@ -4,6 +4,8 @@
 
 ;; A simple CFG for parsing logical expressions containing several logic
 ;; operators. Currently requires expressions to be fully parenthesized.
+;; Since this is an ambiguous grammar, use parse-trees if you want to get
+;; all possible parse trees.
 (insta/defparser
   infix-cfg
   (str "top-level      = equiv-expr
@@ -22,6 +24,10 @@
         boolean        = 'true' | 'false'
         variable       = #'[a-zA-Z]'
         w              = #'\\s*'"))
+
+(defn parse-trees [str]
+  "A simple wrapper for infix-cfg and insta/parses."
+  (insta/parses infix-cfg str))
 
 (def ^:private operator-map
   {"¬" :not
@@ -50,7 +56,7 @@
    string cannot be parsed. In that case, the parse error is
    attached as metadata."
   [expression]
-  (let [hiccup-tree (transform-infix-cfg (insta/parses infix-cfg expression))]
+  (let [hiccup-tree (transform-infix-cfg (parse-trees expression))]
     (if-not (= (type hiccup-tree) instaparse.gll/Failure)
       hiccup-tree)))
 
