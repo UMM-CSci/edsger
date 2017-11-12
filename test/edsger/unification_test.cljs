@@ -124,3 +124,20 @@
             'b
             '(:and ?p ?p)
             '?p))))
+
+;; ==== Unit tests for `check-multiple-matches`
+
+(deftest check-multiple-matches__simple-success
+  (is (true? (u/check-multiple-matches
+              '[[:equiv false [:equiv false false]]
+                [:equiv [:equiv false] false]]
+              '[[:equiv false true]]
+              '[:equiv false false]
+              true))))
+
+(deftest check-multiple-matches__simple-failure
+  (is (not (u/check-multiple-matches
+            '[[:equiv [:equiv false] false]]
+            '[[:equiv false true]]
+            '[:equiv false false]
+            true))))

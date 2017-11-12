@@ -54,6 +54,13 @@
            (some :match result-list)
            (every? #(or (:match %) (:equal %)) result-list)))))))
 
+(defn check-multiple-matches [start-exps end-exps start-rule end-rule]
+  "Returns true when the given rules can be used to make
+   one of the start-exps equal to one of the end-exps"
+  (some identity (for [start start-exps
+                       end   end-exps]
+                   (check-match-recursive start end start-rule end-rule))))
+
 ;; This file is currently only for playing around during development
 ;; but I think that we'll eventually have some useful functions here.
 
