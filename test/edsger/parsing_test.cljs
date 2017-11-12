@@ -44,6 +44,26 @@
     "¬ true"
     "¬true"))
 
+(deftest parse-trees_precedence-operator-works
+  (are [input expected-output] (= (p/parse-trees input) expected-output)
+    "p ∧ q ≡ r" '[[:top-level [:equiv [:and [:variable "p"] [:variable "q"]] [:variable "r"]]]]
+    "¬p ⇒ q" '[[:top-level [:implies [:not [:variable "p"]] [:variable "q"]]]]))
+
+(deftest parse-trees_operator-chains-handled-correctly
+  (are [input expected-output] (= (set (p/parse-trees input)) (set expected-output))
+    "p ∧ q ∧ r" '[[:top-level [:and [:and [:variable "p"] [:variable "q"]] [:variable "r"]]]
+                  [:top-level [:and [:variable "p"] [:and [:variable "q"] [:variable "r"]]]]]
+    "p ∨ q ∨ r" '[[:top-level [:or [:or [:variable "p"] [:variable "q"]] [:variable "r"]]]
+                  [:top-level [:or [:variable "p"] [:or [:variable "q"] [:variable "r"]]]]]
+    "p ≡ q ≡ r" '[[:top-level [:equiv [:equiv [:variable "p"] [:variable "q"]] [:variable "r"]]]
+                  [:top-level [:equiv [:variable "p"] [:equiv [:variable "q"] [:variable "r"]]]]]))
+
+(deftest parse-trees_mixed-operator-chains-handled-correctly
+  (are [input expected-output] (= (set (p/parse-trees input)) (set expected-output))
+    "p ∨ q ∧ r" []  ;; <-- This isn't a valid expression
+    "p ∨ (q ∧ r)" '[[:top-level [:or [:variable "p"] [:and [:variable "q"] [:variable "r"]]]]]
+    "(p ∨ q) ∧ r" '[[:top-level [:and [:or [:variable "p"] [:variable "q"]] [:variable "r"]]]]))
+
 
 ;; ==== Tests for `transform-infix-cfg`
 
