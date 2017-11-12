@@ -8,12 +8,14 @@
   infix-cfg
   (str "top-level      = equiv-expr
         <equiv-expr>   = implies-expr | equiv
-        equiv          = <w> equiv-expr <w '≡' w> implies-expr <w>
+        equiv          = <w> equiv-expr <w '≡' w> equiv-expr <w>
         <implies-expr> = and-or-expr | implies
-        implies        = <w> implies-expr <w '⇒' w> and-or-expr <w>
+        implies        = <w> implies-expr <w '⇒' w> implies-expr <w>
         <and-or-expr>  = not-expr | and | or
-        and            = <w> and-or-expr <w '∧' w> not-expr <w>
-        or             = <w> and-or-expr <w '∨' w> not-expr <w>
+        <and-expr>     = not-expr | and
+        <or-expr>      = not-expr | or
+        and            = <w> and-expr <w '∧' w> and-expr <w>
+        or             = <w> or-expr <w '∨' w> or-expr <w>
         <not-expr>     = statement | not
         not            = <w '¬' w> statement <w>
         <statement>    = <w> (variable | boolean) <w> | <w '(' w> equiv-expr <w ')' w>
@@ -43,11 +45,12 @@
    parse-tree))
 
 (defn parse
-  "Takes a stringfied expression and converts it into
-   a legitimate expression. Returns nil when the expression
-   cannot be parsed."
+  "Takes a stringfied expression and returns a list of possible
+   parse trees for the expression. Returns an empty list when the
+   string cannot be parsed. In that case, the parse error is
+   attached as metadata."
   [expression]
-  (let [hiccup-tree (transform-infix-cfg (infix-cfg expression))]
+  (let [hiccup-tree (transform-infix-cfg (insta/parses infix-cfg expression))]
     (if-not (= (type hiccup-tree) instaparse.gll/Failure)
       hiccup-tree)))
 
