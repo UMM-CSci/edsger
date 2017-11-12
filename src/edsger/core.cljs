@@ -96,15 +96,17 @@
         rule-str-li (map #(.-value %) (iArrayLike-to-cljs-list (gdom/getElementsByClass "rule")))
         non-empty-input (every? #(not= "" %) (concat exp-str-li rule-str-li))
         exps (map #(parsing/parse %) exp-str-li)
-        vanilla-rules (map #(parsing/parse %) rule-str-li)
+        vanilla-rules (map
+                       #(if (empty? %) nil (first %))
+                       (map #(parsing/parse %) rule-str-li))
         rules (map #(parsing/rulify %) vanilla-rules)
         ;; vector of indices where parsing err occurred (e.g., [0, 3])
         exp-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} exps))
         rule-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} vanilla-rules))
-        result-str (str (true? (uni/check-match-recursive (nth exps 0)
-                                                          (nth exps 1)
-                                                          (nth rules 0)
-                                                          (nth rules 1))))]
+        result-str (str (true? (uni/check-multiple-matches (nth exps 0)
+                                                           (nth exps 1)
+                                                           (nth rules 0)
+                                                           (nth rules 1))))]
     (remove-elems-by-class "alert-danger")
     (when non-empty-input
       (if (some not-empty [exp-parse-err rule-parse-err])
