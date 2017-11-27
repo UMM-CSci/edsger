@@ -1,6 +1,5 @@
 (ns edsger.test-runner
   (:require  [doo.runner :refer-macros [doo-tests]]
-             [edsger.substitution-test]
              [edsger.unification-test]
              [edsger.parsing-test]))
 
@@ -8,7 +7,6 @@
 (enable-console-print!)
 
 (doo-tests
- 'edsger.substitution-test
  'edsger.unification-test
  'edsger.parsing-test)
 
