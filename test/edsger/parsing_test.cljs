@@ -44,6 +44,35 @@
     "¬ true"
     "¬true"))
 
+(deftest infix-cfg_sequential-ands
+  (is (= (type (p/infix-cfg "p ∧ q ∧ r")) instaparse.gll/Failure))
+  (is (= (p/infix-cfg "p ∧ (q ∧ r)") [:top-level
+                                       [:and [:variable "p"]
+                                        [:and [:variable "q"] [:variable "r"]]]]))
+  (is (= (p/infix-cfg "(p ∧ q) ∧ r") [:top-level
+                                        [:and
+                                         [:and [:variable "p"] [:variable "q"]]
+                                         [:variable "r"]]])))
+
+(deftest infix-cfg_sequential-ors
+  (is (= (type (p/infix-cfg "p ∨ q ∨ r")) instaparse.gll/Failure))
+  (is (= (p/infix-cfg "p ∨ (q ∨ r)") [:top-level
+                                       [:or [:variable "p"]
+                                        [:or [:variable "q"] [:variable "r"]]]]))
+  (is (= (p/infix-cfg "(p ∨ q) ∨ r") [:top-level
+                                       [:or
+                                        [:or [:variable "p"] [:variable "q"]]
+                                        [:variable "r"]]])))
+
+(deftest infix-cfg_mixed-and-with-or
+  (is (= (type (p/infix-cfg "p ∧ q ∨ r")) instaparse.gll/Failure))
+  (is (= (p/infix-cfg "p ∧ (q ∨ r)") [:top-level
+                                      [:and [:variable "p"]
+                                       [:or [:variable "q"] [:variable "r"]]]]))
+  (is (= (p/infix-cfg "(p ∧ q) ∨ r") [:top-level
+                                      [:or
+                                       [:and [:variable "p"] [:variable "q"]]
+                                       [:variable "r"]]])))
 
 ;; ==== Tests for `transform-infix-cfg`
 

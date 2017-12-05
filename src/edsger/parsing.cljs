@@ -12,8 +12,8 @@
         <implies-expr> = and-or-expr | implies
         implies        = <w> implies-expr <w '⇒' w> and-or-expr <w>
         <and-or-expr>  = not-expr | and | or
-        and            = <w> and-or-expr <w '∧' w> not-expr <w>
-        or             = <w> and-or-expr <w '∨' w> not-expr <w>
+        and            = <w> not-expr <w '∧' w> not-expr <w>
+        or             = <w> not-expr <w '∨' w> not-expr <w>
         <not-expr>     = statement | not
         not            = <w '¬' w> statement <w>
         <statement>    = <w> (variable | boolean) <w> | <w '(' w> equiv-expr <w ')' w>
