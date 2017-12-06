@@ -8,7 +8,7 @@
   infix-cfg
   (str "top-level      = equiv-expr
         <equiv-expr>   = implies-expr | equiv
-        equiv          = <w> equiv-expr <w '≡' w> implies-expr <w>
+        equiv          = <w> implies-expr <w '≡' w> implies-expr <w>
         <implies-expr> = and-or-expr | implies
         implies        = <w> implies-expr <w '⇒' w> and-or-expr <w>
         <and-or-expr>  = not-expr | and | or

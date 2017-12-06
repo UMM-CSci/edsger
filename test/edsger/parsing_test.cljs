@@ -74,6 +74,16 @@
                                        [:and [:variable "p"] [:variable "q"]]
                                        [:variable "r"]]])))
 
+(deftest infix-cfg_sequential-equivs
+  (is (= (type (p/infix-cfg "p ≡ q ≡ r")) instaparse.gll/Failure))
+  (is (= (p/infix-cfg "p ≡ (q ≡ r)") [:top-level
+                                      [:equiv [:variable "p"]
+                                       [:equiv [:variable "q"] [:variable "r"]]]]))
+  (is (= (p/infix-cfg "(p ≡ q) ≡ r") [:top-level
+                                      [:equiv
+                                       [:equiv [:variable "p"] [:variable "q"]]
+                                       [:variable "r"]]])))
+
 ;; ==== Tests for `transform-infix-cfg`
 
 (deftest transform-infix-cfg_works-with-infix-cfg
