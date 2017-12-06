@@ -116,6 +116,14 @@
     "(p)∨(q)"
     "(p∨((q)))"))
 
+(deftest infix-cfg_serial-negation
+  (is (= (p/infix-cfg "¬¬¬¬a")
+         [:top-level
+          [:not
+           [:not
+            [:not
+             [:not [:variable "a"]]]]]])))
+
 
 ;; ==== Tests for `transform-infix-cfg`
 

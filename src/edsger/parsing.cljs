@@ -15,7 +15,7 @@
         and            = <w> not-expr <w '∧' w> not-expr <w>
         or             = <w> not-expr <w '∨' w> not-expr <w>
         <not-expr>     = statement | not
-        not            = <w '¬' w> statement <w>
+        not            = <w '¬' w> not-expr <w>
         <statement>    = <w> (variable | boolean) <w> | <w '(' w> equiv-expr <w ')' w>
         boolean        = 'true' | 'false'
         variable       = #'[a-zA-Z]'
