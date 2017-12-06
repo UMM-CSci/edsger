@@ -94,6 +94,18 @@
                                        [:implies [:variable "p"] [:variable "q"]]
                                        [:variable "r"]]])))
 
+(deftest infix-cfg_general-precedence
+  (is (= (p/infix-cfg "(p ∧ q) ∨ r ≡ s ∧ (t ∨ u) ⇒ ¬w ∧ x")
+         [:top-level [:equiv
+                      [:or
+                       [:and [:variable "p"] [:variable "q"]]
+                       [:variable "r"]]
+                      [:implies
+                       [:and [:variable "s"]
+                        [:or [:variable "t"] [:variable "u"]]]
+                       [:and [:not [:variable "w"]] [:variable "x"]]]]])))
+
+
 ;; ==== Tests for `transform-infix-cfg`
 
 (deftest transform-infix-cfg_works-with-infix-cfg
