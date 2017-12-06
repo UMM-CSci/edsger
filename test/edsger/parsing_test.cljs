@@ -84,6 +84,16 @@
                                        [:equiv [:variable "p"] [:variable "q"]]
                                        [:variable "r"]]])))
 
+(deftest infix-cfg_sequential-implication
+  (is (= (type (p/infix-cfg "p ⇒ q ⇒ r")) instaparse.gll/Failure))
+  (is (= (p/infix-cfg "p ⇒ (q ⇒ r)") [:top-level
+                                      [:implies [:variable "p"]
+                                       [:implies [:variable "q"] [:variable "r"]]]]))
+  (is (= (p/infix-cfg "(p ⇒ q) ⇒ r") [:top-level
+                                      [:implies
+                                       [:implies [:variable "p"] [:variable "q"]]
+                                       [:variable "r"]]])))
+
 ;; ==== Tests for `transform-infix-cfg`
 
 (deftest transform-infix-cfg_works-with-infix-cfg

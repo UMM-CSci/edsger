@@ -10,7 +10,7 @@
         <equiv-expr>   = implies-expr | equiv
         equiv          = <w> implies-expr <w '≡' w> implies-expr <w>
         <implies-expr> = and-or-expr | implies
-        implies        = <w> implies-expr <w '⇒' w> and-or-expr <w>
+        implies        = <w> and-or-expr <w '⇒' w> and-or-expr <w>
         <and-or-expr>  = not-expr | and | or
         and            = <w> not-expr <w '∧' w> not-expr <w>
         or             = <w> not-expr <w '∨' w> not-expr <w>
