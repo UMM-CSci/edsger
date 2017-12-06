@@ -105,6 +105,17 @@
                         [:or [:variable "t"] [:variable "u"]]]
                        [:and [:not [:variable "w"]] [:variable "x"]]]]])))
 
+(deftest infix-cfg_extraneous-parens-ignored
+  (are [input] (= (p/infix-cfg input) [:top-level [:variable "p"]])
+    "p"
+    "(p)"
+    "(((p)))")
+  (are [input] (= (p/infix-cfg input) [:top-level [:or [:variable "p"] [:variable "q"]]])
+    "p∨q"
+    "(p∨q)"
+    "(p)∨(q)"
+    "(p∨((q)))"))
+
 
 ;; ==== Tests for `transform-infix-cfg`
 
