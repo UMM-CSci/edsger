@@ -3,8 +3,8 @@
   (:require [instaparse.core :as insta :refer-macros [defparser]]))
 
 ;; A simple CFG for parsing logical expressions containing several logic
-;; operators. The parser is aware of presence, but some operators have
-;; equal presence, e.g. "p ≡ q ≡ r" needs to be parenthesized as
+;; operators. The parser is aware of precedence, but some operators have
+;; equal precedence, e.g. "p ≡ q ≡ r" needs to be parenthesized as
 ;; "(p ≡ q) ≡ r" or as "p ≡ (q ≡ r)".
 
 (insta/defparser
