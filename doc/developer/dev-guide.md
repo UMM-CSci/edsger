@@ -16,6 +16,6 @@ Edsger is a front-end only application fully written in ClojureScript. It is cur
 * `edsger.unification` is a model containing validation functions using [`core.logic`](https://github.com/clojure/core.logic) library.
 
 ### Known Issues & TODOs
-* Currently, the cursor shows unexpected behavior. This is because we manually reset the cursor location after we replace symbols in the input box.
-* An easy way to type rules is desirable. (e.g. rule dropdown)
-* More helpful error messages are needed when parsing or evaluation fails.
+* #39 Currently, the cursor shows unexpected behavior. This is because we manually reset the cursor location after we replace symbols in the input box.
+* #36 An easy way to type rules is desirable. (e.g. rule dropdown)
+* #32, #33 More helpful error messages are needed when parsing or evaluation fails.
