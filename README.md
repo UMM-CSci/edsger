@@ -45,8 +45,8 @@ Tips:
 - If you omit `once` from the end of the command, the tests be re-run every time
   that Karma detects a change in the compiled JS files. Very handy when developing
   tests.
-- (Check out [direnv](https://direnv.net/) if you want to avoid manually setting your
-  `PATH`.)
+- Check out [direnv](https://direnv.net/) if you want to avoid manually setting your
+  `PATH`.
 - If you wish to avoid opening a browser window
   for the tests, use `chrome-headless` instead (requires Chrome 59 or later).
 
