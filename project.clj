@@ -1,6 +1,6 @@
 (defproject edsger "0.1.0-SNAPSHOT"
-  :description "FIXME: write this!"
-  :url "http://example.com/FIXME"
+  :description "A simple proof checker for use in introductory logic courses"
+  :url "https://github.com/UMM-CSci/edsger"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
