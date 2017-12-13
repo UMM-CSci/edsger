@@ -21,7 +21,7 @@ there's some evidence that the students find it useful.
 
 ## Quick Start
 
-:warning: edsger is still under active development. The running instructions are most likely to change in the future.
+See the [dev guide](doc/developer/dev-guide.md) for more info about how the project is set up.
 
 Clone and run this repository to see the app in action
 ```
@@ -29,6 +29,7 @@ git clone https://github.com/UMM-CSci/edsger.git
 cd edsger
 lein figwheel
 ```
+See [this page](doc/developer/hacking.md) for instructions on making figwheel work with Spacemacs.
 
 ### Running the tests
 
