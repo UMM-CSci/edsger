@@ -39,6 +39,10 @@ test namespace under `test/`. Be sure to import the new test namespace in
   the ClojureScript to JS and is thus in `.gitignore`
 - `src/edsger` - ClojureScript source code
 - `test/edsger` - ClojureScript tests
+- `.gitignore` - prevent files from being commited in git
+- `.travis.yml` - our Travis CI configuration
+- `package.json` - NPM packages needed for tests
+- `projec.clj` - `lein` project configuration
 
 ### Deploying the project
 
