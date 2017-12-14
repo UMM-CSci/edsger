@@ -39,3 +39,15 @@ test namespace under `test/`. Be sure to import the new test namespace in
   the ClojureScript to JS and is thus in `.gitignore`
 - `src/edsger` - ClojureScript source code
 - `test/edsger` - ClojureScript tests
+
+### Deploying the project
+
+To deploy the project on a real server instead of just running Figwheel on your
+local box, take the following steps.
+
+- Cleanup non-minimized JS files: `rm -r resources/public/js/compiled`
+- Build minimized JS files: `lein cljsbuild once min`
+- Copy the contents of `resources/public` to the root of your HTTP server
+
+These are the steps we use to deploy to TravisCI as configured by the
+`before_deploy` and `deploy` entries in `.travis.yml`.
