@@ -28,3 +28,14 @@ Edsger is a front-end only application fully written in ClojureScript. It is cur
 If you introduce a new namespace under `src/` you should also introduce a new
 test namespace under `test/`. Be sure to import the new test namespace in
 `edsger.test-runner` so that your new tests are actually run.
+
+### File layout
+
+- `dev` - something to do with figwheel
+- `doc` - various documentation related to the project
+- `resources/public` - this folder stores static resources to be deployed with
+  the project.
+- `resources/public/js/compiled` - this folder contains the results of compiling
+  the ClojureScript to JS and is thus in `.gitignore`
+- `src/edsger` - ClojureScript source code
+- `test/edsger` - ClojureScript tests
