@@ -12,8 +12,11 @@ Edsger is a front-end only application fully written in ClojureScript. It is cur
 ### Current Project Set-up
 * ClojureScript is the main development language. We also use [`Google Closure`](https://github.com/google/closure-library) for dom manipulation.
 * `edsger.core` is the controller containing all input handlers.
+  The `validate-handler` function is the only place that the frontend calls out to code in our other namespaces.
 * `edsger.parsing` is a namespace for parsing user input strings into ClojureScript data structures using the [`instaparse`](https://github.com/Engelberg/instaparse) library.
+  The function `check-match-recursive` is currently the only one intended for use outside the namespace.
 * `edsger.unification` is a namespace containing validation functions using [`core.logic`](https://github.com/clojure/core.logic) library.
+   The functions `parse` and `rulify` are the only ones intended for use outside the namespace.
 
 ### Known Issues & TODOs
 * #39 Currently, the cursor shows unexpected behavior. This is because we manually reset the cursor location after we replace symbols in the input box.
