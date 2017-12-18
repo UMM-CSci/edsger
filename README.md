@@ -21,7 +21,7 @@ there's some evidence that the students find it useful.
 
 ## Quick Start
 
-:warning: edsger is still under active development. The running instructions are most likely to change in the future.
+See the [dev guide](doc/developer/dev-guide.md) for more info about how the project is set up.
 
 Clone and run this repository to see the app in action
 ```
@@ -29,6 +29,27 @@ git clone https://github.com/UMM-CSci/edsger.git
 cd edsger
 lein figwheel
 ```
+See [this page](doc/developer/hacking.md) for instructions on making figwheel work with Spacemacs.
+
+### Running the tests
+
+```
+npm install
+PATH="$(pwd)/node_modules/karma-cli/bin:$PATH"
+lein doo chrome test once
+```
+
+These steps assume you have Chrome. If want to run the tests in Firefox, simply
+replace `chrome` with `firefox`.
+
+Tips:
+- If you omit `once` from the end of the command, the tests be re-run every time
+  that Karma detects a change in the compiled JS files. Very handy when developing
+  tests.
+- Check out [direnv](https://direnv.net/) if you want to avoid manually setting your
+  `PATH`.
+- If you wish to avoid opening a browser window
+  for the tests, use `chrome-headless` instead (requires Chrome 59 or later).
 
 ## Usage
 
@@ -59,27 +80,6 @@ The below is the conversion table.
 | ≡ (equivalence) | ==                           |
 
 And finally, click the **validate** button to check your reasoning :100:.
-
-## Running the tests
-
-Running the tests requires Karma. You can install Karma and all the needed
-plugins by running `npm install` in the root of the repo. You'll then need to
-add `./node_modules/karma-cli/bin` to your
-`$PATH`. Check out [direnv](https://direnv.net/) if you want to make this easier
-to do.
-
-If you have Google Chrome, you can run the tests once with the following command:
-
-```
-lein doo chrome test once
-```
-
-If want to run the tests in Firefox, simply replace `chrome` with `firefox`. If
-you wish to avoid opening a browser window for the tests, use `chrome-headless`
-instead (requires Chrome 59 or later).
-
-If you omit `once` from the end of the command, the tests be re-run every time
-that Karma detects a change in the compiled JS files.
 
 ## License
 
