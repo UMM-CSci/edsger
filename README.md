@@ -14,10 +14,11 @@ confusion about things like syntax right away, in our logic/discrete course
 students can flail on basic syntactic issues for weeks, and are often very
 frustrated because they just don't know if "they've done it right".
 
-Our goal here is to write a web-based ClojureScript tool that will allow
-students to check the correctness of each step in their proofs, at least for
-simple propositional calculus. It's likely to be _very_ simple, at least until
-there's some evidence that the students find it useful.
+This project is a web-based ClojureScript tool that will allow students to check
+the correctness of each step in their proofs, at least for simple propositional
+calculus. The basic functionality is in place, but there is a lot of work to be
+done before this will be a tool that students will want to use for checking more
+than a few steps of a proof.
 
 ## Quick Start
 
@@ -51,9 +52,14 @@ Tips:
 - If you wish to avoid opening a browser window
   for the tests, use `chrome-headless` instead (requires Chrome 59 or later).
 
-## Usage
+## Usage & Current State
 
-When you validate a logic expression looking:  
+While the goal is to allow students to check a whole proof, we currently can
+only check one step at a time. To cite a rule, the rule must be given in two
+pieces: a left-hand rule that matches the expression we are starting from, and a
+right-hand rule that matches the expression we end up with.
+
+So, when you validate a logic expression looking like:  
 ```
   a ∧ (c ∨ b)
 ≣    <(3.24) Symmetry of ∨>
@@ -80,6 +86,12 @@ The below is the conversion table.
 | ≡ (equivalence) | ==                           |
 
 And finally, click the **validate** button to check your reasoning :100:.
+
+The logic symbols given in the table above are the only ones that we currently
+support. The parser has knowledge of precedence, but series of operators with
+equal precendence need to be made unambigious with parens. We see this in the
+example above, but another example would be `a ∧ b ∧ c`, which would not parse
+unless you add parens to make either `(a ∧ b) ∧ c` or `a ∧ (b ∧ c)`.
 
 ## License
 
