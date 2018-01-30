@@ -15,49 +15,114 @@
 
 (deftest infix-cfg_one-level-operations
   (are [input expected-output] (= (p/infix-cfg input) expected-output)
-    "¬ true" [:top-level [:unary-expr [:unary-op "¬"] [:bottom [:boolean "true"]]]]
-    "a ⇒ false" [:top-level [:binary-expr
-                             [:bottom [:variable "a"]]
-                             [:binary-op "⇒"]
-                             [:bottom [:boolean "false"]]]]
-    "p ≡ q" [:top-level [:binary-expr
-                         [:bottom [:variable "p"]]
-                         [:binary-op "≡"]
-                         [:bottom [:variable "q"]]]]
-    "t ∧ u" [:top-level [:binary-expr
-                         [:bottom [:variable "t"]]
-                         [:binary-op "∧"]
-                         [:bottom [:variable "u"]]]]))
+    "¬ true" [:top-level [:not [:boolean "true"]]]
+    "a ⇒ false" [:top-level [:implies [:variable "a"] [:boolean "false"]]]
+    "p ≡ q" [:top-level [:equiv
+                         [:variable "p"]
+                         [:variable "q"]]]
+    "t ∧ u" [:top-level [:and
+                         [:variable "t"]
+                         [:variable "u"]]]))
 
 (deftest infix-cfg_complex-nexting-with-parens-works
   (is (=
        (p/infix-cfg "(a ⇒ false) ∨ (¬ (t ∧ u))")
-       [:top-level [:binary-expr
-                    [:bottom
-                     [:top-level
-                          [:binary-expr
-                           [:bottom [:variable "a"]]
-                           [:binary-op "⇒"]
-                           [:bottom [:boolean "false"]]]]]
-                    [:binary-op "∨"]
-                    [:bottom
-                     [:top-level
-                          [:unary-expr
-                           [:unary-op "¬"]
-                           [:bottom
-                                [:top-level
-                                 [:binary-expr
-                                  [:bottom [:variable "t"]]
-                                  [:binary-op "∧"]
-                                  [:bottom [:variable "u"]]]]]]]]]])))
+       [:top-level
+        [:or
+         [:implies
+          [:variable "a"]
+          [:boolean "false"]]
+         [:not
+          [:and
+           [:variable "t"]
+           [:variable "u"]]]]])))
 
 (deftest infix-cfg_spaces-with-not
   (are [input] (= (p/infix-cfg input) [:top-level
-                                       [:unary-expr
-                                        [:unary-op "¬"]
-                                        [:bottom [:boolean "true"]]]])
+                                       [:not
+                                        [:boolean "true"]]])
     "¬ true"
     "¬true"))
+
+(deftest infix-cfg_sequential-ands
+  (is (= (type (p/infix-cfg "p ∧ q ∧ r")) instaparse.gll/Failure))
+  (is (= (p/infix-cfg "p ∧ (q ∧ r)") [:top-level
+                                       [:and [:variable "p"]
+                                        [:and [:variable "q"] [:variable "r"]]]]))
+  (is (= (p/infix-cfg "(p ∧ q) ∧ r") [:top-level
+                                        [:and
+                                         [:and [:variable "p"] [:variable "q"]]
+                                         [:variable "r"]]])))
+
+(deftest infix-cfg_sequential-ors
+  (is (= (type (p/infix-cfg "p ∨ q ∨ r")) instaparse.gll/Failure))
+  (is (= (p/infix-cfg "p ∨ (q ∨ r)") [:top-level
+                                       [:or [:variable "p"]
+                                        [:or [:variable "q"] [:variable "r"]]]]))
+  (is (= (p/infix-cfg "(p ∨ q) ∨ r") [:top-level
+                                       [:or
+                                        [:or [:variable "p"] [:variable "q"]]
+                                        [:variable "r"]]])))
+
+(deftest infix-cfg_mixed-and-with-or
+  (is (= (type (p/infix-cfg "p ∧ q ∨ r")) instaparse.gll/Failure))
+  (is (= (p/infix-cfg "p ∧ (q ∨ r)") [:top-level
+                                      [:and [:variable "p"]
+                                       [:or [:variable "q"] [:variable "r"]]]]))
+  (is (= (p/infix-cfg "(p ∧ q) ∨ r") [:top-level
+                                      [:or
+                                       [:and [:variable "p"] [:variable "q"]]
+                                       [:variable "r"]]])))
+
+(deftest infix-cfg_sequential-equivs
+  (is (= (type (p/infix-cfg "p ≡ q ≡ r")) instaparse.gll/Failure))
+  (is (= (p/infix-cfg "p ≡ (q ≡ r)") [:top-level
+                                      [:equiv [:variable "p"]
+                                       [:equiv [:variable "q"] [:variable "r"]]]]))
+  (is (= (p/infix-cfg "(p ≡ q) ≡ r") [:top-level
+                                      [:equiv
+                                       [:equiv [:variable "p"] [:variable "q"]]
+                                       [:variable "r"]]])))
+
+(deftest infix-cfg_sequential-implication
+  (is (= (type (p/infix-cfg "p ⇒ q ⇒ r")) instaparse.gll/Failure))
+  (is (= (p/infix-cfg "p ⇒ (q ⇒ r)") [:top-level
+                                      [:implies [:variable "p"]
+                                       [:implies [:variable "q"] [:variable "r"]]]]))
+  (is (= (p/infix-cfg "(p ⇒ q) ⇒ r") [:top-level
+                                      [:implies
+                                       [:implies [:variable "p"] [:variable "q"]]
+                                       [:variable "r"]]])))
+
+(deftest infix-cfg_general-precedence
+  (is (= (p/infix-cfg "(p ∧ q) ∨ r ≡ s ∧ (t ∨ u) ⇒ ¬w ∧ x")
+         [:top-level [:equiv
+                      [:or
+                       [:and [:variable "p"] [:variable "q"]]
+                       [:variable "r"]]
+                      [:implies
+                       [:and [:variable "s"]
+                        [:or [:variable "t"] [:variable "u"]]]
+                       [:and [:not [:variable "w"]] [:variable "x"]]]]])))
+
+(deftest infix-cfg_extraneous-parens-ignored
+  (are [input] (= (p/infix-cfg input) [:top-level [:variable "p"]])
+    "p"
+    "(p)"
+    "(((p)))")
+  (are [input] (= (p/infix-cfg input) [:top-level [:or [:variable "p"] [:variable "q"]]])
+    "p∨q"
+    "(p∨q)"
+    "(p)∨(q)"
+    "(p∨((q)))"))
+
+(deftest infix-cfg_serial-negation
+  (is (= (p/infix-cfg "¬¬¬¬a")
+         [:top-level
+          [:not
+           [:not
+            [:not
+             [:not [:variable "a"]]]]]])))
 
 
 ;; ==== Tests for `transform-infix-cfg`

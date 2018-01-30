@@ -14,14 +14,15 @@ confusion about things like syntax right away, in our logic/discrete course
 students can flail on basic syntactic issues for weeks, and are often very
 frustrated because they just don't know if "they've done it right".
 
-Our goal here is to write a web-based ClojureScript tool that will allow
-students to check the correctness of each step in their proofs, at least for
-simple propositional calculus. It's likely to be _very_ simple, at least until
-there's some evidence that the students find it useful.
+This project is a web-based ClojureScript tool that will allow students to check
+the correctness of each step in their proofs, at least for simple propositional
+calculus. The basic functionality is in place, but there is a lot of work to be
+done before this will be a tool that students will want to use for checking more
+than a few steps of a proof.
 
 ## Quick Start
 
-:warning: edsger is still under active development. The running instructions are most likely to change in the future.
+See the [dev guide](doc/developer/dev-guide.md) for more info about how the project is set up.
 
 Clone and run this repository to see the app in action
 ```
@@ -29,10 +30,36 @@ git clone https://github.com/UMM-CSci/edsger.git
 cd edsger
 lein figwheel
 ```
+See [this page](doc/developer/hacking.md) for instructions on making figwheel work with Spacemacs.
 
-## Usage
+### Running the tests
 
-When you validate a logic expression looking:  
+```
+npm install
+PATH="$(pwd)/node_modules/karma-cli/bin:$PATH"
+lein doo chrome test once
+```
+
+These steps assume you have Chrome. If want to run the tests in Firefox, simply
+replace `chrome` with `firefox`.
+
+Tips:
+- If you omit `once` from the end of the command, the tests be re-run every time
+  that Karma detects a change in the compiled JS files. Very handy when developing
+  tests.
+- Check out [direnv](https://direnv.net/) if you want to avoid manually setting your
+  `PATH`.
+- If you wish to avoid opening a browser window
+  for the tests, use `chrome-headless` instead (requires Chrome 59 or later).
+
+## Usage & Current State
+
+While the goal is to allow students to check a whole proof, we currently can
+only check one step at a time. To cite a rule, the rule must be given in two
+pieces: a left-hand rule that matches the expression we are starting from, and a
+right-hand rule that matches the expression we end up with.
+
+So, when you validate a logic expression looking like:  
 ```
   a ∧ (c ∨ b)
 ≣    <(3.24) Symmetry of ∨>
@@ -60,26 +87,11 @@ The below is the conversion table.
 
 And finally, click the **validate** button to check your reasoning :100:.
 
-## Running the tests
-
-Running the tests requires Karma. You can install Karma and all the needed
-plugins by running `npm install` in the root of the repo. You'll then need to
-add `./node_modules/karma-cli/bin` to your
-`$PATH`. Check out [direnv](https://direnv.net/) if you want to make this easier
-to do.
-
-If you have Google Chrome, you can run the tests once with the following command:
-
-```
-lein doo chrome test once
-```
-
-If want to run the tests in Firefox, simply replace `chrome` with `firefox`. If
-you wish to avoid opening a browser window for the tests, use `chrome-headless`
-instead (requires Chrome 59 or later).
-
-If you omit `once` from the end of the command, the tests be re-run every time
-that Karma detects a change in the compiled JS files.
+The logic symbols given in the table above are the only ones that we currently
+support. The parser has knowledge of precedence, but series of operators with
+equal precendence need to be made unambigious with parens. We see this in the
+example above, but another example would be `a ∧ b ∧ c`, which would not parse
+unless you add parens to make either `(a ∧ b) ∧ c` or `a ∧ (b ∧ c)`.
 
 ## License
 
