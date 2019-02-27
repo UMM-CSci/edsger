@@ -108,6 +108,14 @@
         (gdom/insertSiblingAfter (str-to-elem parse-err-str) (nth rule-cols id)))
       err-id-vec))))
 
+(defn recursive-validate
+  "does the thing"
+  [exps rules]
+  (cond (or (empty? exps) (empty? rules)) true
+        (true? (uni/check-match-recursive (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1))) (recursive-validate (rest exps) (rest (rest rules)))
+        :else false))
+
+
 (defn validate-handler
   "Performs the validation based on the values typed by users"
   [evt]
@@ -120,10 +128,15 @@
         ;; vector of indices where parsing err occurred (e.g., [0, 3])
         exp-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} exps))
         rule-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} vanilla-rules))
-        result-str (str (true? (uni/check-match-recursive (nth exps 0)
-                                                          (nth exps 1)
-                                                          (nth rules 0)
-                                                          (nth rules 1))))]
+        ;result-str (str (true? (and (uni/check-match-recursive (nth exps 0)
+      ;                                                  (nth exps 1)
+      ;                                                    (nth rules 0)
+      ;                                                    (nth rules 1))
+      ;                              (uni/check-match-recursive (nth exps 1)
+      ;                                                    (nth exps 2)
+      ;                                                    (nth rules 2)
+      ;                                                    (nth rules 3)))))
+          result-str (str (recursive-validate exps rules))]
     (remove-elems-by-class "alert-danger")
     (when non-empty-input
       (if (some not-empty [exp-parse-err rule-parse-err])
