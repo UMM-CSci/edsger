@@ -108,13 +108,6 @@
         (gdom/insertSiblingAfter (str-to-elem parse-err-str) (nth rule-cols id)))
       err-id-vec))))
 
-(defn recursive-validate
-  "does the thing"
-  [exps rules]
-  (cond (or (empty? exps) (empty? rules)) true
-        (true? (uni/check-match-recursive (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1))) (recursive-validate (rest exps) (rest (rest rules)))
-        :else false))
-
 
 (defn validate-handler
   "Performs the validation based on the values typed by users"
@@ -136,7 +129,7 @@
       ;                                                    (nth exps 2)
       ;                                                    (nth rules 2)
       ;                                                    (nth rules 3)))))
-          result-str (str (recursive-validate exps rules))]
+          result-str (str (uni/recursive-validate exps rules))]
     (remove-elems-by-class "alert-danger")
     (when non-empty-input
       (if (some not-empty [exp-parse-err rule-parse-err])
