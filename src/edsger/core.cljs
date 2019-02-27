@@ -10,8 +10,27 @@
 
 (enable-console-print!)
 
+;; Constants =========================
 
+; copy of div for rule input
+(def rule-div "<div class=\"form-group row rule-box\">
+       <label for=\"inputRule\" class=\"col-sm-2 col-form-label\">Rule</label>
+       <div class=\"col rule-box-left\">
+           <input type=\"text\" class=\"form-control rule\" placeholder=\"Left-hand side of rule\">
+       </div>
+       <span> ≡ </span>
+       <div class=\"col rule-box-right\">
+           <input type=\"text\" class=\"form-control rule\" placeholder=\"Right-hand side of rule\">
+       </div>)
+   </div>")
 
+; copy of div for expression input
+(def exp-div "<div class=\"form-group row exp-box\">
+       <label for=\"inputExp\" class=\"col-sm-2 col-form-label\">Expression</label>
+       <div class=\"col\">
+           <input type=\"text\" class=\"form-control ex\" placeholder=\"Type an expression (e.x. q ∧ p)\">
+       </div>
+   </div>")
 ;; Helpers ===========================
 
 ;; shortcut for dom/get-element
@@ -116,6 +135,17 @@
   [elem]
   (events/listen elem "click" validate-handler))
 
+(defn new-step-handler
+  "Add new lines for the user to fill in"
+  [evt]
+  (dorun
+    (gdom/appendChild (by-id "proof") (str-to-elem rule-div))
+    (gdom/appendChild (by-id "proof") (str-to-elem exp-div))))
+
+(defn new-step-listener
+  [elem]
+  (events/listen elem "click" new-step-handler))
+
 (defn- replace-with-symbols
   "Replaces all symbol-like strings to real symbols"
   [vanilla-str]
@@ -151,6 +181,7 @@
   "Top-level load handler"
   []
   (validate-click-listener (by-id "validate"))
-  (keystroke-listener))
+  (keystroke-listener)
+  (new-step-listener (by-id "new-step")))
 
 (events/listen js/window "load" window-load-handler)
