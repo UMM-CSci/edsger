@@ -14,14 +14,15 @@
 
 ; copy of div for rule input
 (def rule-div "<div class=\"form-group row rule-box\">
-       <label for=\"inputRule\" class=\"col-sm-2 col-form-label\">Rule</label>
+       <label for=\"inputRule\" class=\"col-sm-2 col-form-label rule-label\">Rule</label>
+       <div class= \"result-val\"></div>
        <div class=\"col rule-box-left\">
            <input type=\"text\" class=\"form-control rule\" placeholder=\"Left-hand side of rule\">
        </div>
        <span> ≡ </span>
        <div class=\"col rule-box-right\">
            <input type=\"text\" class=\"form-control rule\" placeholder=\"Right-hand side of rule\">
-       </div>)
+       </div>
    </div>")
 
 ; copy of div for expression input
@@ -108,6 +109,13 @@
         (gdom/insertSiblingAfter (str-to-elem parse-err-str) (nth rule-cols id)))
       err-id-vec))))
 
+(defn show-results
+  [results]
+  (dorun (map
+    (fn [old-result result]
+      (gdom/replaceNode (str-to-elem (str "<div class='result-val'>" result "</div>")) old-result))
+    (iArrayLike-to-cljs-list (gdom/getElementsByClass "result-val"))
+    results)))
 
 (defn validate-handler
   "Performs the validation based on the values typed by users"
@@ -129,13 +137,14 @@
       ;                                                    (nth exps 2)
       ;                                                    (nth rules 2)
       ;                                                    (nth rules 3)))))
-          result-str (str (uni/recursive-validate exps rules))]
+          results (uni/recursive-validate exps rules)]
     (remove-elems-by-class "alert-danger")
     (when non-empty-input
       (if (some not-empty [exp-parse-err rule-parse-err])
         (do (show-exp-parse-err exp-parse-err)
             (show-rule-parse-err rule-parse-err))
-        (.alert js/window result-str)))))
+        ;(.alert js/window results)))))
+        (show-results results)))))
 
 (defn validate-click-listener
   [elem]
