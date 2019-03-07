@@ -129,16 +129,25 @@
 ;; The following tests are to test recursive-validate
 ;; Test on empty lists, should return true if both are empty, false if only one
 (deftest empty-list-recurse-val
-  (is (not (u/recursive-validate '() '())))
-  (is (u/recursive-validate '("anything, just one thing") '()))
-  (is (not (u/recursive-validate
-          (list '(:and a a) 'a)
-          '())))
-  (is (not (u/recursive-validate '()
-                  (list '(:and ?p ?p) '?p)))))
+  ;Trying it on two empty lists should throw an error
+  (try
+    (doall
+      (u/recursive-validate '() '())
+      (is false))
+    (catch js/Error e (is true)))
+
+  (is (empty? (u/recursive-validate '("anything, just one thing") '())))
+
+  (try
+    (doall
+      (u/recursive-validate
+              (list '(:and a a) 'a)
+              '())
+      (is false))
+    (catch js/Error e (is true))))
 
 ;; Test on recursive-validate on non-empty lists
-(def rules-list (list '(:and ?a ?b) '(:and ?b a)
+(def rules-list (list '(:and ?a ?b) '(:and ?b ?a)
                        '(:or ?a ?b) '(:or ?b ?a)
                        '(:implies ?z ?q) '(:implies '(:not ?q) '(:not ?z))))
 (def exps-list (list '(:implies '(:and a b) '(:or p q))
@@ -146,5 +155,5 @@
                      '(:implies '(:and b a) '(:or q p))
                      '(:implies '(:not '(:or q p)) '(:not '(:and b a)))))
 (deftest recursive-validate-non-empty
-  (is (u/recursive-validate exps-list rules-list))
-  (is (not (u/recursive-validate exps-list (conj '(:or ?a ?b) (rest rules-list))))))
+  (is (every? true? (u/recursive-validate exps-list rules-list)))
+  (is (not (every? true? (u/recursive-validate exps-list (cons '(:or ?a ?b) (rest rules-list)))))))
