@@ -112,10 +112,10 @@
 (defn show-results
   [results]
   (dorun (map
-    (fn [old-result result]
-      (gdom/replaceNode (str-to-elem (str "<div class='result-val'>" result "</div>")) old-result))
-    (iArrayLike-to-cljs-list (gdom/getElementsByClass "result-val"))
-    results)))
+          (fn [old-result result]
+            (gdom/replaceNode (str-to-elem (str "<div class='result-val'>" result "</div>")) old-result))
+          (iArrayLike-to-cljs-list (gdom/getElementsByClass "result-val"))
+          results)))
 
 (defn validate-handler
   "Performs the validation based on the values typed by users"
@@ -137,7 +137,7 @@
       ;                                                    (nth exps 2)
       ;                                                    (nth rules 2)
       ;                                                    (nth rules 3)))))
-          results (uni/recursive-validate exps rules)]
+          results (uni/recursive-validate-imply exps rules)]
     (remove-elems-by-class "alert-danger")
     (when non-empty-input
       (if (some not-empty [exp-parse-err rule-parse-err])
