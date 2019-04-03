@@ -117,9 +117,14 @@
           (iArrayLike-to-cljs-list (gdom/getElementsByClass "result-val"))
           results)))
 
+(defn validate-imply-or-equiv
+  [proof-type exps rules]
+  (if (= proof-type "⇒")
+    (uni/recursive-validate-imply exps rules)
+    (uni/recursive-validate-equiv exps rules)))
+
 (defn validate-handler
   "Performs the validation based on the values typed by users"
-  [evt]
   (let [exp-str-li (map #(.-value %) (iArrayLike-to-cljs-list (gdom/getElementsByClass "ex")))
         rule-str-li (map #(.-value %) (iArrayLike-to-cljs-list (gdom/getElementsByClass "rule")))
         non-empty-input (every? #(not= "" %) (concat exp-str-li rule-str-li))
@@ -133,11 +138,12 @@
       ;                                                  (nth exps 1)
       ;                                                    (nth rules 0)
       ;                                                    (nth rules 1))
-      ;                              (uni/check-match-recursive (nth exps 1)
+      ;                              (ugeni/check-match-recursive (nth exps 1)
       ;                                                    (nth exps 2)
       ;                                                    (nth rules 2)
       ;                                                    (nth rules 3)))))
-          results (uni/recursive-validate-imply exps rules)]
+        proof-type (gdom/getTextContent (by-id "type-proof"))
+        results (uni/recursive-validate-imply exps rules)]
     (remove-elems-by-class "alert-danger")
     (when non-empty-input
       (if (some not-empty [exp-parse-err rule-parse-err])
@@ -160,6 +166,24 @@
 (defn new-step-listener
   [elem]
   (events/listen elem "click" new-step-handler))
+
+(defn imply-handler
+  [evt]
+   (gdom/replaceNode (str-to-elem "<span id=\"type-proof\"> ⇒ </span>")
+                     (by-id "type-proof")))
+
+(defn imply-click-listener
+  [elem]
+  (events/listen elem "click" imply-handler)
+
+  (defn equiv-handler
+    [evt]
+     (gdom/replaceNode (str-to-elem "<span id=\"type-proof\"> ≡ </span>")
+                       (by-id "type-proof"))))
+
+(defn equiv-click-listener
+  [elem]
+  (events/listen elem "click" equiv-handler))
 
 (defn- replace-with-symbols
   "Replaces all symbol-like strings to real symbols"
@@ -196,7 +220,9 @@
   "Top-level load handler"
   []
   (validate-click-listener (by-id "validate"))
-  (keystroke-listener)
-  (new-step-listener (by-id "new-step")))
+  (new-step-listener (by-id "new-step"))
+  (imply-click-listener (by-id "imply"))
+  (equiv-click-listener (by-id "equiv"))
+  (keystroke-listener))
 
 (events/listen js/window "load" window-load-handler)
