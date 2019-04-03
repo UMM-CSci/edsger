@@ -34,7 +34,7 @@
                 <!-- User input -->
                 <div class="row">
                     <div class="col-12 col-lg-12">
-                        <form>
+                        <form id="proof">
                             <div class="form-group row exp-box">
                                 <label for="inputExp" class="col-sm-2 col-form-label">Expression</label>
                                 <div class="col">
@@ -42,7 +42,8 @@
                                 </div>
                             </div>
                             <div class="form-group row rule-box">
-                                <label for="inputRule" class="col-sm-2 col-form-label">Rule</label>
+                                <label for="inputRule" class="col-sm-2 col-form-label rule-label">Rule</label>
+                                <div class= "result-val"></div>
                                 <div class="col rule-box-left">
                                     <input type="text" class="form-control rule" placeholder="Left-hand side of rule">
                                 </div>
@@ -62,7 +63,7 @@
                     <!-- Adding more slots -->
                     <div class="row text-center">
                         <div class="col-12 col-lg-12 text-center">
-                            <button type="button" class="btn btn-secondary btn-lg">+</button>
+                            <button type="button" class="btn btn-secondary btn-lg" id="new-step">+</button>
                         </div>
                     </div>
 
@@ -84,11 +85,11 @@
                     <tbody>
                     <tr>
                         <td>¬ (not)</td>
-                        <td>!</td>
+                        <td>! or -</td>
                     </tr>
                     <tr>
                         <td>∧ (and)</td>
-                        <td>&</td>
+                        <td>& or ^</td>
                     </tr>
                     <tr>
                         <td>∨ (or)</td>
@@ -110,7 +111,7 @@
         <hr>
 
         <footer>
-            <p>&copy; Laverne Schrock, Tony Song 2017</p>
+            <p>&copy; Nathan Beneke, Courtney Cook 2019</p>
         </footer>
 
     </div><!--/.container-->

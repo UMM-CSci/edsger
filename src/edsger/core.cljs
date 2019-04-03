@@ -10,8 +10,28 @@
 
 (enable-console-print!)
 
+;; Constants =========================
 
+; copy of div for rule input
+(def rule-div "<div class=\"form-group row rule-box\">
+       <label for=\"inputRule\" class=\"col-sm-2 col-form-label rule-label\">Rule</label>
+       <div class= \"result-val\"></div>
+       <div class=\"col rule-box-left\">
+           <input type=\"text\" class=\"form-control rule\" placeholder=\"Left-hand side of rule\">
+       </div>
+       <span> ≡ </span>
+       <div class=\"col rule-box-right\">
+           <input type=\"text\" class=\"form-control rule\" placeholder=\"Right-hand side of rule\">
+       </div>
+   </div>")
 
+; copy of div for expression input
+(def exp-div "<div class=\"form-group row exp-box\">
+       <label for=\"inputExp\" class=\"col-sm-2 col-form-label\">Expression</label>
+       <div class=\"col\">
+           <input type=\"text\" class=\"form-control ex\" placeholder=\"Type an expression (e.x. q ∧ p)\">
+       </div>
+   </div>")
 ;; Helpers ===========================
 
 ;; shortcut for dom/get-element
@@ -89,6 +109,14 @@
         (gdom/insertSiblingAfter (str-to-elem parse-err-str) (nth rule-cols id)))
       err-id-vec))))
 
+(defn show-results
+  [results]
+  (dorun (map
+    (fn [old-result result]
+      (gdom/replaceNode (str-to-elem (str "<div class='result-val'>" result "</div>")) old-result))
+    (iArrayLike-to-cljs-list (gdom/getElementsByClass "result-val"))
+    results)))
+
 (defn validate-handler
   "Performs the validation based on the values typed by users"
   [evt]
@@ -101,20 +129,37 @@
         ;; vector of indices where parsing err occurred (e.g., [0, 3])
         exp-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} exps))
         rule-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} vanilla-rules))
-        result-str (str (true? (uni/check-match-recursive (nth exps 0)
-                                                          (nth exps 1)
-                                                          (nth rules 0)
-                                                          (nth rules 1))))]
+        ;result-str (str (true? (and (uni/check-match-recursive (nth exps 0)
+      ;                                                  (nth exps 1)
+      ;                                                    (nth rules 0)
+      ;                                                    (nth rules 1))
+      ;                              (uni/check-match-recursive (nth exps 1)
+      ;                                                    (nth exps 2)
+      ;                                                    (nth rules 2)
+      ;                                                    (nth rules 3)))))
+          results (uni/recursive-validate exps rules)]
     (remove-elems-by-class "alert-danger")
     (when non-empty-input
       (if (some not-empty [exp-parse-err rule-parse-err])
         (do (show-exp-parse-err exp-parse-err)
             (show-rule-parse-err rule-parse-err))
-        (.alert js/window result-str)))))
+        ;(.alert js/window results)))))
+        (show-results results)))))
 
 (defn validate-click-listener
   [elem]
   (events/listen elem "click" validate-handler))
+
+(defn new-step-handler
+  "Add new lines for the user to fill in"
+  [evt]
+  (dorun
+    (gdom/appendChild (by-id "proof") (str-to-elem rule-div))
+    (gdom/appendChild (by-id "proof") (str-to-elem exp-div))))
+
+(defn new-step-listener
+  [elem]
+  (events/listen elem "click" new-step-handler))
 
 (defn- replace-with-symbols
   "Replaces all symbol-like strings to real symbols"
@@ -151,6 +196,7 @@
   "Top-level load handler"
   []
   (validate-click-listener (by-id "validate"))
-  (keystroke-listener))
+  (keystroke-listener)
+  (new-step-listener (by-id "new-step")))
 
 (events/listen js/window "load" window-load-handler)
