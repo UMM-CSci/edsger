@@ -121,10 +121,17 @@
   [vanilla-str]
   (-> vanilla-str
       (clojure.string/replace "!" "¬")
+      (clojure.string/replace "not" "¬")
       (clojure.string/replace "&" "∧")
+      (clojure.string/replace "^" "∧")
+      (clojure.string/replace "and" "∧")
       (clojure.string/replace "|" "∨")
+      (clojure.string/replace "or" "∨")
       (clojure.string/replace "=>" "⇒")
-      (clojure.string/replace "==" "≡")))
+      (clojure.string/replace "->" "⇒")
+      (clojure.string/replace "implies" "⇒")
+      (clojure.string/replace "==" "≡")
+      (clojure.string/replace "equiv" "≡")))
 
 (defn keystroke-handler
   "Replaces all symbol-like strings in the focused input box to real symbols"
@@ -132,7 +139,7 @@
   (let [input-box (gdom/getActiveElement js/document)
         key (aget evt "key")]
     ;; The last four cases handle fast user typing
-    (when (contains? #{"!" "&" "|" "=" ">" "1" "7" "\\" "."} key)
+    (when (contains? #{"!" "&" "|" "=" ">" "1" "7" "\\" "." "^" "t" "d" "r" "s" "v"} key)
       (gselection/setStart input-box 0)
       (gselection/setEnd input-box (count (.-value input-box)))
       (gselection/setText input-box (replace-with-symbols (gselection/getText input-box)))
