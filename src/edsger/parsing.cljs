@@ -54,14 +54,28 @@
     (if-not (= (type hiccup-tree) instaparse.gll/Failure)
       hiccup-tree)))
 
+(defn find-vars
+  [exps vars]
+  (cond (seqable? exps) (concat (find-vars (first exps) vars) (find-vars (rest exps) vars) vars)
+        (symbol? exps) (cons vars exps)))
+
+
 (defn rulify
   "Recursively traverse an expression and prepend '?' onto
    all symbols."
-  [input]
-  (cond
-    (seqable? input) (map rulify input)
-    (symbol? input) (symbol (str "?" input))
-    :else input))
+  ([input]
+   (cond
+     (seqable? input) (map rulify input)
+     (symbol? input) (symbol (str "?" input))
+     :else input))
+  ([input vars]
+   (cond
+     (seqable? input) (map #(rulify % vars) input)
+     (and (symbol? input) (not (contains? vars input))) (symbol (str "?" input))
+     :else input)))
+
+
+
 (print "START in parsing")
 
 

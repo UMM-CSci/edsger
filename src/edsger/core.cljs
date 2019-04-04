@@ -112,10 +112,10 @@
 (defn show-results
   [results]
   (dorun (map
-    (fn [old-result result]
-      (gdom/replaceNode (str-to-elem (str "<div class='result-val'>" result "</div>")) old-result))
-    (iArrayLike-to-cljs-list (gdom/getElementsByClass "result-val"))
-    results)))
+          (fn [old-result result]
+            (gdom/replaceNode (str-to-elem (str "<div class='result-val'>" result "</div>")) old-result))
+          (iArrayLike-to-cljs-list (gdom/getElementsByClass "result-val"))
+          results)))
 
 (defn validate-handler
   "Performs the validation based on the values typed by users"
@@ -124,8 +124,9 @@
         rule-str-li (map #(.-value %) (iArrayLike-to-cljs-list (gdom/getElementsByClass "rule")))
         non-empty-input (every? #(not= "" %) (concat exp-str-li rule-str-li))
         exps (map #(parsing/parse %) exp-str-li)
+        log-vars (parsing/find-vars exps '())
         vanilla-rules (map #(parsing/parse %) rule-str-li)
-        rules (map #(parsing/rulify %) vanilla-rules)
+        rules (map #(parsing/rulify % log-vars) vanilla-rules)
         ;; vector of indices where parsing err occurred (e.g., [0, 3])
         exp-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} exps))
         rule-parse-err (:locations (reduce merge-val {:curr-id -1 :locations []} vanilla-rules))
