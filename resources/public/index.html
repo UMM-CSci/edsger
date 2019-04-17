@@ -15,9 +15,7 @@
 <body>
     <nav class="navbar navbar-light fixed-top bg-light justify-content-between">
         <a class="navbar-brand" href="#">Edsger</a>
-        <form class="form-inline">
-            <button class="btn btn-outline-success btn-lg my-2 my-sm-0" id="validate" type="button">Validate</button>
-        </form>
+
     </nav>
 
     <div class="container">
@@ -61,11 +59,21 @@
                         </form>
                     </div><!--/span-->
                     <!-- Adding more slots -->
-                    <div class="row text-center">
-                        <div class="col-12 col-lg-12 text-center">
-                            <button type="button" class="btn btn-secondary btn-lg" id="new-step">+</button>
-                        </div>
-                    </div>
+                    <span style="text-align: left; width:49%; display: inline-block;">
+                     <div>
+                    <!--<div class="row text-center">-->
+                          <div class="col-12 col-lg-12">
+                          <!-- <div class="col-12 col-lg-12 text-center"> -->
+                              <button type="button" class="btn btn-secondary btn-lg" id="new-step">+</button>
+                          </div>
+                      </div>
+                    </span>
+                      <span style="text-align: right; width:50%;  display: inline-block;>
+                        <form class="form-inline">
+                            <button  class="btn btn-outline-success btn-lg my-2 my-sm-0" id="validate" type="button">Validate</button>
+                        </form>
+                      </span>
+                      <div style="clear: both;"></div>
 
                 </div><!--/row-->
             </div><!--/span-->
@@ -107,6 +115,7 @@
                 </table>
             </div><!--/span-->
         </div><!--/row-->
+
 
         <hr>
 
