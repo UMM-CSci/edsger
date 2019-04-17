@@ -13,25 +13,40 @@
 ;; Constants =========================
 
 ; copy of div for rule input
-(def rule-div "<div class=\"form-group row rule-box\">
+(def rule-div-first "<div class=\"form-group row rule-box\">
        <label for=\"inputRule\" class=\"col-sm-2 col-form-label rule-label\">Rule</label>
        <div class= \"result-val\"></div>
+       <span> < </span>
        <div class=\"col rule-box-left\">
            <input type=\"text\" class=\"form-control rule\" placeholder=\"Left-hand side of rule\">
-       </div>
-       <span> ≡ </span>
-       <div class=\"col rule-box-right\">
+       </div>")
+
+(def rule-type-equiv "<span class=\"rule-type\"> ≡ </span>")
+(def rule-type-imply "<span class=\"rule-type\"> ⇒ </span>")
+
+(def rule-div-last "<div class=\"col rule-box-right\">
            <input type=\"text\" class=\"form-control rule\" placeholder=\"Right-hand side of rule\">
        </div>
+       <span> > </span>
    </div>")
+
+(defn get-rule-div
+  ([] (str rule-div-first rule-type-equiv rule-div-last))
+  ([type]
+    (if (= type "equiv") (get-rule-div)
+        (str rule-div-first rule-type-imply rule-div-last))))
 
 ; copy of div for expression input
 (def exp-div "<div class=\"form-group row exp-box\">
        <label for=\"inputExp\" class=\"col-sm-2 col-form-label\">Expression</label>
+       <span class=\"spine\"> ≡ </span>
        <div class=\"col\">
            <input type=\"text\" class=\"form-control ex\" placeholder=\"Type an expression (e.x. q ∧ p)\">
        </div>
    </div>")
+
+(def spine-equiv "<span class=\"spine\"> ≡ </span>")
+(def spine-imply "<span class=\"spine\"> ⇒ </span>")
 ;; Helpers ===========================
 
 ;; shortcut for dom/get-element
@@ -62,7 +77,10 @@
   [class]
   (dorun (map #(gdom/removeNode %) (iArrayLike-to-cljs-list (gdom/getElementsByClass class)))))
 
-
+(defn by-class
+  "Returns a cljs list of elements by class"
+  [class]
+  (doall (iArrayLike-to-cljs-list (gdom/getElementsByClass class))))
 
 ;; UI and handlers ===================
 
@@ -154,12 +172,44 @@
   "Add new lines for the user to fill in"
   [evt]
   (dorun
-    (gdom/appendChild (by-id "proof") (str-to-elem rule-div))
+    (gdom/appendChild (by-id "proof") (str-to-elem (get-rule-div)))
     (gdom/appendChild (by-id "proof") (str-to-elem exp-div))))
 
 (defn new-step-listener
   [elem]
   (events/listen elem "click" new-step-handler))
+
+(defn imply-handler
+  [evt]
+  (dorun (map (fn [x]
+                (doall
+                  (gdom/replaceNode (str-to-elem rule-type-imply) x)))
+              (by-class "rule-type"))
+         (map (fn [x]
+                (doall
+                  (print "imply spine traversal")
+                  (gdom/replaceNode (str-to-elem spine-imply) x)))
+              (by-class "spine"))))
+
+(defn imply-click-listener
+  [elem]
+  (events/listen elem "click" imply-handler))
+
+(defn equiv-handler
+  [evt]
+  (doall (map (fn [x]
+                  (doall
+                    (print "equiv step rule")
+                    (gdom/replaceNode (str-to-elem rule-type-equiv) x)))
+              (by-class "rule-type"))
+         (map (fn [x]
+                (doall
+                  (gdom/replaceNode (str-to-elem spine-equiv) x)))
+              (by-class "spine"))))
+
+(defn equiv-click-listener
+  [elem]
+  (events/listen elem "click" equiv-handler))
 
 (defn- replace-with-symbols
   "Replaces all symbol-like strings to real symbols"
@@ -196,7 +246,9 @@
   "Top-level load handler"
   []
   (validate-click-listener (by-id "validate"))
-  (keystroke-listener)
-  (new-step-listener (by-id "new-step")))
+  (imply-click-listener (by-id "imply"))
+  (equiv-click-listener (by-id "equiv"))
+  (new-step-listener (by-id "new-step"))
+  (keystroke-listener))
 
 (events/listen js/window "load" window-load-handler)
