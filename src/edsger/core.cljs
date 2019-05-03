@@ -62,7 +62,10 @@
   [class]
   (dorun (map #(gdom/removeNode %) (iArrayLike-to-cljs-list (gdom/getElementsByClass class)))))
 
-
+(defn by-class
+  "Returns a cljs list of elements by class"
+  [class]
+  (doall (iArrayLike-to-cljs-list (gdom/getElementsByClass class))))
 
 ;; UI and handlers ===================
 
@@ -157,9 +160,22 @@
     (gdom/appendChild (by-id "proof") (str-to-elem rule-div))
     (gdom/appendChild (by-id "proof") (str-to-elem exp-div))))
 
+(defn remove-steps-handler
+  "Removes an extra step"
+  [evt]
+  (if (and (> (count (by-class "exp-box")) 1) (> (count (by-class "rule-box")) 1))
+  (do
+    (gdom/removeNode (last (by-class "exp-box")))
+    (gdom/removeNode (last (by-class "rule-box"))))
+    ()))
+
 (defn new-step-listener
   [elem]
   (events/listen elem "click" new-step-handler))
+
+  (defn remove-steps-listener
+    [elem]
+    (events/listen elem "click" remove-steps-handler))
 
 (defn- replace-with-symbols
   "Replaces all symbol-like strings to real symbols"
@@ -204,6 +220,7 @@
   []
   (validate-click-listener (by-id "validate"))
   (keystroke-listener)
-  (new-step-listener (by-id "new-step")))
+  (new-step-listener (by-id "new-step"))
+  (remove-steps-listener (by-id "remove-steps")))
 
 (events/listen js/window "load" window-load-handler)
