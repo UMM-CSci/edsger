@@ -16,13 +16,14 @@
 (def rule-div-first "<div class=\"form-group row rule-box\">
        <label for=\"inputRule\" class=\"col-sm-2 col-form-label rule-label\">Rule</label>
        <div class= \"result-val\"></div>
+       <button class=\"spine\" type=\"button\">≡</button>
        <span> < </span>
        <div class=\"col rule-box-left\">
            <input type=\"text\" class=\"form-control rule\" placeholder=\"Left-hand side of rule\">
        </div>")
 
-(def rule-type-equiv "<span class=\"rule-type\"> ≡ </span>")
-(def rule-type-imply "<span class=\"rule-type\"> ⇒ </span>")
+(def rule-type-equiv "<span class=\"rule-type\">≡</span>")
+
 
 (def rule-div-last "<div class=\"col rule-box-right\">
            <input type=\"text\" class=\"form-control rule\" placeholder=\"Right-hand side of rule\">
@@ -30,23 +31,20 @@
        <span> > </span>
    </div>")
 
-(defn get-rule-div
-  ([] (str rule-div-first rule-type-equiv rule-div-last))
-  ([type]
-    (if (= type "equiv") (get-rule-div)
-        (str rule-div-first rule-type-imply rule-div-last))))
+(def rule-div (str rule-div-first rule-type-equiv rule-div-last))
+
+(def imply-button "<button class=\"spine\" type=\"button\">⇒</button>")
+(def equiv-button "<button class=\"spine\" type=\"button\">≡</button>")
+
 
 ; copy of div for expression input
 (def exp-div "<div class=\"form-group row exp-box\">
        <label for=\"inputExp\" class=\"col-sm-2 col-form-label\">Expression</label>
-       <span class=\"spine\"> ≡ </span>
        <div class=\"col\">
            <input type=\"text\" class=\"form-control ex\" placeholder=\"Type an expression (e.x. q ∧ p)\">
        </div>
    </div>")
 
-(def spine-equiv "<span class=\"spine\"> ≡ </span>")
-(def spine-imply "<span class=\"spine\"> ⇒ </span>")
 ;; Helpers ===========================
 
 ;; shortcut for dom/get-element
@@ -172,44 +170,39 @@
   "Add new lines for the user to fill in"
   [evt]
   (dorun
-    (gdom/appendChild (by-id "proof") (str-to-elem (get-rule-div)))
+    (gdom/appendChild (by-id "proof") (str-to-elem rule-div))
     (gdom/appendChild (by-id "proof") (str-to-elem exp-div))))
 
 (defn new-step-listener
   [elem]
   (events/listen elem "click" new-step-handler))
 
-(defn imply-handler
-  [evt]
-  (dorun (map (fn [x]
-                (doall
-                  (gdom/replaceNode (str-to-elem rule-type-imply) x)))
-              (by-class "rule-type"))
-         (map (fn [x]
-                (doall
-                  (print "imply spine traversal")
-                  (gdom/replaceNode (str-to-elem spine-imply) x)))
-              (by-class "spine"))))
+(defn spine-handler
+  [elem evt]
+(print "handler activated")
+(print (gdom/getTextContent elem))
+(print (= (gdom/getTextContent elem) "≡"))
+  (let [imply-but-node (str-to-elem imply-button)
+        equiv-but-node (str-to-elem equiv-button)]
+        (if (= (gdom/getTextContent elem) "≡")
+            (gdom/replaceNode imply-but-node elem)
+            (gdom/replaceNode equiv-but-node elem))
+        (doall (map (fn [elem](events/listen elem "click" (partial spine-handler elem)))
+                    (by-class "spine")))))
 
-(defn imply-click-listener
+(defn spine-listener
+  "listens for an indivdual spine button being clicked"
   [elem]
-  (events/listen elem "click" imply-handler))
+  ()
+  (events/listen elem "click" (partial spine-handler elem)))
 
-(defn equiv-handler
-  [evt]
-  (doall (map (fn [x]
-                  (doall
-                    (print "equiv step rule")
-                    (gdom/replaceNode (str-to-elem rule-type-equiv) x)))
-              (by-class "rule-type"))
-         (map (fn [x]
-                (doall
-                  (gdom/replaceNode (str-to-elem spine-equiv) x)))
-              (by-class "spine"))))
-
-(defn equiv-click-listener
-  [elem]
-  (events/listen elem "click" equiv-handler))
+(defn all-spine-listener
+  "Listens to all spine buttons saying whether the step is equivalence or
+  implication, switches that particular button"
+  [elems]
+  (print "all listener activated")
+  (print elems)
+  (doall (map spine-listener elems)))
 
 (defn- replace-with-symbols
   "Replaces all symbol-like strings to real symbols"
@@ -246,8 +239,7 @@
   "Top-level load handler"
   []
   (validate-click-listener (by-id "validate"))
-  (imply-click-listener (by-id "imply"))
-  (equiv-click-listener (by-id "equiv"))
+  (all-spine-listener (by-class "spine"))
   (new-step-listener (by-id "new-step"))
   (keystroke-listener))
 
