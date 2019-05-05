@@ -15,9 +15,7 @@
 <body>
     <nav class="navbar navbar-light fixed-top bg-light justify-content-between">
         <a class="navbar-brand" href="#">Edsger</a>
-        <form class="form-inline">
-            <button class="btn btn-outline-success btn-lg my-2 my-sm-0" id="validate" type="button">Validate</button>
-        </form>
+
     </nav>
 
     <div class="container">
@@ -61,11 +59,21 @@
                         </form>
                     </div><!--/span-->
                     <!-- Adding more slots -->
-                    <div class="row text-center">
-                        <div class="col-12 col-lg-12 text-center">
-                            <button type="button" class="btn btn-secondary btn-lg" id="new-step">+</button>
-                        </div>
-                    </div>
+                    <span style="text-align: left; width:49%; display: inline-block;">
+                     <div>
+                    <!--<div class="row text-center">-->
+                          <div class="col-12 col-lg-12">
+                          <!-- <div class="col-12 col-lg-12 text-center"> -->
+                              <button type="button" class="btn btn-secondary btn-lg" id="new-step">+</button>
+                              <button type="button" class="btn btn-secondary btn-lg" id="remove-steps">-</button>
+                          </div>
+                      </div>
+                    </span>
+                      <span style="text-align: right; width:50%;  display: inline-block;>
+                        <form class="form-inline">
+                            <button  class="btn btn-outline-success btn-lg my-2 my-sm-0" id="validate" type="button">Validate</button>
+                        </form>
+                      </span>
 
                 </div><!--/row-->
             </div><!--/span-->
@@ -101,17 +109,18 @@
                     </tr>
                     <tr>
                         <td>≡ (equivalence)</td>
-                        <td>== or "equiv</td>
+                        <td>== or "equiv"</td>
                     </tr>
                     </tbody>
                 </table>
             </div><!--/span-->
         </div><!--/row-->
 
+
         <hr>
 
         <footer>
-            <p>&copy; Nathan Beneke, Courtney Cook 2019</p>
+            <p>Available under the Eclipse Public License 2.0 </p>
         </footer>
 
     </div><!--/.container-->
