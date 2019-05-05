@@ -13,17 +13,29 @@
 ;; Constants =========================
 
 ; copy of div for rule input
-(def rule-div "<div class=\"form-group row rule-box\">
+(def rule-div-first "<div class=\"form-group row rule-box\">
        <label for=\"inputRule\" class=\"col-sm-2 col-form-label rule-label\">Rule</label>
        <div class= \"result-val\"></div>
+       <button class=\"spine\" type=\"button\">≡</button>
+       <span> < </span>
        <div class=\"col rule-box-left\">
            <input type=\"text\" class=\"form-control rule\" placeholder=\"Left-hand side of rule\">
-       </div>
-       <span> ≡ </span>
-       <div class=\"col rule-box-right\">
+       </div>")
+
+(def rule-type-equiv "<span class=\"rule-type\">≡</span>")
+
+
+(def rule-div-last "<div class=\"col rule-box-right\">
            <input type=\"text\" class=\"form-control rule\" placeholder=\"Right-hand side of rule\">
        </div>
+       <span> > </span>
    </div>")
+
+(def rule-div (str rule-div-first rule-type-equiv rule-div-last))
+
+(def imply-button "<button class=\"spine\" type=\"button\">⇒</button>")
+(def equiv-button "<button class=\"spine\" type=\"button\">≡</button>")
+
 
 ; copy of div for expression input
 (def exp-div "<div class=\"form-group row exp-box\">
@@ -32,6 +44,7 @@
            <input type=\"text\" class=\"form-control ex\" placeholder=\"Type an expression (e.x. q ∧ p)\">
        </div>
    </div>")
+
 ;; Helpers ===========================
 
 ;; shortcut for dom/get-element
@@ -173,6 +186,33 @@
   [elem]
   (events/listen elem "click" new-step-handler))
 
+(defn spine-handler
+  [elem evt]
+(print "handler activated")
+(print (gdom/getTextContent elem))
+(print (= (gdom/getTextContent elem) "≡"))
+  (let [imply-but-node (str-to-elem imply-button)
+        equiv-but-node (str-to-elem equiv-button)]
+        (if (= (gdom/getTextContent elem) "≡")
+            (gdom/replaceNode imply-but-node elem)
+            (gdom/replaceNode equiv-but-node elem))
+        (doall (map (fn [elem](events/listen elem "click" (partial spine-handler elem)))
+                    (by-class "spine")))))
+
+(defn spine-listener
+  "listens for an indivdual spine button being clicked"
+  [elem]
+  ()
+  (events/listen elem "click" (partial spine-handler elem)))
+
+(defn all-spine-listener
+  "Listens to all spine buttons saying whether the step is equivalence or
+  implication, switches that particular button"
+  [elems]
+  (print "all listener activated")
+  (print elems)
+  (doall (map spine-listener elems)))
+
   (defn remove-steps-listener
     [elem]
     (events/listen elem "click" remove-steps-handler))
@@ -219,8 +259,10 @@
   "Top-level load handler"
   []
   (validate-click-listener (by-id "validate"))
-  (keystroke-listener)
+  (all-spine-listener (by-class "spine"))
   (new-step-listener (by-id "new-step"))
+  (keystroke-listener)
   (remove-steps-listener (by-id "remove-steps")))
+
 
 (events/listen js/window "load" window-load-handler)
