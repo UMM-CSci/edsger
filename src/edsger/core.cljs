@@ -188,9 +188,9 @@
 
 (defn spine-handler
   [elem evt]
-(print "handler activated")
-(print (gdom/getTextContent elem))
-(print (= (gdom/getTextContent elem) "≡"))
+;(print "handler activated")
+;(print (gdom/getTextContent elem))
+;(print (= (gdom/getTextContent elem) "≡"))
   (let [imply-but-node (str-to-elem imply-button)
         equiv-but-node (str-to-elem equiv-button)]
         (if (= (gdom/getTextContent elem) "≡")
@@ -239,7 +239,7 @@
   [evt]
   (let [input-box (gdom/getActiveElement js/document)
         key (aget evt "key")]
-    ;; The last four cases handle fast user typing
+    ;; The middle four cases handle fast user typing
     (when (contains? #{"!" "&" "|" "=" ">" "1" "7" "\\" "." "^" "t" "d" "r" "s" "v"} key)
       (gselection/setStart input-box 0)
       (gselection/setEnd input-box (count (.-value input-box)))
