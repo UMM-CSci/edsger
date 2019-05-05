@@ -173,6 +173,15 @@
     (gdom/appendChild (by-id "proof") (str-to-elem rule-div))
     (gdom/appendChild (by-id "proof") (str-to-elem exp-div))))
 
+(defn remove-steps-handler
+  "Removes an extra step"
+  [evt]
+  (if (and (> (count (by-class "exp-box")) 1) (> (count (by-class "rule-box")) 1))
+  (do
+    (gdom/removeNode (last (by-class "exp-box")))
+    (gdom/removeNode (last (by-class "rule-box"))))
+    ()))
+
 (defn new-step-listener
   [elem]
   (events/listen elem "click" new-step-handler))
@@ -204,15 +213,26 @@
   (print elems)
   (doall (map spine-listener elems)))
 
+  (defn remove-steps-listener
+    [elem]
+    (events/listen elem "click" remove-steps-handler))
+
 (defn- replace-with-symbols
   "Replaces all symbol-like strings to real symbols"
   [vanilla-str]
   (-> vanilla-str
       (clojure.string/replace "!" "¬")
+      (clojure.string/replace "not" "¬")
       (clojure.string/replace "&" "∧")
+      (clojure.string/replace "^" "∧")
+      (clojure.string/replace "and" "∧")
       (clojure.string/replace "|" "∨")
+      (clojure.string/replace "or" "∨")
       (clojure.string/replace "=>" "⇒")
-      (clojure.string/replace "==" "≡")))
+      (clojure.string/replace "->" "⇒")
+      (clojure.string/replace "implies" "⇒")
+      (clojure.string/replace "==" "≡")
+      (clojure.string/replace "equiv" "≡")))
 
 (defn keystroke-handler
   "Replaces all symbol-like strings in the focused input box to real symbols"
@@ -220,7 +240,7 @@
   (let [input-box (gdom/getActiveElement js/document)
         key (aget evt "key")]
     ;; The last four cases handle fast user typing
-    (when (contains? #{"!" "&" "|" "=" ">" "1" "7" "\\" "."} key)
+    (when (contains? #{"!" "&" "|" "=" ">" "1" "7" "\\" "." "^" "t" "d" "r" "s" "v"} key)
       (gselection/setStart input-box 0)
       (gselection/setEnd input-box (count (.-value input-box)))
       (gselection/setText input-box (replace-with-symbols (gselection/getText input-box)))
@@ -241,6 +261,8 @@
   (validate-click-listener (by-id "validate"))
   (all-spine-listener (by-class "spine"))
   (new-step-listener (by-id "new-step"))
-  (keystroke-listener))
+  (keystroke-listener)
+  (remove-steps-listener (by-id "remove-steps")))
+
 
 (events/listen js/window "load" window-load-handler)
