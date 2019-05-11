@@ -164,5 +164,5 @@
 (def bug-rule-left '(:and ?a ?a))
 (def bug-rule-right '?a)
 (def bug-exp-right '(:not '(:and p q)))
-(deftest check-bug-62
-  (is (u/check-match-recursive bug-exp-left bug-exp-right bug-rule-left bug-rule-right)))
+;(deftest check-bug-62
+;  (is (u/check-match-recursive bug-exp-left bug-exp-right bug-rule-left bug-rule-right)))
