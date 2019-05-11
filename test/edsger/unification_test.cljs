@@ -157,3 +157,11 @@
 (deftest recursive-validate-non-empty
   (is (every? true? (u/recursive-validate exps-list rules-list)))
   (is (not (every? true? (u/recursive-validate exps-list (cons '(:or ?a ?b) (rest rules-list)))))))
+
+;; Test unification for known bug #62
+(def bug-exp-left '(:not '(:and '(:and p p) q)))
+(def bug-rule-left '(:and ?a ?a))
+(def bug-rule-right '?a)
+(def bug-exp-right '(:not '(:and p q)))
+(deftest check-bug-62
+  (is (u/check-match-recursive bug-exp-left bug-exp-right bug-rule-left bug-rule-right)))
