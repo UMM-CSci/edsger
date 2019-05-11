@@ -132,16 +132,17 @@
   ;Trying it on two empty lists should throw an error
   (try
     (doall
-      (u/recursive-validate '() '())
+      (u/recursive-validate '() '() '())
       (is false))
     (catch js/Error e (is true)))
 
-  (is (empty? (u/recursive-validate '("anything, just one thing") '())))
+  (is (empty? (u/recursive-validate '("anything, just one thing") '() '())))
 
   (try
     (doall
       (u/recursive-validate
               (list '(:and a a) 'a)
+              '()
               '())
       (is false))
     (catch js/Error e (is true))))
@@ -155,5 +156,13 @@
                      '(:implies '(:and b a) '(:or q p))
                      '(:implies '(:not '(:or q p)) '(:not '(:and b a)))))
 (deftest recursive-validate-non-empty
-  (is (every? true? (u/recursive-validate exps-list rules-list)))
-  (is (not (every? true? (u/recursive-validate exps-list (cons '(:or ?a ?b) (rest rules-list)))))))
+  (is (every? true? (u/recursive-validate exps-list rules-list (list "≡" "≡" "≡"))))
+  (is (not (every? true? (u/recursive-validate exps-list (cons '(:or ?a ?b) (rest rules-list)) (list "≡" "≡" "≡" "≡"))))))
+
+;; Test unification for known bug #62
+(def bug-exp-left '(:not '(:and '(:and p p) q)))
+(def bug-rule-left '(:and ?a ?a))
+(def bug-rule-right '?a)
+(def bug-exp-right '(:not '(:and p q)))
+(deftest check-bug-62
+  (is (u/check-match-recursive bug-exp-left bug-exp-right bug-rule-left bug-rule-right)))
