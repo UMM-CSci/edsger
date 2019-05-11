@@ -7,7 +7,7 @@ edsger: _Simple proof checker for introductory logic_
 The idea is to provide a simple checker for basic logic proofs that students
 generate in the sort of discrete math/logic course that is often required in
 Computer Science programs. In these courses, students often struggle with the
-basic question of "is this correct?" in a ways that don't come up in an intro
+basic question of "is this correct?" in ways that don't come up in an intro
 programming course _because there the compiler/interpreter gives them hard
 feedback_. So while students in an intro programming course are forced to face
 confusion about things like syntax right away, in our logic/discrete course
@@ -54,9 +54,9 @@ Tips:
 
 ## Usage & Current State
 
-While the goal is to allow students to check a whole proof, we currently can
-only check one step at a time. To cite a rule, the rule must be given in two
-pieces: a left-hand rule that matches the expression we are starting from, and a
+Users enter a starting expression, a rule they wish to use, and the ending expression. 
+To cite a rule, the rule must be given in two pieces: a left-hand rule that 
+matches the expression we are starting from, and a
 right-hand rule that matches the expression we end up with.
 
 So, when you validate a logic expression looking like:  
@@ -75,17 +75,20 @@ bottom-expression box : | a ∧ (c ∨ b) |
 
 :interrobang: To type logic symbols like `≣` or `∨`, you don't have to copy them 
 from somewhere. _edsger_ is doing conversion for you when you type Java-like symbols. 
-The below is the conversion table.
+Below is the conversion table.
 
 | Logic Symbol    | Regular Symbol (on keyboard) |
 | -------------   | -------------                |
-| ¬ (not)         | !                            |
-| ∧ (and)         | &                            |
-| ∨ (or)          | \|                           |
-| ⇒ (implication) | =>                           |
-| ≡ (equivalence) | ==                           |
+| ¬ (not)         | ! or "not"                   |
+| ∧ (and)         | &, ^, or "and"               |
+| ∨ (or)          | \| or "or"                   |
+| ⇒ (implication) | =>, ->, or "implies"         |
+| ≡ (equivalence) | == or "equiv"                |
 
-And finally, click the **validate** button to check your reasoning :100:.
+Click the + button to add steps to your proof, and the - button if you accidentally add too many. 
+_edsger_ will not run if any input box is empty.
+
+Finally, click the **validate** button to check your reasoning :100:.
 
 The logic symbols given in the table above are the only ones that we currently
 support. The parser has knowledge of precedence, but series of operators with
@@ -95,4 +98,4 @@ unless you add parens to make either `(a ∧ b) ∧ c` or `a ∧ (b ∧ c)`.
 
 ## License
 
-Distributed under the Eclipse Public License either version 1.0 or any later version.
+Distributed under the Eclipse Public License version 2.0.
