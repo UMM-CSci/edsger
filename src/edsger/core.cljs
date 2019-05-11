@@ -159,7 +159,8 @@
       ;                                                    (nth exps 2)
       ;                                                    (nth rules 2)
       ;                                                    (nth rules 3)))))
-          results (uni/recursive-validate exps rules)]
+        step-types (map gdom/getTextContent (by-class "spine"))
+        results (uni/recursive-validate exps rules step-types)]
     (remove-elems-by-class "alert-danger")
     (when non-empty-input
       (if (some not-empty [exp-parse-err rule-parse-err])
