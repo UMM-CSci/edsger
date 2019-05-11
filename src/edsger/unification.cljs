@@ -56,17 +56,32 @@
 
 (defn recursive-validate
     "validates each step in order, returning an array of boolean values corresponding to the rules, in order"
-     [exps rules]
+     [exps rules steps]
        (cond
              ;if one expression and 0 rules are left, all expressions and rules validated
              (and (= 1 (count exps)) (empty? rules)) '()
              ;if only one list is empty, something is wrong
              (or (>= 1 (count exps)) (empty? rules)) (throw (js/Error. "Mismatched expression and rules lists' lengths"))
-             (true? (check-match-recursive (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1)))
-                             (cons true (recursive-validate (rest exps) (rest (rest rules))))
+             (and (= (first steps) "⇒") (check-match (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1)))
+                (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
+             (and (= (first steps) "≡")
+                  (true? (check-match-recursive (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1))))
+                (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
              ;if check-match-recursive didn't return true, end the computation
              :else (cons false (recursive-validate (rest exps) (rest (rest rules))))))
 
+
+(defn check-implication
+  [exps rules]
+    (cond
+      ;if one expression and 0 rules are left, all expressions and rules validated
+      (and (= 1 (count exps)) (empty? rules)) '()
+      ;if only one list is empty, something is wrong
+      (or (>= 1 (count exps)) (empty? rules)) (throw (js/Error. "Mismatched expression and rules lists' lengths"))
+      (true? (check-match (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1)))
+                      (cons true (check-implication (rest exps) (rest (rest rules))))
+      ;if check-match didn't return true, cons a false on and keep going
+      :else (cons false (check-implication (rest exps) (rest (rest rules))))))
 ;; This file is currently only for playing around during development
 ;; but I think that we'll eventually have some useful functions here.
 
