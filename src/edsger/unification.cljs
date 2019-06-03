@@ -62,11 +62,12 @@
              (and (= 1 (count exps)) (empty? rules)) '()
              ;if only one list is empty, something is wrong
              (or (>= 1 (count exps)) (empty? rules)) (throw (js/Error. "Mismatched expression and rules lists' lengths"))
-             (and (= (first steps) "⇒") (check-match (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1)))
-                (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
-             (and (= (first steps) "≡")
-                  (true? (check-match-recursive (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1))))
-                (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
+             (= (first steps) "⇒")
+              (cons (check-match (first exps) (second exps) (first rules) (second rules))
+                (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
+             (= (first steps) "≡")
+                (cons  (check-match-recursive (first exps) (second exps) (first rules) (second rules))
+                  (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
              ;if check-match-recursive didn't return true, end the computation
              :else (cons false (recursive-validate (rest exps) (rest (rest rules))))))
 

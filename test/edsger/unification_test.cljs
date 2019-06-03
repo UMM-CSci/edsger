@@ -149,15 +149,23 @@
 
 ;; Test on recursive-validate on non-empty lists
 (def rules-list (list '(:and ?a ?b) '(:and ?b ?a)
-                       '(:or ?a ?b) '(:or ?b ?a)
-                       '(:implies ?z ?q) '(:implies '(:not ?q) '(:not ?z))))
+                      '(:or ?a ?b) '(:or ?b ?a)
+                      '(:implies ?z ?q) '(:implies '(:not ?q) '(:not ?z))))
 (def exps-list (list '(:implies '(:and a b) '(:or p q))
                      '(:implies '(:and b a) '(:or p q))
                      '(:implies '(:and b a) '(:or q p))
                      '(:implies '(:not '(:or q p)) '(:not '(:and b a)))))
 (deftest recursive-validate-non-empty
-  (is (every? true? (u/recursive-validate exps-list rules-list (list "≡" "≡" "≡"))))
-  (is (not (every? true? (u/recursive-validate exps-list (cons '(:or ?a ?b) (rest rules-list)) (list "≡" "≡" "≡" "≡"))))))
+  (is
+    (every? true?
+            (u/recursive-validate exps-list rules-list (list "≡" "≡" "≡"))))
+  (is
+    (not
+      (every? true?
+        (u/recursive-validate
+          exps-list
+          (cons '(:or ?a ?b) (rest rules-list))
+          (list "≡" "≡" "≡"))))))
 
 ;; Test unification for known bug #62
 (def bug-exp-left '(:not (:and (:and p p) q)))
