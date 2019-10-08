@@ -29,10 +29,12 @@
    </div>")
 
 (def imply-button "<button class=\"spine\" type=\"button\">⇒</button>")
+(def follows-button "<button class=\"spine\" type=\"button\">⇐</button>")
 (def equiv-button "<button class=\"spine\" type=\"button\">≡</button>")
 
 (def rule-type-equiv "<span class=\"rule-type\"> ≡ </span>")
 (def rule-type-imply "<span class=\"rule-type\"> ⇒ </span>")
+(def rule-type-follows "<span class=\"rule-type\"> ⇐ </span>")
 
 (def rule-div (str rule-div-first rule-type-equiv rule-div-last))
 ; copy of div for expression input
@@ -182,19 +184,43 @@
     (gdom/removeNode (last (by-class "rule-box"))))
     ()))
 
+(defn replace-imply
+  [old-rule elem]
+  (if (= 1
+         (count (filter (fn [e] (= "⇒" (gdom/getTextContent e)))
+                        (by-class "spine"))))
+      (do
+        (gdom/replaceNode (str-to-elem follows-button) elem)
+        (gdom/replaceNode (str-to-elem rule-type-follows) old-rule))
+      (do
+        (gdom/replaceNode (str-to-elem equiv-button) elem)
+        (gdom/replaceNode (str-to-elem rule-type-equiv) old-rule))))
+
+(defn replace-equiv
+  [old-rule elem]
+  (if (every? (fn [e] (not= "⇐" (gdom/getTextContent e)))
+              (by-class "spine"))
+      (do
+        (gdom/replaceNode (str-to-elem imply-button) elem)
+        (gdom/replaceNode (str-to-elem rule-type-imply) old-rule))
+      (do
+        (gdom/replaceNode (str-to-elem follows-button) elem)
+        (gdom/replaceNode (str-to-elem rule-type-follows) old-rule))))
+
 (defn spine-handler
   [elem evt]
   (let [imply-but-node (str-to-elem imply-button)
+        follows-but-node (str-to-elem follows-button)
         equiv-but-node (str-to-elem equiv-button)
         rule-type-node (getNthNextNode 3 elem)
         rule-node-equiv (str-to-elem rule-type-equiv)
-        rule-node-imply (str-to-elem rule-type-imply)]
-        (if (= (gdom/getTextContent elem) "≡")
-            (gdom/replaceNode imply-but-node elem)
-            (gdom/replaceNode equiv-but-node elem))
-        (if (= (gdom/getTextContent elem) "≡")
-            (gdom/replaceNode rule-node-imply rule-type-node)
-            (gdom/replaceNode rule-node-equiv rule-type-node))
+        rule-node-imply (str-to-elem rule-type-imply)
+        rule-node-follows (str-to-elem rule-type-follows)]
+        (case (gdom/getTextContent elem)
+          "⇐" (do (gdom/replaceNode equiv-but-node elem)
+                  (gdom/replaceNode rule-node-equiv rule-type-node))
+          "≡" (replace-equiv rule-type-node elem)
+          "⇒" (replace-imply rule-type-node elem))
         (doall (map (fn [elem](events/listen elem "click" (partial spine-handler elem)))
                     (by-class "spine")))))
 
