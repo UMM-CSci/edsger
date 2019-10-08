@@ -58,16 +58,19 @@
     "validates each step in order, returning an array of boolean values corresponding to the rules, in order"
      [exps rules steps]
        (cond
-             ;if one expression and 0 rules are left, all expressions and rules validated
+             ; if one expression and 0 rules are left, all expressions and rules validated
              (and (= 1 (count exps)) (empty? rules)) '()
-             ;if only one list is empty, something is wrong
+             ; if only one list is empty, something is wrong
              (or (>= 1 (count exps)) (empty? rules)) (throw (js/Error. "Mismatched expression and rules lists' lengths"))
              (and (= (first steps) "⇒") (check-match (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1)))
                 (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
+             ; follows from is exactly equal to implication backwards
+             (and (= (first steps) "⇐") (check-match (nth exps 1) (nth exps 0) (nth rules 1) (nth rules 0)))
+               (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
              (and (= (first steps) "≡")
                   (true? (check-match-recursive (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1))))
                 (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
-             ;if check-match-recursive didn't return true, end the computation
+             ; if check-match-recursive didn't return true, end the computation
              :else (cons false (recursive-validate (rest exps) (rest (rest rules))))))
 
 
