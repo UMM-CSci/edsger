@@ -15,23 +15,26 @@
         end-matches (binding-map
                      (wrap end-exp)
                      (wrap end-rule))]
-    (and
-     start-matches
-     end-matches
-     (every? (fn [[key end-binding]]
+    (when (and
+      start-matches
+      end-matches
+      (every? (fn [[key end-binding]]
                (let [start-binding (get start-matches key)]
                  (or (nil? start-binding) ;; constants are matched
                      (= start-binding end-binding)))) ;; substitutions are matched
-             end-matches))))
+             end-matches))
+      {:start-binding start-matches
+       :end-binding end-matches}))
 
 
 (defn check-match-recursive [start-exp end-exp start-rule end-rule]
   "Returns true when the given rules can be used to make the start-exp
    equal to the end-exp."
   (let [check (fn [s e]
-                (check-match s e start-rule end-rule))]
+                (check-match s e start-rule end-rule))
+        check-result (check start-exp end-epx)]
       (or
-        (check start-exp end-exp)
+        check-result
         (and
          ;; if start-exp and end-exp don't pass the check as a whole,
          ;; then we must be able to break them down to find a place
