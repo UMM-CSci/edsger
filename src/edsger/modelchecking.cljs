@@ -2,7 +2,7 @@
 (ns powerset.core-test
   (:use (clojure set test)))
 
-(defn modelcheck [let [expr (parse [expression])]]
+(defn modelcheck [let [expr (hiccup-tree)]]
 
   ;; evaluate expr if all true then it is correct
 
@@ -22,9 +22,6 @@
         (eval-var(second expr) true-vars)))
   )
 
-(defn true-vars
-    
-)
 
  ;; Create a powerset of the set s containing all variables
 (defn powerset [s]
@@ -34,8 +31,9 @@
          (map (fn [i] (powerset (disj s i))) s)))
 
   ;;find the variables and create a set
-    (defn variables
-        (let [op (first expr)]
+  
+(defn variables
+    (let [op (first expr)]
             (if ( = op variable)
                 (set (second expr))
                 (if (= op :not)
@@ -45,5 +43,5 @@
                      )
                  )
             )
-         )
     )
+)
