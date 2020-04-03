@@ -6,7 +6,7 @@
 
   ;; evaluate expr if all true then it is correct
 
-    (if (some false (map #(eval-expr expr %) powerset[(variables)]))
+    (if (some false (map #(eval-expr expr %) (powerset[(variables)])))
         (print "invalid rule")
     )
     (else( print "valid rule"))
