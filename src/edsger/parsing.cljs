@@ -1,3 +1,4 @@
+
 (ns edsger.parsing
   "Tools to convert user input into cljs lists"
   (:require [instaparse.core :as insta :refer-macros [defparser]]))
@@ -52,7 +53,10 @@
   [expression]
   (let [hiccup-tree (transform-infix-cfg (infix-cfg expression))]
     (if-not (= (type hiccup-tree) instaparse.gll/Failure)
-      hiccup-tree)))
+      hiccup-tree))
+      
+   (modelcheck(hiccup-tree)) 
+)
 
 (defn rulify
   "Recursively traverse an expression and prepend '?' onto
