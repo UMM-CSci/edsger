@@ -1,7 +1,8 @@
 
 (ns edsger.parsing
   "Tools to convert user input into cljs lists"
-  (:require [instaparse.core :as insta :refer-macros [defparser]]))
+  (:require [instaparse.core :as insta :refer-macros [defparser]]
+            [edsger.modelchecking :as mc]))
 
 ;; A simple CFG for parsing logical expressions containing several logic
 ;; operators. The parser is aware of precedence, but some operators have
@@ -55,7 +56,7 @@
     (if-not (= (type hiccup-tree) instaparse.gll/Failure)
       hiccup-tree))
       
-   (modelcheck(hiccup-tree)) 
+      (mc/modelcheck hiccup-tree)
 )
 
 (defn rulify
