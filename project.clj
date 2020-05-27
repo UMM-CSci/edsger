@@ -6,15 +6,15 @@
 
   :min-lein-version "2.7.1"
 
-  :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
-                 [org.clojure/clojurescript "1.9.908"]
-                 [org.clojure/core.async  "0.3.443"]
-                 [org.clojure/core.logic "0.8.11"]
-                 [instaparse "1.4.8"]]
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 [org.clojure/clojurescript "1.10.741"]
+                 ; [org.clojure/core.async  "0.3.443"]
+                 [org.clojure/core.logic "1.0.0"]
+                 [instaparse "1.4.10"]]
 
-  :plugins [[lein-figwheel "0.5.13"]
-            [lein-cljsbuild "1.1.7" :exclusions [[org.clojure/clojure]]]
-            [lein-doo "0.1.8"]]
+  :plugins [[lein-figwheel "0.5.20"]
+            [lein-cljsbuild "1.1.8" :exclusions [[org.clojure/clojure]]]
+            [lein-doo "0.1.10"]]
 
   :source-paths ["src"]
 
@@ -99,8 +99,8 @@
   ;; Setting up nREPL for Figwheel and ClojureScript dev
   ;; Please see:
   ;; https://github.com/bhauman/lein-figwheel/wiki/Using-the-Figwheel-REPL-within-NRepl
-  :profiles {:dev {:dependencies [[binaryage/devtools "0.9.4"]
-                                  [figwheel-sidecar "0.5.13"]
+  :profiles {:dev {:dependencies [[binaryage/devtools "1.0.2"]
+                                  [figwheel-sidecar "0.5.20"]
                                   [com.cemerick/piggieback "0.2.2"]]
                    ;; need to add dev source path here to get user.clj loaded
                    :source-paths ["src" "dev"]
