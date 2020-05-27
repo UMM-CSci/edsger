@@ -58,55 +58,17 @@
     "validates each step in order, returning an array of boolean values corresponding to the rules, in order"
      [exps rules steps]
        (cond
-             ;if one expression and 0 rules are left, all expressions and rules validated
+             ; if one expression and 0 rules are left, all expressions and rules validated
              (and (= 1 (count exps)) (empty? rules)) '()
-             ;if only one list is empty, something is wrong
+             ; if only one list is empty, something is wrong
              (or (>= 1 (count exps)) (empty? rules)) (throw (js/Error. "Mismatched expression and rules lists' lengths"))
-             (= (first steps) "⇒")
-              (cons (check-match (first exps) (second exps) (first rules) (second rules))
-                (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
-             (= (first steps) "≡")
-                (cons  (check-match-recursive (first exps) (second exps) (first rules) (second rules))
-                  (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
-             ;if check-match-recursive didn't return true, end the computation
+             (and (= (first steps) "⇒") (check-match (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1)))
+                (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
+             ; follows from is exactly equal to implication backwards
+             (and (= (first steps) "⇐") (check-match (nth exps 1) (nth exps 0) (nth rules 1) (nth rules 0)))
+               (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
+             (and (= (first steps) "≡")
+                  (true? (check-match-recursive (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1))))
+                (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
+             ; if check-match-recursive didn't return true, end the computation
              :else (cons false (recursive-validate (rest exps) (rest (rest rules))))))
-
-
-(defn check-implication
-  [exps rules]
-    (cond
-      ;if one expression and 0 rules are left, all expressions and rules validated
-      (and (= 1 (count exps)) (empty? rules)) '()
-      ;if only one list is empty, something is wrong
-      (or (>= 1 (count exps)) (empty? rules)) (throw (js/Error. "Mismatched expression and rules lists' lengths"))
-      (true? (check-match (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1)))
-                      (cons true (check-implication (rest exps) (rest (rest rules))))
-      ;if check-match didn't return true, cons a false on and keep going
-      :else (cons false (check-implication (rest exps) (rest (rest rules))))))
-;; This file is currently only for playing around during development
-;; but I think that we'll eventually have some useful functions here.
-
-;; When this file is evaluated, the
-;; code here is executed and anything that is (print)-ed will
-;; be printed in the developer console in Chrome when using figwheel.
-;; This means we can just make a change, save, and then switch to
-;; Chrome to see what printed.
-
-(print "BBORK!\nPRE") ;; I like a header for the section
-
-(def a '(+ ?x 1))
-(def b '(+ 1 1))
-
-(def exp-start '(:not (:equiv u (:or w y))))
-(def exp-end '(:equiv (:not u) (:or w y)))
-(def lhs '(:not (:equiv ?a ?b)))
-(def rhs '(:equiv (:not ?a) ?b))
-
-(print (binding-map exp-start lhs))
-(print (binding-map exp-end rhs))
-(print (= (binding-map exp-start lhs)
-          (binding-map exp-end rhs)))
-
-
-
-(print "POST\nBBORK!") ;; I like a footer for the section
