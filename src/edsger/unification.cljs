@@ -6,9 +6,10 @@
     (list exp)
     exp))
 
-(defn check-match [start-exp end-exp start-rule end-rule]
+(defn check-match
   "Returns true if start-exp can be matched with start-rule
    with the same bindings that cause end-exp to match end-rule."
+  [start-exp end-exp start-rule end-rule]
   (let [start-matches (binding-map
                        (wrap start-exp)
                        (wrap start-rule))
@@ -24,10 +25,10 @@
                      (= start-binding end-binding)))) ;; substitutions are matched
              end-matches))))
 
-
-(defn check-match-recursive [start-exp end-exp start-rule end-rule]
+(defn check-match-recursive 
   "Returns true when the given rules can be used to make the start-exp
    equal to the end-exp."
+  [start-exp end-exp start-rule end-rule]
   (let [check (fn [s e]
                 (check-match s e start-rule end-rule))]
       (or
@@ -55,20 +56,20 @@
            (every? #(or (:match %) (:equal %)) result-list)))))))
 
 (defn recursive-validate
-    "validates each step in order, returning an array of boolean values corresponding to the rules, in order"
-     [exps rules steps]
-       (cond
+  "validates each step in order, returning an array of boolean values corresponding to the rules, in order"
+  [exps rules steps]
+  (cond
              ; if one expression and 0 rules are left, all expressions and rules validated
-             (and (= 1 (count exps)) (empty? rules)) '()
+    (and (= 1 (count exps)) (empty? rules)) '()
              ; if only one list is empty, something is wrong
-             (or (>= 1 (count exps)) (empty? rules)) (throw (js/Error. "Mismatched expression and rules lists' lengths"))
-             (and (= (first steps) "⇒") (check-match (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1)))
-                (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
+    (or (>= 1 (count exps)) (empty? rules)) (throw (js/Error. "Mismatched expression and rules lists' lengths"))
+    (and (= (first steps) "⇒") (check-match (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1)))
+    (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
              ; follows from is exactly equal to implication backwards
-             (and (= (first steps) "⇐") (check-match (nth exps 1) (nth exps 0) (nth rules 1) (nth rules 0)))
-               (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
-             (and (= (first steps) "≡")
-                  (true? (check-match-recursive (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1))))
-                (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
+    (and (= (first steps) "⇐") (check-match (nth exps 1) (nth exps 0) (nth rules 1) (nth rules 0)))
+    (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
+    (and (= (first steps) "≡")
+         (true? (check-match-recursive (nth exps 0) (nth exps 1) (nth rules 0) (nth rules 1))))
+    (cons true (recursive-validate (rest exps) (rest (rest rules)) (rest steps)))
              ; if check-match-recursive didn't return true, end the computation
-             :else (cons false (recursive-validate (rest exps) (rest (rest rules))))))
+    :else (cons false (recursive-validate (rest exps) (rest (rest rules))))))
