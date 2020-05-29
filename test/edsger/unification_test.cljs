@@ -1,5 +1,6 @@
 (ns edsger.unification-test
   (:require [edsger.unification :as u]
+            [edsger.parsing :as p]
             [cljs.test :as t :refer-macros [deftest is] :include-macros true]))
 
 ;; ==== Unit tests for `wrap`
@@ -167,22 +168,68 @@
           (cons '(:or ?a ?b) (rest rules-list))
           (list "≡" "≡" "≡"))))))
 
-;; Test unification for known bug #62
-(def bug-exp-left '(:not (:and (:and p p) q)))
-(def bug-rule-left '(:and ?a ?a))
-(def bug-rule-right '?a)
-(def bug-exp-right '(:not (:and p q)))
+;; Tests capturing the problem for bug #62
+;; The problem was an (unnecessary) check that used
+;; `list?`, which returned `false` when passed vectors.
+;; Our parser generates nested vectors, so this failed
+;; on more complex expressions. 
 (deftest check-bug-62
-  (is
-    (not (u/check-match
-      bug-exp-left bug-exp-right
-      bug-rule-left bug-rule-right)))
-  (is
-    (u/check-match-recursive
+  (let [bug-exp-left (p/parse "¬((p ∧ p) ∧ q)") ; '(:not (:and (:and p p) q))
+        bug-rule-left (p/rulify (p/parse "a ∧ a")) ; '(:and ?a ?a)
+        bug-rule-right (p/rulify (p/parse "a")) ; '?a
+        bug-exp-right (p/parse "¬(p ∧ q)")] ; '(:not (:and p q))
+    (is
+     (not (u/check-match
+           bug-exp-left bug-exp-right
+           bug-rule-left bug-rule-right)))
+    (is
+     (u/check-match
+      (second (second bug-exp-left))
+      (second (second bug-exp-right))
+      bug-rule-left bug-rule-right))
+    (is
+     (u/check-match-recursive
+      (second (second bug-exp-left))
+      (second (second bug-exp-right))
+      bug-rule-left bug-rule-right))
+    (is
+     (u/check-match-recursive
       (second bug-exp-left)
       (second bug-exp-right)
       bug-rule-left bug-rule-right))
-  (is
-    (u/check-match-recursive
+    (is
+     (u/check-match-recursive
       bug-exp-left bug-exp-right
-      bug-rule-left bug-rule-right)))
+      bug-rule-left bug-rule-right))
+    ; check that it works when everything is a vector
+    (is
+     (u/check-match-recursive
+      [:not [:and [:and 'p 'p] 'q]]
+      [:not [:and 'p 'q]]
+      [:and '?a '?a]
+      '?a))
+    ; check that it works when everything is a list
+    (is
+     (u/check-match-recursive
+      '(:not (:and (:and p p) q))
+      '(:not (:and p q))
+      '(:and ?a ?a)
+      '?a))
+    (is
+     (first
+      (u/recursive-validate
+       (list bug-exp-left bug-exp-right)
+       (list bug-rule-left bug-rule-right)
+       ["≡"])))))
+
+(deftest check-bug-91
+  (let [exp-left (p/parse "(m ≡ (n ∧ p)) ⇒ q")
+        rule-left (p/rulify (p/parse "a ∧ b"))
+        rule-right (p/rulify (p/parse "b ∧ a"))
+        exp-right (p/parse "(m ≡ (p ∧ n)) ⇒ q")]
+    (is
+     (u/recursive-validate
+      [exp-left exp-right]
+      [rule-left rule-right]
+      ["≡"])))
+  )

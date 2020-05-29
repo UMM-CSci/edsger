@@ -151,6 +151,11 @@
     "¬ false" '(:not false)
     "¬((p ∧ p) ∧ q)" '(:not (:and (:and p p) q))
     "¬(p ∧ q)" '(:not (:and p q))
+    ; Note that `=` treats lists and vectors as equal
+    ; but there are other Clojure tools (like `list?`)
+    ; that treat them as differently.
+    "¬ ((p ∧ p) ∧ q)" [:not [:and [:and 'p 'p] 'q]]
+    "¬(p ∧ q)" [:not [:and 'p 'q]]
 ))
 
 (deftest parse_bad

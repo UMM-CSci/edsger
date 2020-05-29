@@ -39,16 +39,14 @@
          ;; to apply the rule
          (seqable? start-exp)
          (seqable? end-exp)
-         ;; only works for the same length exps
+         ;; Both expressions have to have the same length in order
+         ;; to match.
          (= (count start-exp) (count end-exp))
-         (let
-            [result-list (map (fn [s e]
-                                {:equal (= s e)
-                                 :match (if (and (list? s) (list? e))
-                                          (check-match-recursive s e
+         (let [result-list (map (fn [s e]
+                                  {:equal (= s e)
+                                   :match (check-match-recursive s e
                                                                  start-rule
-                                                                 end-rule)
-                                          (check s e))})
+                                                                 end-rule)})
                               start-exp
                               end-exp)]
           (and
