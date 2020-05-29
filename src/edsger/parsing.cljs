@@ -62,12 +62,3 @@
     (seqable? input) (map rulify input)
     (symbol? input) (symbol (str "?" input))
     :else input))
-(print "START in parsing")
-
-
-
-;; (print (as-and-bs "(and (a) (b))"))
-;; (print (count (as-and-bs "(and (a) (b))")))
-;; (print (type (as-and-bs "(and (a) )")))
-
-(print "ENND in parsing")
