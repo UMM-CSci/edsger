@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Edsger, the proofchecker</title>
+    <link rel="icon" href="https://clojurescript.org/images/cljs-logo-icon-32.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+    <!-- Custom styling CSS -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-light fixed-top bg-light justify-content-between">
+        <a class="navbar-brand" href="#">Edsger</a>
+
+<!--       <form class="form-inline">
+          <div>
+            Choose what operation to use on the spine and for your rules:
+            <button class="btn btn-lg my-2 my-sm-0" id="equiv" type="button">Equivalency</button>
+            <button class="btn btn-lg my-2 my-sm-0" id="imply" type="button">Implication</button>
+          </div>
+          <button class="btn btn-outline-success btn-lg my-2 my-sm-0" id="validate" type="button">Validate</button>
+        </form>
+-->
+    </nav>
+
+    <div class="container">
+
+        <div class="row row-offcanvas row-offcanvas-right">
+
+            <div class="col-12 col-md-9">
+                <!-- Brief instructions -->
+                <div class="row">
+                    <div class="col-12 col-lg-12">
+                        <h4>Type expressions & rules and click the <em>Validate</em> button</h4>
+                    </div>
+                </div>
+                <!-- User input -->
+                <div class="row">
+                    <div class="col-12 col-lg-12">
+                        <form id="proof">
+                            <div class="form-group row exp-box">
+                                <label for="inputExp" class="col-sm-2 col-form-label">Expression</label>
+                                <div class="col">
+                                    <input type="text" class="form-control ex" placeholder="Type an expression (e.x. p ∧ q)">
+                                </div>
+                            </div>
+                            <div class="form-group row rule-box">
+                                <label for="inputRule" class="col-sm-2 col-form-label rule-label">Rule</label>
+                                <div class= "result-val"></div>
+                                <button class="spine" type="button">≡</button>
+                                <span> < </span>
+                                <div class="col rule-box-left">
+                                    <input type="text" class="form-control rule" placeholder="Left-hand side of rule">
+                                </div>
+                                <span class="rule-type"> ≡ </span>
+                                <div class="col rule-box-right">
+                                    <input type="text" class="form-control rule" placeholder="Right-hand side of rule">
+                                </div>
+                                <span> > </span>
+                            </div>
+                            <div class="form-group row exp-box">
+                                <label for="inputExp" class="col-sm-2 col-form-label">Expression</label>
+                                <div class="col">
+                                    <input type="text" class="form-control ex" placeholder="Type an expression (e.x. q ∧ p)">
+                                </div>
+                            </div>
+                        </form>
+                    </div><!--/span-->
+                    <!-- Adding more slots -->
+                    <span style="text-align: left; width:49%; display: inline-block;">
+                     <div>
+                    <!--<div class="row text-center">-->
+                          <div class="col-12 col-lg-12">
+                          <!-- <div class="col-12 col-lg-12 text-center"> -->
+                              <button type="button" class="btn btn-secondary btn-lg" id="new-step">+</button>
+                              <button type="button" class="btn btn-secondary btn-lg" id="remove-steps">-</button>
+                          </div>
+                      </div>
+                    </span>
+                      <span style="text-align: right; width:50%;  display: inline-block;>
+                        <form class="form-inline">
+                            <button  class="btn btn-outline-success btn-lg my-2 my-sm-0" id="validate" type="button">Validate</button>
+                        </form>
+                      </span>
+
+                </div><!--/row-->
+            </div><!--/span-->
+
+            <!-- Inserting symbols -->
+            <div class="col-6 col-md-2 sidebar-offcanvas" id="sidebar">
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col" colspan="2" >How to type symbols?</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">Symbol</th>
+                        <th scope="col">On Keyboard</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>¬ (not)</td>
+                        <td>! or "not"</td>
+                    </tr>
+                    <tr>
+                        <td>∧ (and)</td>
+                        <td>& , ^, or "and"</td>
+                    </tr>
+                    <tr>
+                        <td>∨ (or)</td>
+                        <td>| or "or"</td>
+                    </tr>
+                    <tr>
+                        <td>⇒ (implication)</td>
+                        <td>=>, ->, or "implies"</td>
+                    </tr>
+                    <tr>
+                        <td>≡ (equivalence)</td>
+                        <td>== or "equiv"</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div><!--/span-->
+        </div><!--/row-->
+
+
+        <hr>
+
+        <footer>
+            <p>Available under the Eclipse Public License 2.0 </p>
+        </footer>
+
+    </div><!--/.container-->
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script src="js/compiled/edsger.js" type="text/javascript"></script>
+</body>
+</html>
